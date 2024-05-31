@@ -2,45 +2,50 @@ package com.example.sisvitacus1
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.sisvitacus1.ui.theme.Sisvitacus1Theme
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.sisvita_cus1.data.model.Estudiante
+import com.example.sisvitacus1.ui.viewmodel.RegisterViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private lateinit var registerViewModel: RegisterViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Sisvitacus1Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+        registerViewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
+
+        // Run the registration logic
+        registerStudent()
+    }
+
+    private fun registerStudent() {
+        // Create a sample Estudiante object
+        val estudiante = Estudiante(
+            nom_usu = "santiago",
+            pat_usu = "cubas",
+            mat_usu = "huaranga",
+            nacion_usu = "alemana",
+            tipo_doc_usu = "DNI",
+            num_doc_usu = 70600300,
+            sexo_usu = "Masculino",
+            edad_usu = 30,
+            cel_usu = 999666777,
+            email_usu = "santiago@gmail.com",
+            contra_usu = "password123",
+            id_est = 1,
+            est_civ_est = "Soltero",
+            nom_univ_est = "UNMSM"
+        )
+
+        // Use a coroutine to perform the registration
+        lifecycleScope.launch {
+            try {
+                val result = registerViewModel.registrarEstudiante(estudiante)
+                println("Estudiante registrado con éxito: $result")
+            } catch (e: Exception) {
+                println("Error al registrar el estudiante: ${e.message}")
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Sisvitacus1Theme {
-        Greeting("Android")
     }
 }
