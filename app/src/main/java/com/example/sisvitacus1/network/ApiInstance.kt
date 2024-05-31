@@ -15,6 +15,6 @@ object ApiInstance {
     val apiInstance by lazy{
         retrofit.create(ApiService::class.java)
     }
-    
+
 
 }
