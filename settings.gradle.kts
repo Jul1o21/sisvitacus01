@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "sisvitacus1"
+rootProject.name = "SisvitaG2"
 include(":app")
  

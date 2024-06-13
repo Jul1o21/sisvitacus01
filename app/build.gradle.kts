@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sisvitacus1"
+    namespace = "com.example.sisvitag2"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.sisvitacus1"
+        applicationId = "com.example.sisvitag2"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -59,8 +59,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.constraintlayout)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation ("androidx.compose.ui:ui-text-google-fonts:1.4.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,12 +69,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    //Nuevo
-    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
-    // To use constraintlayout in compose
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
 }
