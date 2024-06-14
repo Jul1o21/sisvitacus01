@@ -2,7 +2,20 @@ package com.example.sisvitacus1.navigation
 
 
 sealed class AppScreen(val route: String){
-    object mainScreen: AppScreen("main")
+
+    //AlumMainScreen - mainalumno
+    object alumMainScreen: AppScreen("mainalumno")
+
+    //AlumRegisterScreen - register
+    object alumRegisterScreen: AppScreen("register")
+
+    //AlumTestScreen - test
+    object alumTestScreen: AppScreen("test")
+
+    //LoginScreen - login
     object loginScreen: AppScreen("login")
-    object registerScreen: AppScreen("register")
+
+    //MainScreen - inicio
+    object mainScreen: AppScreen("inicio")
+
 }

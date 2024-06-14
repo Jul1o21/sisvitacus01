@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.MainViewModel
@@ -51,7 +52,7 @@ fun MainScreen(navController: NavController) {
                     .padding(30.dp)
             ) {
                 titulo()
-                botones()
+                botones(navController)
             }
         }
     }
@@ -84,7 +85,7 @@ fun titulo() {
 }
 
 @Composable
-fun botones() {
+fun botones(navController: NavController) {
     Column (
         verticalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
@@ -106,7 +107,7 @@ fun botones() {
         }
         OutlinedButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ }
+            onClick = { /*TODO*/ navController.navigate(AppScreen.loginScreen.route)}
         ) {
             Text(
                 text = "Iniciar Sesión",
