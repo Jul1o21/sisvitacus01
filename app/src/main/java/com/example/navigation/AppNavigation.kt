@@ -3,8 +3,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.sisvitacus1.ui.view.LoginScreen
-import com.example.sisvitacus1.ui.view.MainScreen
+import com.example.sisvitag2.ui.view.LoginScreen
+import com.example.sisvitag2.ui.view.MainScreen
 
 @Composable
 fun AppNavigation(){
