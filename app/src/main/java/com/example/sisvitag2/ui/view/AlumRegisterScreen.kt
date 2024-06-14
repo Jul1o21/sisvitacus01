@@ -14,19 +14,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -36,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvitag2.ui.viewmodel.AlumRegisterModel
+import com.example.sisvitag2.ui.viewmodel.AlumRegisterViewModel
 
 @Composable
 fun AlumRegisterScreen () {
@@ -213,7 +209,7 @@ fun Formulario1() {
 
 @Preview(showBackground = true)
 @Composable
-fun AlumRegisterScreenPreview(alumRegisterModel: AlumRegisterModel = viewModel()) {
+fun AlumRegisterScreenPreview(alumRegisterModel: AlumRegisterViewModel = viewModel()) {
     SisvitaG2Theme {
         AlumRegisterScreen()
     }
