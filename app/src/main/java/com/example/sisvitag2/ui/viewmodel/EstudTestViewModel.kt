@@ -2,8 +2,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.data.model.TestResponse
 import com.example.sisvita_cus1.data.model.Test
-import com.example.sisvita_cus1.data.model.TestResponse
 import com.example.sisvita_cus1.data.model.Result
 import com.example.sisvita_cus1.domain.TestUseCase
 import com.example.sisvita_cus1.data.repository.TestRepository
