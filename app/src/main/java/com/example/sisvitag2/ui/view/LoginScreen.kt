@@ -110,6 +110,13 @@ fun Formulario() {
     val correo: String by loginViewModel.correoState
     val contrasenia: String by loginViewModel.contraseniaState
 
+
+    val rememberMe: Boolean by loginViewModel.rememberMeState
+    val isLoading: Boolean by loginViewModel.isLoading
+    val isError: Boolean by loginViewModel.isError
+    val loginSuccess: Boolean by loginViewModel.loginSuccess
+
+    
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
