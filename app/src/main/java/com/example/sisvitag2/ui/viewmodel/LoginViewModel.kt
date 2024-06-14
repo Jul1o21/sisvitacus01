@@ -3,9 +3,11 @@ package com.example.sisvitag2.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
+import com.example.sisvita_cus1.data.repository.RegEstudRepository
 
 class LoginViewModel : ViewModel() {
 
+    private val repository = RegEstudRepository()
 
     private val _correoState = mutableStateOf("")
     val correoState: State<String> = _correoState

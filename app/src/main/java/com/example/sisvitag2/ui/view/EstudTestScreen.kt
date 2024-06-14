@@ -38,10 +38,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvitag2.ui.viewmodel.AlumTestViewModel
+import com.example.sisvitag2.ui.viewmodel.EstudTestViewModel
 
 @Composable
-fun AlumTestScreen (navController: NavController) {
+fun EstudTestScreen (navController: NavController) {
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -473,9 +473,9 @@ fun BottomBar3() {
 
 @Preview(showBackground = true)
 @Composable
-fun AlumTestScreenPreview(alumTestModel: AlumTestViewModel = viewModel()) {
+fun EstudTestScreenPreview(estudTestModel: EstudTestViewModel = viewModel()) {
     val navController = rememberNavController()
     SisvitaG2Theme {
-        AlumTestScreen(navController = navController)
+        EstudTestScreen(navController = navController)
     }
 }

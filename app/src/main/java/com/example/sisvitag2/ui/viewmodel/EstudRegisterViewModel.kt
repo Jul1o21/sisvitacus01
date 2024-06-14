@@ -5,12 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sisvita_cus1.data.model.Estudiante
-import com.example.sisvita_cus1.data.repository.RegEstudianteRepository
+import com.example.sisvita_cus1.data.repository.RegEstudRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AlumRegisterViewModel: ViewModel()  {
-    private val repository = RegEstudianteRepository()
+class EstudRegisterViewModel: ViewModel()  {
+    private val repository = RegEstudRepository()
 
     private val _isError = mutableStateOf(false)
     val isError: State<Boolean> = _isError

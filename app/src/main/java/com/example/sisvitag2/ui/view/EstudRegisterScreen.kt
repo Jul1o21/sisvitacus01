@@ -34,10 +34,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvitag2.ui.viewmodel.AlumRegisterViewModel
+import com.example.sisvitag2.ui.viewmodel.EstudRegisterViewModel
 
 @Composable
-fun AlumRegisterScreen (navController: NavController) {
+fun EstudRegisterScreen (navController: NavController) {
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -211,9 +211,9 @@ fun Formulario1() {
 
 @Preview(showBackground = true)
 @Composable
-fun AlumRegisterScreenPreview(alumRegisterModel: AlumRegisterViewModel = viewModel()) {
+fun EstudRegisterScreenPreview(estudRegisterModel: EstudRegisterViewModel = viewModel()) {
     val navController = rememberNavController()
     SisvitaG2Theme {
-        AlumRegisterScreen(navController=navController)
+        EstudRegisterScreen(navController=navController)
     }
 }
