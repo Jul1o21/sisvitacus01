@@ -27,6 +27,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -41,20 +45,30 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.sisvita_cus1.data.model.Estudiante
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
 
 @Composable
-fun EstudMainScreen (navController: NavController) {
+fun EstudMainScreen (
+    navController: NavController,
+    id_usu: Int
+) {
+    val estudiante = remember { mutableStateOf<Estudiante?>(null) }
+
+    LaunchedEffect(id_usu) {
+        estudiante.value = Estudiante(id_usu = id_usu)
+    }
+
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBar2()
-        Content2()
-        BottomBar2()
+        Content2(estudiante)
+        BottomBar2(estudiante)
     }
 }
 
@@ -79,7 +93,9 @@ fun TopBar2() {
 }
 
 @Composable
-fun Content2() {
+fun Content2(
+    estudiante: MutableState<Estudiante?>
+) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -88,8 +104,9 @@ fun Content2() {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        val id_usu = estudiante.value?.id_usu ?: -1
         Text(
-            text = "Hey "+"Invitado"+"!",
+            text = "Hey $id_usu!",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
@@ -280,7 +297,9 @@ fun Content2() {
 }
 
 @Composable
-fun BottomBar2() {
+fun BottomBar2(
+    estudiante: MutableState<Estudiante?>
+) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -391,6 +410,9 @@ fun BottomBar2() {
 fun EstudMainScreenPreview(estudMainModel: EstudMainViewModel = viewModel()) {
     val navController = rememberNavController()
     SisvitaG2Theme {
-        EstudMainScreen(navController=navController)
+        EstudMainScreen(
+            navController=navController,
+            id_usu = 0
+        )
     }
 }

@@ -37,6 +37,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.LoginViewModel
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
+import androidx.compose.runtime.LaunchedEffect
+import com.example.sisvitacus1.navigation.AppScreen
 
 
 @Composable
@@ -45,13 +48,36 @@ fun LoginScreen (
     loginViewModel: LoginViewModel = viewModel(), // Inicializa el LoginViewModel
 ) {
 
+    val showDialog by loginViewModel.showDialog
+    val dialogMessage by loginViewModel.dialogMessage
+
+
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBar()
-        Content()
+        Content(navController,loginViewModel)
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { loginViewModel.dismissDialog() },
+            title = {
+                Text(text = "Notificación")
+            },
+            text = {
+                Text(text = dialogMessage)
+            },
+            confirmButton = {
+                Button(
+                    onClick = { loginViewModel.dismissDialog() }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 
@@ -76,7 +102,10 @@ fun TopBar() {
 }
 
 @Composable
-fun Content() {
+fun Content(
+    navController: NavController,
+    loginViewModel: LoginViewModel
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -97,26 +126,27 @@ fun Content() {
             )
         }
         item {
-            Formulario()
+            Formulario(navController, loginViewModel)
         }
     }
 }
 
 @Composable
-fun Formulario() {
+fun Formulario(
+    navController: NavController,
+    loginViewModel: LoginViewModel
+) {
 
-    val loginViewModel: LoginViewModel = viewModel()
 
     val correo: String by loginViewModel.correoState
     val contrasenia: String by loginViewModel.contraseniaState
 
 
-    val rememberMe: Boolean by loginViewModel.rememberMeState
-    val isLoading: Boolean by loginViewModel.isLoading
+
     val isError: Boolean by loginViewModel.isError
     val loginSuccess: Boolean by loginViewModel.loginSuccess
 
-    
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -185,7 +215,7 @@ fun Formulario() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 30.dp),
-            onClick = { /*TODO*/ },
+            onClick = { loginViewModel.login() },
         ) {
             Text(
                 text = "Iniciar Sesión",
@@ -195,6 +225,24 @@ fun Formulario() {
                     .padding(5.dp)
             )
         }
+        if (isError) {
+            Text(
+                text = "Error en el login, por favor intente de nuevo",
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(top = 20.dp)
+            )
+        }
+
+        if (loginSuccess) {
+            val estudiante = loginViewModel.estudiante.value
+            if (estudiante != null) {
+                LaunchedEffect(estudiante.id_usu) {
+                    navController.navigate(AppScreen.estudMainScreen.createRoute(estudiante.id_usu!!))
+                }
+            }
+        }
+
     }
 
 }

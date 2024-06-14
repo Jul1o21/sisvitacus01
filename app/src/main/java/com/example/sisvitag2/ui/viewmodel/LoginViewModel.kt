@@ -6,6 +6,7 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
 import com.example.data.model.LoginRequest
 import com.example.data.repository.LoginRepository
+import com.example.sisvita_cus1.data.model.Estudiante
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,15 @@ class LoginViewModel : ViewModel() {
     private val _loginSuccess = mutableStateOf(false)
     val loginSuccess: State<Boolean> = _loginSuccess
 
+    private val _showDialog = mutableStateOf(false)
+    val showDialog: State<Boolean> = _showDialog
+
+    private val _dialogMessage = mutableStateOf("")
+    val dialogMessage: State<String> = _dialogMessage
+
+    private val _estudiante = mutableStateOf<Estudiante?>(null)
+    val estudiante: State<Estudiante?> = _estudiante
+
     fun setEmail(email: String) {
         _correoState.value = email
     }
@@ -54,6 +64,8 @@ class LoginViewModel : ViewModel() {
                 val loginRequest = LoginRequest(_correoState.value, _contraseniaState.value)
                 val response = repository.login(loginRequest)
                 if (response.success && response.data != null) {
+                    val id_usu = response.data.id_usu
+                    _estudiante.value = Estudiante(id_usu = id_usu)
                     _loginSuccess.value = true
                 } else {
                     _isError.value = true
@@ -64,6 +76,10 @@ class LoginViewModel : ViewModel() {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun dismissDialog() {
+        _showDialog.value = false
     }
 
 }
