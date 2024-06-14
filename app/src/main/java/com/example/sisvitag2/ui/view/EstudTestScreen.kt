@@ -38,7 +38,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvitag2.ui.viewmodel.EstudTestViewModel
+import com.example.sisvitag2.viewmodel.EstudTestViewModel
+
 
 @Composable
 fun EstudTestScreen (navController: NavController) {
