@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,6 +47,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sisvita_cus1.data.model.Estudiante
+import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
@@ -66,14 +68,17 @@ fun EstudMainScreen (
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar2()
-        Content2(estudiante)
-        BottomBar2(estudiante)
+        TopBar2(navController,estudiante)
+        Content2(navController,estudiante)
+        BottomBar2(navController,estudiante)
     }
 }
 
 @Composable
-fun TopBar2() {
+fun TopBar2(
+    navController: NavController,
+    estudiante: MutableState<Estudiante?>
+) {
     Box (
         modifier = Modifier
             .fillMaxWidth()
@@ -81,19 +86,27 @@ fun TopBar2() {
             .background(MaterialTheme.colorScheme.primary)
             .padding(15.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowLeft,
-            contentDescription = null,
-            modifier = Modifier
-                .size(50.dp)
-                .align(Alignment.CenterStart),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+        IconButton(onClick = {
+            // Accion para regresar al login
+            navController.navigate(AppScreen.loginScreen.route) {
+                popUpTo(AppScreen.loginScreen.route) { inclusive = true }
+            }
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(50.dp)
+                    .align(Alignment.CenterStart),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
     }
 }
 
 @Composable
 fun Content2(
+    navController: NavController,
     estudiante: MutableState<Estudiante?>
 ) {
     Column (
@@ -298,6 +311,7 @@ fun Content2(
 
 @Composable
 fun BottomBar2(
+    navController: NavController,
     estudiante: MutableState<Estudiante?>
 ) {
     Row (
