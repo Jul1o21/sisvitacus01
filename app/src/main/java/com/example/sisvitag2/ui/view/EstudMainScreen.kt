@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -53,27 +54,22 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
 
 @Composable
-fun EstudMainScreen (
+fun EstudMainScreen(
     navController: NavController,
-    id_usu: Int
+    estudiante: MutableState<Estudiante?>
 ) {
-    val estudiante = remember { mutableStateOf<Estudiante?>(null) }
+    println("Usuario recibido en EstudMainScreen: ${estudiante.value}")
 
-    LaunchedEffect(id_usu) {
-        estudiante.value = Estudiante(id_usu = id_usu)
-    }
-
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar2(navController,estudiante)
-        Content2(navController,estudiante)
-        BottomBar2(navController,estudiante)
+        TopBar2(navController, estudiante)
+        Content2(navController, estudiante)
+        BottomBar2(navController, estudiante)
     }
 }
-
 @Composable
 fun TopBar2(
     navController: NavController,
@@ -117,9 +113,10 @@ fun Content2(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val id_usu = estudiante.value?.id_usu ?: -1
+        println("Estudiante recibido en Content2: $estudiante")
+        val id_usuario = estudiante.value?.id_usuario ?: -1
         Text(
-            text = "Hey $id_usu!",
+            text = "Hey $id_usuario!",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
@@ -421,12 +418,14 @@ fun BottomBar2(
 
 @Preview(showBackground = true)
 @Composable
-fun EstudMainScreenPreview(estudMainModel: EstudMainViewModel = viewModel()) {
+fun EstudMainScreenPreview() {
     val navController = rememberNavController()
+    val estudianteState = remember { mutableStateOf<Estudiante?>(null) }
+
     SisvitaG2Theme {
         EstudMainScreen(
-            navController=navController,
-            id_usu = 0
+            navController = navController,
+            estudiante = estudianteState
         )
     }
 }

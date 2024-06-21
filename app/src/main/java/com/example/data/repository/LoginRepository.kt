@@ -1,7 +1,7 @@
 package com.example.data.repository
 
-import com.example.data.model.LoginRequest
-import com.example.data.model.LoginResponse
+import com.example.data.model.request.LoginRequest
+import com.example.data.model.response.LoginResponse
 import com.example.sisvita_cus1.network.ApiInstance
 
 class LoginRepository {

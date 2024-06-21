@@ -2,7 +2,6 @@ package com.example.sisvitag2.ui.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -133,19 +130,17 @@ fun Content(
 
 @Composable
 fun Formulario(
-    navController: NavController,
+            navController: NavController,
     loginViewModel: LoginViewModel
-) {
+    ) {
 
 
-    val correo: String by loginViewModel.correoState
-    val contrasenia: String by loginViewModel.contraseniaState
-
-
-
-    val isError: Boolean by loginViewModel.isError
-    val loginSuccess: Boolean by loginViewModel.loginSuccess
-
+        val correo: String by loginViewModel.correoState
+        val contrasenia: String by loginViewModel.contraseniaState
+        val isError: Boolean by loginViewModel.isError
+        val loginSuccess: Boolean by loginViewModel.loginSuccess
+        val showDialog: Boolean by loginViewModel.showDialog
+        val dialogMessage:String by loginViewModel.dialogMessage
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -234,13 +229,39 @@ fun Formulario(
             )
         }
 
+
         if (loginSuccess) {
             val estudiante = loginViewModel.estudiante.value
-            if (estudiante != null) {
-                LaunchedEffect(estudiante.id_usu) {
-                    navController.navigate(AppScreen.estudMainScreen.createRoute(estudiante.id_usu!!))
+            val especialista = loginViewModel.especialista.value
+            estudiante?.let {
+                LaunchedEffect(estudiante) {
+                    println("Estudiante en la ventana: $estudiante")
+                    navController.navigate(AppScreen.estudMainScreen.createRoute(estudiante))
+
                 }
+            } ?: especialista?.let {
+                loginViewModel.setDialogMessage("Bienvenido, ${it.nombre_completo}. Aún no se ha implementado el menú para especialistas.")
+                loginViewModel.mostrarDialog()
             }
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { loginViewModel.dismissDialog() },
+                title = {
+                    Text(text = "Notificación")
+                },
+                text = {
+                    Text(text = dialogMessage)
+                },
+                confirmButton = {
+                    Button(
+                        onClick = { loginViewModel.dismissDialog() }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
 
     }
