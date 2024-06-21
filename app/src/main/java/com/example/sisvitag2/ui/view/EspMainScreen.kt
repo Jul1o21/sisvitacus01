@@ -1,16 +1,9 @@
 package com.example.sisvitag2.ui.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -18,14 +11,8 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,38 +23,42 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.sisvita_cus1.data.model.Especialista
+import com.example.sisvitag2.data.model.Cita
+import com.example.sisvitag2.data.model.Especialista
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EspMainViewModel
 
 @Composable
-fun EspMainScreen (
+
+fun EspMainScreen(
     navController: NavController,
-    id_esp: Int
+    id_esp: Int,
+    espMainViewModel: EspMainViewModel = viewModel()
 ) {
-    val especialista = remember { mutableStateOf<Especialista?>(null) }
+    val especialista by espMainViewModel.especialista
+    val citas by espMainViewModel.citas
 
     LaunchedEffect(id_esp) {
-        especialista.value = Especialista(id_esp = id_esp)
+        espMainViewModel.loadEspecialista(id_esp)
+        espMainViewModel.loadCitas(id_esp)
     }
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBarEsp()
-        ContentEsp(especialista)
+        ContentEsp(especialista, citas)
         BottomBarEsp(especialista)
     }
 }
-
 @Composable
 fun TopBarEsp() {
-    Box (
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.1F)
+            .fillMaxHeight(0.1f)
             .background(MaterialTheme.colorScheme.primary)
             .padding(15.dp)
     ) {
@@ -83,47 +74,13 @@ fun TopBarEsp() {
 }
 
 @Composable
-fun ContentEsp(
-    especialista: MutableState<Especialista?>
-) {
-    Column (
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(.89F)
-            .padding(start = 30.dp, end = 30.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        val id_esp = especialista.value?.id_esp ?: -1
-        Text(
-            text = "Bienvenido Especialista $id_esp!",
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 30.dp, bottom = 30.dp),
-            textAlign = TextAlign.Left
-        )
-        Text(
-            text = "Aquí puedes ver y gestionar las citas, observaciones y tratamientos.",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp)
-        )
-        // Aquí puedes agregar más Cards o elementos para mostrar información relevante para el especialista
-    }
-}
-
-@Composable
 fun BottomBarEsp(
-    especialista: MutableState<Especialista?>
+    especialista: Especialista?
 ) {
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
+            .fillMaxHeight(0.1f)
             .background(MaterialTheme.colorScheme.secondary)
             .padding(
                 start = 20.dp,
@@ -133,7 +90,7 @@ fun BottomBarEsp(
             ),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .width(75.dp)
                 .height(75.dp),
@@ -155,7 +112,7 @@ fun BottomBarEsp(
                 textAlign = TextAlign.Center
             )
         }
-        Column (
+        Column(
             modifier = Modifier
                 .width(75.dp)
                 .height(75.dp),
@@ -177,7 +134,7 @@ fun BottomBarEsp(
                 textAlign = TextAlign.Center
             )
         }
-        Column (
+        Column(
             modifier = Modifier
                 .width(75.dp)
                 .height(75.dp),
@@ -199,7 +156,7 @@ fun BottomBarEsp(
                 textAlign = TextAlign.Center
             )
         }
-        Column (
+        Column(
             modifier = Modifier
                 .width(75.dp)
                 .height(75.dp),
@@ -220,6 +177,82 @@ fun BottomBarEsp(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
+        }
+    }
+}
+
+@Composable
+fun ContentEsp(
+    especialista: Especialista?,
+    citas: List<Cita>
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(.89F)
+            .padding(start = 30.dp, end = 30.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        val id_esp = especialista?.id_especialista ?: -1
+        Text(
+            text = "Bienvenido Especialista $id_esp!",
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp, bottom = 30.dp),
+            textAlign = TextAlign.Left
+        )
+        Text(
+            text = "Aquí puedes ver y gestionar las citas, observaciones y tratamientos.",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)
+        )
+        citas.forEach { cita ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 10.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Cita con Usuario ${cita.id_usuario}",
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = cita.fecha_cita,
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                    Text(
+                        text = "Observaciones: ${cita.observaciones ?: "Ninguna"}",
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Tratamiento: ${cita.tratamiento ?: "Ninguno"}",
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Estado: ${cita.estado}",
+                        fontSize = 16.sp
+                    )
+                }
+            }
         }
     }
 }
