@@ -27,7 +27,9 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvita_cus1.data.model.*
 
 @Composable
-fun EstudTestScreen(navController: NavController) {
+fun EstudTestScreen(
+    navController: NavController
+) {
 
     Column(
         modifier = Modifier
@@ -77,9 +79,20 @@ fun TopBar3() {
 }
 
 @Composable
-fun Content3(
+fun Content3() {
+    val questions = listOf(
+        "¿Cuál es tu color favorito?",
+        "¿Prefieres la montaña o la playa?",
+        "¿Cuál es tu comida favorita?",
+        "¿Qué deporte te gusta más?"
+    )
+    val options = listOf(
+        "Opción A",
+        "Opción B",
+        "Opción C",
+        "Opción D"
+    )
 
-) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -106,47 +119,38 @@ fun Content3(
                 .padding(bottom = 20.dp)
         )
 
-        /*
-        testOLDS.forEach { test ->
-            test.questions.forEach { question ->
-                Column(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                ) {
-                    Text(
-                        text = question.text,
-                        fontSize = 16.sp,
-                        modifier = Modifier.padding(top = 10.dp, bottom = 8.dp)
-                    )
-                    question.options.forEach { option ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Checkbox(
-                                checked = selectedAnswers[question.id] == option,
-                                onCheckedChange = {
-                                    if (it) {
-                                        onAnswerSelected(question.id, option)
-                                    }
-                                },
-                                modifier = Modifier
-                                    .width(40.dp)
-                                    .height(35.dp)
-                            )
-                            Text(
-                                text = option,
-                                fontSize = 16.sp
-                            )
-                        }
+        questions.forEach { question ->
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = question,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 8.dp)
+                )
+                options.forEach { option ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = false, // Esto es solo para el preview
+                            onCheckedChange = { /* No hace nada por ahora */ },
+                            modifier = Modifier
+                                .width(40.dp)
+                                .height(35.dp)
+                        )
+                        Text(
+                            text = option,
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
         }
-
-         */
     }
 }
 
