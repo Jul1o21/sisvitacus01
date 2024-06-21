@@ -7,9 +7,10 @@ import com.example.data.model.response.Test
 import com.example.sisvita_cus1.data.repository.TestRepository
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.*
+import com.example.sisvita_cus1.domain.TestUseCase
 
 class EstudMainViewModel: ViewModel()  {
-    private val repository = TestRepository()
+    private val testUseCase = TestUseCase()
 
     private val _tests = mutableStateOf<List<Test>>(emptyList())
     val tests: State<List<Test>> = _tests
@@ -22,7 +23,7 @@ class EstudMainViewModel: ViewModel()  {
         println("SE obtienen los test")
         viewModelScope.launch {
             try {
-                val response = repository.getTests()
+                val response = testUseCase.getTests()
                 if (response.success) {
                     _tests.value = response.data
                     println("Los test obtenidos son: $_tests.value")

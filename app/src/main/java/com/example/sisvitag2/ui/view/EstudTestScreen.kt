@@ -21,14 +21,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.data.model.Answer
-import com.example.data.model.TestResponse
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvita_cus1.data.model.*
 
 @Composable
 fun EstudTestScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: EstudTestViewModel = viewModel()
 ) {
 
     Column(

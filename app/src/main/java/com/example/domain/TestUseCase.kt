@@ -12,7 +12,5 @@ class TestUseCase {
         return repository.getTests()
     }
 
-    suspend fun submitTest(testResponse: TestResponse): Result<TestResponse> {
-        return repository.submitTest(testResponse)
-    }
+
 }

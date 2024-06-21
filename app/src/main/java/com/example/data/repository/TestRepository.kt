@@ -12,7 +12,4 @@ class TestRepository {
         return apiService.getTests()
     }
 
-    suspend fun submitTest(testResponse: TestResponse): Result<TestResponse> {
-        return apiService.submitTest(testResponse)
-    }
 }

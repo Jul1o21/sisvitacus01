@@ -6,14 +6,15 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
 import com.example.data.model.Especialista
 import com.example.data.model.request.LoginRequest
-import com.example.data.repository.LoginRepository
+import com.example.domain.LoginUseCase
 import com.example.sisvita_cus1.data.model.Estudiante
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val repository = LoginRepository()
+    private val loginUseCase = LoginUseCase()
+
 
     private val _correoState = mutableStateOf("")
     val correoState: State<String> = _correoState
@@ -84,7 +85,7 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val loginRequest = LoginRequest(_correoState.value, _contraseniaState.value)
-                val response = repository.login(loginRequest)
+                val response = loginUseCase.login(loginRequest)
 
                 if (response.success && response.data != null) {
                     println("JSON recibido con éxito: $response") // Mensaje para la consola de Tomcat
