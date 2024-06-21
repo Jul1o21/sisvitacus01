@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.data.model.Cita
 import com.example.sisvitag2.data.model.Cita
 import com.example.sisvitag2.data.model.Especialista
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
@@ -31,9 +32,6 @@ import com.example.sisvitag2.ui.viewmodel.EspMainViewModel
 @Composable
 
 fun EspMainScreen(
-    navController: NavController,
-    id_esp: Int,
-    espMainViewModel: EspMainViewModel = viewModel()
 ) {
     val especialista by espMainViewModel.especialista
     val citas by espMainViewModel.citas
@@ -183,7 +181,6 @@ fun BottomBarEsp(
 
 @Composable
 fun ContentEsp(
-    especialista: Especialista?,
     citas: List<Cita>
 ) {
     Column(
@@ -194,9 +191,8 @@ fun ContentEsp(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val id_esp = especialista?.id_especialista ?: -1
         Text(
-            text = "Bienvenido Especialista $id_esp!",
+            text = "Bienvenido Especialista ",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
@@ -259,12 +255,10 @@ fun ContentEsp(
 
 @Preview(showBackground = true)
 @Composable
-fun EspMainScreenPreview(espMainModel: EspMainViewModel = viewModel()) {
+fun EspMainScreenPreview() {
     val navController = rememberNavController()
     SisvitaG2Theme {
         EspMainScreen(
-            navController=navController,
-            id_esp = 0
         )
     }
 }
