@@ -6,7 +6,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +18,7 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 fun EvaluarResultadosTestScreen() {
     var observacion by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
-    val resultado = remember { mutableStateOf(Resultado("Juan Perez", 80, "Media")) }
+    val resultado = remember { mutableStateOf(Resultado("Juan Perez", 80, "Alta")) }
 
     Column(
         modifier = Modifier
@@ -38,7 +37,7 @@ fun EvaluarResultadosTestScreen() {
                 .padding(top = 10.dp, bottom = 30.dp),
             textAlign = TextAlign.Center
         )
-        // Detalles del Resultado con semáforo
+        // Detalles del Resultado
         ResultadoDetallesComponent(resultado = resultado.value)
         // Observaciones y Tratamiento
         ObservacionesComponent(
@@ -70,21 +69,10 @@ fun EvaluarResultadosTestScreen() {
 
 @Composable
 fun ResultadoDetallesComponent(resultado: Resultado) {
-    val color = when (resultado.nivelAnsiedad) {
-        "Alta" -> Color.Red
-        "Media" -> Color.Yellow
-        else -> Color.Green
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color)
-            .padding(16.dp)
-    ) {
+    Column {
         Text(
             text = "Nombre: ${resultado.nombre}",
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )

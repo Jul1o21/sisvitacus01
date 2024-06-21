@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -103,28 +104,40 @@ fun FiltroComponent(
 fun ParticipantesList(participantes: List<Participante>) {
     Column {
         participantes.forEach { participante ->
+            val color = when (participante.puntaje) {
+                in 0..50 -> Color.Green
+                in 51..75 -> Color.Yellow
+                else -> Color.Red
+            }
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Nombre: ${participante.nombre}",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Puntaje: ${participante.puntaje}",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Text(
-                        text = "Calificación: ${participante.calificacion}",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal
-                    )
+                Box(
+                    modifier = Modifier
+                        .background(color)
+                        .padding(16.dp)
+                ) {
+                    Column {
+                        Text(
+                            text = "Nombre: ${participante.nombre}",
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Puntaje: ${participante.puntaje}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+                        Text(
+                            text = "Calificación: ${participante.calificacion}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
                 }
             }
         }
