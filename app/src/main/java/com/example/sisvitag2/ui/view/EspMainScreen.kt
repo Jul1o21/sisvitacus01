@@ -24,31 +24,25 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.Cita
-import com.example.sisvitag2.data.model.Cita
-import com.example.sisvitag2.data.model.Especialista
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvitag2.ui.viewmodel.EspMainViewModel
 
 @Composable
 
 fun EspMainScreen(
 ) {
-    val especialista by espMainViewModel.especialista
-    val citas by espMainViewModel.citas
-
-    LaunchedEffect(id_esp) {
-        espMainViewModel.loadEspecialista(id_esp)
-        espMainViewModel.loadCitas(id_esp)
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBarEsp()
-        ContentEsp(especialista, citas)
-        BottomBarEsp(especialista)
+        val citasList = listOf(
+            Cita(id_usuario = 1, fecha_cita = "2024-06-21", observaciones = "Todo bien", tratamiento = "Continuar con la medicación", estado = "Pendiente"),
+            Cita(id_usuario = 2, fecha_cita = "2024-06-22", observaciones = "Revisión de rutina", tratamiento = "Ninguno", estado = "Completado"),
+            // Añadir más citas según sea necesario
+        )
+        ContentEsp(citasList)
+        BottomBarEsp()
     }
 }
 @Composable
@@ -73,7 +67,6 @@ fun TopBarEsp() {
 
 @Composable
 fun BottomBarEsp(
-    especialista: Especialista?
 ) {
     Row(
         modifier = Modifier
