@@ -47,17 +47,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.data.model.response.Test
 import com.example.sisvita_cus1.data.model.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
+import androidx.compose.runtime.*
 
 @Composable
 fun EstudMainScreen(
     navController: NavController,
-    estudiante: MutableState<Estudiante?>
+    estudiante: MutableState<Estudiante?>,
+    viewModel: EstudMainViewModel = viewModel()
 ) {
+    val tests by viewModel.tests
     println("Usuario recibido en EstudMainScreen: ${estudiante.value}")
 
     Column(
@@ -66,7 +70,7 @@ fun EstudMainScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBar2(navController, estudiante)
-        Content2(navController, estudiante)
+        Content2(navController, estudiante, tests)
         BottomBar2(navController, estudiante)
     }
 }
@@ -103,7 +107,8 @@ fun TopBar2(
 @Composable
 fun Content2(
     navController: NavController,
-    estudiante: MutableState<Estudiante?>
+    estudiante: MutableState<Estudiante?>,
+    tests: List<Test>
 ) {
     Column (
         modifier = Modifier
@@ -115,8 +120,9 @@ fun Content2(
     ) {
         println("Estudiante recibido en Content2: $estudiante")
         val id_usuario = estudiante.value?.id_usuario ?: -1
+        val nombre = estudiante.value?.nombre_completo ?: "sin name"
         Text(
-            text = "Hey $id_usuario!",
+            text = nombre,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
@@ -132,180 +138,68 @@ fun Content2(
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
         )
-        Card (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
-        ) {
-            Column (
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Test de Alfredo",
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontWeight = FontWeight.Bold
-                    )
-                    ClickableText(
-                        text = AnnotatedString("Iniciar >"),
-                        onClick = { /* TODO */},
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 18.sp,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    )
-                }
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.test_icon),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(90.dp)
-                            .height(90.dp)
-                    )
-                    Column (
-                        modifier = Modifier.padding(start = 10.dp)
-                    ) {
-                        Text(
-                            text = "Info:",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        Text(
-                            text = "Test creado por "+ "Alfredo (1935)" +" para medir el grado de ansiedad. Consta de "+"20"+" preguntas de resp. única.",
-                            fontSize = 16.sp
-                        )
-                    }
-                }
-            }
+        tests.forEach { test ->
+            TestCard(test, navController)
         }
-        Card (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
+    }
+}
+@Composable
+fun TestCard(test: Test, navController: NavController) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, bottom = 10.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
         ) {
-            Column (
-                modifier = Modifier.padding(12.dp)
+            Text(
+                text = test.tipo,
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 10.dp)
+            )
+            ClickableText(
+                text = AnnotatedString("Iniciar >"),
+                onClick = {
+                    // Iniciar el test
+                },
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 18.sp,
+                    textDecoration = TextDecoration.Underline
+                ),
+                modifier = Modifier.padding(bottom = 10.dp)
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row (
+                Image(
+                    painter = painterResource(id = R.drawable.test_icon),
+                    contentDescription = null,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .width(90.dp)
+                        .height(90.dp)
+                )
+                Column(
+                    modifier = Modifier.padding(start = 10.dp)
                 ) {
                     Text(
-                        text = "Test de Paco",
+                        text = "Info:",
                         fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 5.dp)
                     )
-                    ClickableText(
-                        text = AnnotatedString("Iniciar >"),
-                        onClick = { /* TODO */},
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 18.sp,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    )
-                }
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.test_icon),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(90.dp)
-                            .height(90.dp)
-                    )
-                    Column (
-                        modifier = Modifier.padding(start = 10.dp)
-                    ) {
-                        Text(
-                            text = "Info:",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        Text(
-                            text = "Test creado por "+ "Paco (1975)" +" para medir el grado de ansiedad. Consta de "+"15"+" preguntas de resp. única.",
-                            fontSize = 16.sp
-                        )
-                    }
-                }
-            }
-        }
-        Card (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
-        ) {
-            Column (
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
                     Text(
-                        text = "Test de Maria",
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontWeight = FontWeight.Bold
+                        text = test.descripcion,
+                        fontSize = 16.sp
                     )
-                    ClickableText(
-                        text = AnnotatedString("Iniciar >"),
-                        onClick = { /* TODO */},
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 18.sp,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    )
-                }
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.test_icon),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(90.dp)
-                            .height(90.dp)
-                    )
-                    Column (
-                        modifier = Modifier.padding(start = 10.dp)
-                    ) {
-                        Text(
-                            text = "Info:",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        Text(
-                            text = "Test creado por "+ "Maria (2005)" +" para medir el grado de ansiedad. Consta de "+"21"+" preguntas de resp. única.",
-                            fontSize = 16.sp
-                        )
-                    }
                 }
             }
         }
     }
 }
-
 @Composable
 fun BottomBar2(
     navController: NavController,
@@ -421,7 +315,6 @@ fun BottomBar2(
 fun EstudMainScreenPreview() {
     val navController = rememberNavController()
     val estudianteState = remember { mutableStateOf<Estudiante?>(null) }
-
     SisvitaG2Theme {
         EstudMainScreen(
             navController = navController,

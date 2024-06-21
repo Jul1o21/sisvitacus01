@@ -130,11 +130,9 @@ fun Content(
 
 @Composable
 fun Formulario(
-            navController: NavController,
+    navController: NavController,
     loginViewModel: LoginViewModel
     ) {
-
-
         val correo: String by loginViewModel.correoState
         val contrasenia: String by loginViewModel.contraseniaState
         val isError: Boolean by loginViewModel.isError
