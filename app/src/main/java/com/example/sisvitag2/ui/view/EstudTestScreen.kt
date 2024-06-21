@@ -27,13 +27,9 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvita_cus1.data.model.*
 
 @Composable
-fun EstudTestScreen(navController: NavController, viewModel: EstudTestViewModel = viewModel()) {
-    val tests by viewModel.tests.observeAsState(emptyList())
-    var selectedAnswers by remember { mutableStateOf(mapOf<Int, String>()) }
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchTests()
-    }
+fun EstudTestScreen(
+    navController: NavController
+) {
 
     Column(
         modifier = Modifier
@@ -41,23 +37,14 @@ fun EstudTestScreen(navController: NavController, viewModel: EstudTestViewModel 
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBar3()
-        Content3(tests, selectedAnswers) { questionId, selectedOption ->
-            selectedAnswers = selectedAnswers.toMutableMap().apply { put(questionId, selectedOption) }
-        }
+        Content3()
         BottomBar3()
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp, bottom = 20.dp),
             onClick = {
-                val testResponse = TestResponse(
-                    testId = 1, // Debe ser dinámico
-                    userId = 1, // Debe ser dinámico
-                    answers = selectedAnswers.map { (questionId, selectedOption) ->
-                        Answer(questionId, selectedOption)
-                    }
-                )
-                viewModel.submitTest(testResponse)
+
             },
         ) {
             Text(
@@ -92,11 +79,20 @@ fun TopBar3() {
 }
 
 @Composable
-fun Content3(
-    tests: List<Test>,
-    selectedAnswers: Map<Int, String>,
-    onAnswerSelected: (Int, String) -> Unit
-) {
+fun Content3() {
+    val questions = listOf(
+        "¿Cuál es tu color favorito?",
+        "¿Prefieres la montaña o la playa?",
+        "¿Cuál es tu comida favorita?",
+        "¿Qué deporte te gusta más?"
+    )
+    val options = listOf(
+        "Opción A",
+        "Opción B",
+        "Opción C",
+        "Opción D"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -122,40 +118,35 @@ fun Content3(
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
         )
-        tests.forEach { test ->
-            test.questions.forEach { question ->
-                Column(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                ) {
-                    Text(
-                        text = question.text,
-                        fontSize = 16.sp,
-                        modifier = Modifier.padding(top = 10.dp, bottom = 8.dp)
-                    )
-                    question.options.forEach { option ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Checkbox(
-                                checked = selectedAnswers[question.id] == option,
-                                onCheckedChange = {
-                                    if (it) {
-                                        onAnswerSelected(question.id, option)
-                                    }
-                                },
-                                modifier = Modifier
-                                    .width(40.dp)
-                                    .height(35.dp)
-                            )
-                            Text(
-                                text = option,
-                                fontSize = 16.sp
-                            )
-                        }
+
+        questions.forEach { question ->
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = question,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 8.dp)
+                )
+                options.forEach { option ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = false, // Esto es solo para el preview
+                            onCheckedChange = { /* No hace nada por ahora */ },
+                            modifier = Modifier
+                                .width(40.dp)
+                                .height(35.dp)
+                        )
+                        Text(
+                            text = option,
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
@@ -274,6 +265,6 @@ fun BottomBar3() {
 fun EstudTestScreenPreview() {
     val navController = rememberNavController()
     SisvitaG2Theme {
-        EstudTestScreen(navController = navController)
+        EstudTestScreen(navController)
     }
 }

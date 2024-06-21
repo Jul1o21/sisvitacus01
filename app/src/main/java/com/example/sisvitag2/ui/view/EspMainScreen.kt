@@ -176,6 +176,7 @@ fun BottomBarEsp(
 fun ContentEsp(
     citas: List<Cita>
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
