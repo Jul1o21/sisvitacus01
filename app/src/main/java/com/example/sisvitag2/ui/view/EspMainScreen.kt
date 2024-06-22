@@ -24,18 +24,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.Cita
+import com.example.data.model.Especialista
+import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.example.sisvitag2.ui.viewmodel.EspMainViewModel
 
 @Composable
 
 fun EspMainScreen(
+    navController: NavController,
+    especialista: MutableState<Especialista?>,
+    viewModel: EspMainViewModel = viewModel()
 ) {
+    Column {
+        Text("Bienvenido, ${especialista.value?.nombre_completo}")
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBarEsp()
+        TopBarEsp(navController, especialista)
         val citasList = listOf(
             Cita(id_usuario = 1, fecha_cita = "2024-06-21", observaciones = "Todo bien", tratamiento = "Continuar con la medicación", estado = "Pendiente"),
             Cita(id_usuario = 2, fecha_cita = "2024-06-22", observaciones = "Revisión de rutina", tratamiento = "Ninguno", estado = "Completado"),
@@ -46,7 +55,10 @@ fun EspMainScreen(
     }
 }
 @Composable
-fun TopBarEsp() {
+fun TopBarEsp(
+    navController: NavController,
+    estudiante: MutableState<Especialista?>
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,14 +66,21 @@ fun TopBarEsp() {
             .background(MaterialTheme.colorScheme.primary)
             .padding(15.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowLeft,
-            contentDescription = null,
-            modifier = Modifier
-                .size(50.dp)
-                .align(Alignment.CenterStart),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+        IconButton(onClick = {
+            // Accion para regresar al login
+            navController.navigate(AppScreen.loginScreen.route) {
+                popUpTo(AppScreen.loginScreen.route) { inclusive = true }
+            }
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(50.dp)
+                    .align(Alignment.CenterStart),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
     }
 }
 
@@ -251,8 +270,11 @@ fun ContentEsp(
 @Composable
 fun EspMainScreenPreview() {
     val navController = rememberNavController()
+    val especialistaState = remember { mutableStateOf<Especialista?>(null) }
     SisvitaG2Theme {
         EspMainScreen(
+            navController = navController,
+            especialista = especialistaState
         )
     }
 }

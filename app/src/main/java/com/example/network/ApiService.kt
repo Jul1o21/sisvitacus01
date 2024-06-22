@@ -2,8 +2,9 @@ package com.example.sisvita_cus1.network
 
 import com.example.data.model.request.LoginRequest
 import com.example.data.model.response.LoginResponse
-import com.example.data.model.TestResponse
+import com.example.data.model.request.TestRequest
 import com.example.data.model.response.TestListResponse
+import com.example.data.model.response.TestResponse
 import com.example.sisvita_cus1.data.model.*
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,6 +20,7 @@ interface ApiService {
     @GET("/tests")
     suspend fun getTests(): TestListResponse
 
-    @POST("/submitTest")
-    suspend fun submitTest(@Body testResponse: TestResponse): Result<TestResponse>
+    @POST("/obtenerTest")
+    suspend fun getTest(@Body testRequest: TestRequest): TestResponse
+
 }

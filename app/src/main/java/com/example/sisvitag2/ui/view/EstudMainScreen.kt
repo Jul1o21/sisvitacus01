@@ -119,7 +119,6 @@ fun Content2(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         println("Estudiante recibido en Content2: $estudiante")
-        val id_usuario = estudiante.value?.id_usuario ?: -1
         val nombre = estudiante.value?.nombre_completo ?: "sin name"
         Text(
             text = nombre,
@@ -139,12 +138,16 @@ fun Content2(
                 .padding(bottom = 20.dp)
         )
         tests.forEach { test ->
-            TestCard(test, navController)
+            TestCard(test, navController, estudiante.value?.id_usuario)
         }
     }
 }
 @Composable
-fun TestCard(test: Test, navController: NavController) {
+fun TestCard(
+    test: Test,
+    navController: NavController,
+    estudianteId: Int?
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -163,8 +166,9 @@ fun TestCard(test: Test, navController: NavController) {
             ClickableText(
                 text = AnnotatedString("Iniciar >"),
                 onClick = {
-                    // Iniciar el test
-                },
+                    estudianteId?.let { idEstudiante ->
+                        navController.navigate(AppScreen.estudTestScreen.createRoute(idEstudiante, test.id_test))
+                    }},
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 18.sp,

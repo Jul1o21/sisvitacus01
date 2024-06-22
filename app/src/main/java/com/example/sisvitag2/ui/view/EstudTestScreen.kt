@@ -21,21 +21,30 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.data.model.request.TestRequest
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
 fun EstudTestScreen(
     navController: NavController,
+    idEstudiante: Int,
+    idTest: Int,
     viewModel: EstudTestViewModel = viewModel()
 ) {
+
+    println("el id del estudiante es $idEstudiante y el id del test es $idTest")
+    // Llamar al método para cargar las preguntas
+    LaunchedEffect(Unit) {
+        viewModel.obtenerTest(TestRequest(id_test = idTest))
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar3()
-        Content3()
+        TopBar3(navController)
+        Content3(viewModel)
         BottomBar3()
         Button(
             modifier = Modifier
@@ -57,7 +66,9 @@ fun EstudTestScreen(
 }
 
 @Composable
-fun TopBar3() {
+fun TopBar3(
+    navController: NavController
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,31 +76,26 @@ fun TopBar3() {
             .background(MaterialTheme.colorScheme.primary)
             .padding(15.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowLeft,
-            contentDescription = null,
-            modifier = Modifier
-                .size(50.dp)
-                .align(Alignment.CenterStart),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+        IconButton(onClick = {
+            navController.popBackStack()
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(50.dp)
+                    .align(Alignment.CenterStart),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
     }
 }
 
 @Composable
-fun Content3() {
-    val questions = listOf(
-        "¿Cuál es tu color favorito?",
-        "¿Prefieres la montaña o la playa?",
-        "¿Cuál es tu comida favorita?",
-        "¿Qué deporte te gusta más?"
-    )
-    val options = listOf(
-        "Opción A",
-        "Opción B",
-        "Opción C",
-        "Opción D"
-    )
+fun Content3(
+    viewModel: EstudTestViewModel
+) {
+    val testResponse by viewModel.testResponse.observeAsState()
 
     Column(
         modifier = Modifier
@@ -100,7 +106,7 @@ fun Content3() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Test de Alfredo",
+            text = testResponse?.data?.test?.tipo ?: "Tipo de Test Desconocido",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
@@ -109,6 +115,7 @@ fun Content3() {
                 .padding(top = 30.dp, bottom = 15.dp),
             textAlign = TextAlign.Center
         )
+
         Text(
             text = "Marque una respuesta en cada una de las siguientes preguntas.",
             fontSize = 18.sp,
@@ -117,37 +124,69 @@ fun Content3() {
                 .padding(bottom = 20.dp)
         )
 
-        questions.forEach { question ->
-            Column(
+        Text(
+            text = "Considere desde poco frecuente hasta muy frecuente, desde el 1 hasta el maximo valor",
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        println("El test recibido del back es: $testResponse")
+
+        testResponse?.data?.preguntas?.forEach { pregunta ->
+            val puntajeMaximo = maxOf(pregunta.puntaje_maximo, pregunta.puntaje_minimo)
+
+            Card(
                 modifier = Modifier
-                    .background(Color.White)
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(top = 10.dp, bottom = 10.dp)
             ) {
-                Text(
-                    text = question,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(top = 10.dp, bottom = 8.dp)
-                )
-                options.forEach { option ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Checkbox(
-                            checked = false, // Esto es solo para el preview
-                            onCheckedChange = { /* No hace nada por ahora */ },
-                            modifier = Modifier
-                                .width(40.dp)
-                                .height(35.dp)
-                        )
-                        Text(
-                            text = option,
-                            fontSize = 16.sp
-                        )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                ) {
+                    println("pregunta del bucle de listas $pregunta")
+                    Text(
+                        text = pregunta.descripcion,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(top = 10.dp, bottom = 8.dp)
+                    )
+                    (1..puntajeMaximo).forEach { opcion ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            println("se crea un checkbock $opcion")
+                            Checkbox(
+                                checked = false, // Esto es solo para el preview
+                                onCheckedChange = { /* No hace nada por ahora */ },
+                                modifier = Modifier
+                                    .width(40.dp)
+                                    .height(35.dp)
+                            )
+                            Text(
+                                text = "Opción $opcion",
+                                fontSize = 16.sp
+                            )
+                        }
                     }
                 }
             }
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp),
+            onClick = { /* No hace nada por ahora */ }
+        ) {
+            Text(
+                text = "Enviar",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(5.dp)
+            )
         }
     }
 }
@@ -258,11 +297,15 @@ fun BottomBar3() {
     }
 }
 
+
+
 @Preview(showBackground = true)
 @Composable
 fun EstudTestScreenPreview() {
     val navController = rememberNavController()
+    val idEstudiante = 123 // ID de estudiante de prueba
+    val idTest = 456 // ID de test de prueba
     SisvitaG2Theme {
-        EstudTestScreen(navController)
+        EstudTestScreen(navController, idEstudiante, idTest)
     }
 }
