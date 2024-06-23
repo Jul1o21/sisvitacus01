@@ -69,34 +69,32 @@ fun EstudMainScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar2(navController, estudiante)
+        TopBar2(navController)
         Content2(navController, estudiante, tests)
         BottomBar2(navController, estudiante)
     }
 }
+
 @Composable
-fun TopBar2(
-    navController: NavController,
-    estudiante: MutableState<Estudiante?>
-) {
+fun TopBar2(navController: NavController) {
     Box (
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.1F)
+            .fillMaxHeight(.05F)
             .background(MaterialTheme.colorScheme.primary)
-            .padding(15.dp)
+            .padding(6.dp)
     ) {
         IconButton(onClick = {
-            // Accion para regresar al login
-            navController.navigate(AppScreen.loginScreen.route) {
-                popUpTo(AppScreen.loginScreen.route) { inclusive = true }
+            // Accion para regresar a la ventana inicial
+            navController.navigate(AppScreen.mainScreen.route) {
+                popUpTo(AppScreen.mainScreen.route) { inclusive = true }
             }
         }) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(25.dp)
                     .align(Alignment.CenterStart),
                 tint = MaterialTheme.colorScheme.onPrimary
             )
@@ -113,7 +111,7 @@ fun Content2(
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.89F)
+            .fillMaxHeight(.92F)
             .padding(start = 30.dp, end = 30.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -232,13 +230,13 @@ fun BottomBar2(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(25.dp)
                     .align(Alignment.CenterHorizontally),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = "Custion.",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
@@ -254,13 +252,13 @@ fun BottomBar2(
                 imageVector = Icons.Default.CheckCircle,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(25.dp)
                     .align(Alignment.CenterHorizontally),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = "Result.",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
@@ -276,13 +274,13 @@ fun BottomBar2(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(25.dp)
                     .align(Alignment.CenterHorizontally),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = "Citas",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
@@ -298,13 +296,13 @@ fun BottomBar2(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(25.dp)
                     .align(Alignment.CenterHorizontally),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = "Perfil",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
