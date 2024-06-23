@@ -54,6 +54,7 @@ import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
 fun EstudMainScreen(
@@ -119,9 +120,9 @@ fun Content2(
         println("Estudiante recibido en Content2: $estudiante")
         val nombre = estudiante.value?.nombre_completo ?: "sin name"
         Text(
-            text = nombre,
+            text = "Bienvenido "+nombre+"!",
             color = MaterialTheme.colorScheme.primary,
-            fontSize = 30.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,7 +131,7 @@ fun Content2(
         )
         Text(
             text = "Selecciona un cuestionario para iniciar.",
-            fontSize = 18.sp,
+            fontSize = 17.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
@@ -149,7 +150,7 @@ fun TestCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 10.dp, bottom = 10.dp)
+            .padding(top = 10.dp, bottom = 5.dp)
     ) {
         Column(
             modifier = Modifier.padding(12.dp)
@@ -159,19 +160,6 @@ fun TestCard(
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
-            ClickableText(
-                text = AnnotatedString("Iniciar >"),
-                onClick = {
-                    estudianteId?.let { idEstudiante ->
-                        navController.navigate(AppScreen.estudTestScreen.createRoute(idEstudiante, test.id_test))
-                    }},
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 18.sp,
-                    textDecoration = TextDecoration.Underline
-                ),
                 modifier = Modifier.padding(bottom = 10.dp)
             )
             Row(
@@ -189,7 +177,7 @@ fun TestCard(
                 ) {
                     Text(
                         text = "Info:",
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 5.dp)
                     )
@@ -198,6 +186,26 @@ fun TestCard(
                         fontSize = 16.sp
                     )
                 }
+            }
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 5.dp, top = 5.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                ClickableText(
+                    text = AnnotatedString("Iniciar >"),
+                    onClick = {
+                        estudianteId?.let { idEstudiante ->
+                            navController.navigate(AppScreen.estudTestScreen.createRoute(idEstudiante, test.id_test))
+                        }},
+                    style = TextStyle(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 15.sp,
+                        textDecoration = TextDecoration.Underline
+                    ),
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
             }
         }
     }
@@ -220,94 +228,51 @@ fun BottomBar2(
             ),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        Column (
+        itemBar3(
+            texto = "Cuestion.",
+            vector = Icons.Default.Star
+        )
+        itemBar3(
+            texto = "Result.",
+            vector = Icons.Default.CheckCircle
+        )
+        itemBar3(
+            texto = "Citas",
+            vector = Icons.Default.Favorite
+        )
+        itemBar3(
+            texto = "Perfil",
+            vector = Icons.Default.AccountCircle
+        )
+    }
+}
+
+@Composable
+fun itemBar3(
+    texto: String,
+    vector: ImageVector
+) {
+    Column (
+        modifier = Modifier
+            .width(75.dp)
+            .height(75.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = vector,
+            contentDescription = null,
             modifier = Modifier
-                .width(75.dp)
-                .height(75.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.CenterHorizontally),
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-            Text(
-                text = "Custion.",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSecondary,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
-        Column (
-            modifier = Modifier
-                .width(75.dp)
-                .height(75.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.CenterHorizontally),
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-            Text(
-                text = "Result.",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSecondary,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
-        Column (
-            modifier = Modifier
-                .width(75.dp)
-                .height(75.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Favorite,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.CenterHorizontally),
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-            Text(
-                text = "Citas",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSecondary,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
-        Column (
-            modifier = Modifier
-                .width(75.dp)
-                .height(75.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.CenterHorizontally),
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-            Text(
-                text = "Perfil",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSecondary,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
+                .size(25.dp)
+                .align(Alignment.CenterHorizontally),
+            tint = MaterialTheme.colorScheme.onSecondary
+        )
+        Text(
+            text = texto,
+            fontSize = 15.sp,
+            color = MaterialTheme.colorScheme.onSecondary,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
