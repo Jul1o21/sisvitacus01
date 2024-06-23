@@ -1,6 +1,7 @@
 package com.example.sisvitag2.ui.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,21 +10,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -33,48 +44,63 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudRegisterViewModel
+import com.example.sisvitag2.ui.viewmodel.LoginViewModel
 
 @Composable
-fun EstudRegisterScreen (navController: NavController) {
+fun EstudRegisterScreen (
+    navController: NavController,
+    registerViewModel: EstudRegisterViewModel = viewModel()
+) {
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar1()
-        Content1()
+        TopBar1(navController)
+        Content1(registerViewModel)
     }
 }
 
 @Composable
-fun TopBar1() {
+fun TopBar1(navController: NavController) {
     Box (
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.1F)
+            .fillMaxHeight(.05F)
             .background(MaterialTheme.colorScheme.primary)
-            .padding(15.dp)
+            .padding(6.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowLeft,
-            contentDescription = null,
-            modifier = Modifier
-                .size(50.dp)
-                .align(Alignment.CenterStart),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+        IconButton(onClick = {
+            // Accion para regresar a la ventana inicial
+            navController.navigate(AppScreen.mainScreen.route) {
+                popUpTo(AppScreen.mainScreen.route) { inclusive = true }
+            }
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(25.dp)
+                    .align(Alignment.CenterStart),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
     }
 }
 
 @Composable
-fun Content1() {
+fun Content1(
+    registerViewModel: EstudRegisterViewModel
+) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(30.dp),
+            .padding(30.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -87,125 +113,173 @@ fun Content1() {
                 .padding(top = 10.dp, bottom = 30.dp),
             textAlign = TextAlign.Center
         )
-        Formulario1()
+        Formulario1(registerViewModel)
     }
 }
 
 @Composable
-fun Formulario1() {
+fun Formulario1(
+    registerViewModel: EstudRegisterViewModel
+) {
+    val nombres: String by registerViewModel.nombresState
+    val paterno: String by registerViewModel.paternoState
+    val materno: String by registerViewModel.maternoState
+    val tipo: String by registerViewModel.tipoState
+    val correo: String by registerViewModel.correoState
+    val contra: String by registerViewModel.contraState
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = "Nombres",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        TextField(
-            value = "",
-            onValueChange = { it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            placeholder = { Text(text = "Nombres") }
-        )
-        Text(
-            text = "Apellidos",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        TextField(
-            value = "",
-            onValueChange = { it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            placeholder = { Text(text = "aPaterno aMaterno") }
-        )
-        Text(
-            text = "Correo",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        TextField(
-            value = "",
-            onValueChange = { it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
+        // Nombres y apellidos
+        subtexto1( texto = "Nombres" )
+        inputText1(
+            value = nombres,
+            onValueChange = { registerViewModel.setNombres(it) },
+            placeholder = "Nombres",
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email
-            ),
-            placeholder = { Text(text = "correo@dominio.com") }
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
         )
-        Text(
-            text = "Contraseña",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        TextField(
-            value = "",
-            onValueChange = { it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
+        subtexto1( texto = "Apellido Paterno" )
+        inputText1(
+            value = paterno,
+            onValueChange = { registerViewModel.setPaterno(it) },
+            placeholder = "Apellido paterno",
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password
-            ),
-            placeholder = { Text(text = "********") }
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
         )
-        Button(
+        subtexto1( texto = "Apellido Materno" )
+        inputText1(
+            value = materno,
+            onValueChange = { registerViewModel.setMaterno(it) },
+            placeholder = "Apellido materno",
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
+        )
+
+        // Tipo de usuario
+        subtexto1( texto = "Tipo de usuario" )
+        desplegable1(
+            value = tipo,
+            onValueChange = { registerViewModel.setTipo(it) },
+            placeholder = "Tipo de usuario",
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
+        )
+
+        // Correo y contraseña
+        subtexto1( texto = "Correo" )
+        inputText1(
+            value = correo,
+            onValueChange = { registerViewModel.setCorreo(it) },
+            placeholder = "example@example.com",
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            )
+        )
+        subtexto1( texto = "Contraseña" )
+        inputText1(
+            value = contra,
+            onValueChange = { registerViewModel.setContra(it) },
+            placeholder = "********",
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            )
+        )
+
+        //Boton para enviar
+        Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 30.dp),
-            onClick = { /*TODO*/ },
+                .padding(top = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Registrase",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
-        }
-        Row (
-            modifier = Modifier.padding(top = 20.dp)
-        ) {
-            Text(
-                text = "¿Tienes una cuenta? ",
-                fontSize = 18.sp
-            )
-            ClickableText(
-                text = AnnotatedString("Iniciar Sesión"),
-                onClick = { /* TODO */},
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 18.sp,
-                    textDecoration = TextDecoration.Underline
-                )
+            boton1(
+                texto = "Registrarse",
+                nav = { "" }
             )
         }
     }
+}
+
+@Composable
+fun subtexto1 (
+    texto: String
+) {
+    Text(
+        text = texto,
+        color = MaterialTheme.colorScheme.secondary,
+        fontSize = 17.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 5.dp, bottom = 10.dp),
+        textAlign = TextAlign.Left
+    )
+}
+
+@Composable
+fun inputText1 (
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    keyboardOptions: KeyboardOptions
+) {
+    TextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        keyboardOptions = keyboardOptions,
+        placeholder = {
+            Text(text = placeholder)
+        }
+    )
+}
+
+@Composable
+fun boton1 (
+    texto: String,
+    nav: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(.75F),
+        onClick = { nav() }
+    ) {
+        textoBoton(texto)
+    }
+}
+
+@Composable
+fun desplegable1 (
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    keyboardOptions: KeyboardOptions
+) {
+    TextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        keyboardOptions = keyboardOptions,
+        placeholder = {
+            Text(text = placeholder)
+        }
+    )
 }
 
 

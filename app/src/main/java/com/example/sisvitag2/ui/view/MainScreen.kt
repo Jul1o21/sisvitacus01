@@ -41,16 +41,20 @@ fun MainScreen(navController: NavController) {
         Box (
 
         ){
+            // Fondo
             Image(
                 painter = painterResource(id = R.drawable.main_background),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
+
+            // Contenido
             Column (
                 modifier = Modifier
                     .padding(30.dp)
             ) {
+                // Dos secciones: titulo y botones
                 titulo()
                 botones(navController)
             }
@@ -63,9 +67,10 @@ fun titulo() {
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.7F),
+            .fillMaxHeight(.75F),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Titulo
         Text(
             text = "SISVITA",
             fontSize = 40.sp,
@@ -74,11 +79,13 @@ fun titulo() {
             modifier = Modifier
                 .padding(top = 30.dp, bottom = 20.dp)
         )
+
+        // Imagen
         Image(
             painter = painterResource(id = R.drawable.main_image),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(.9F)
                 .fillMaxHeight(.8F)
         )
     }
@@ -88,56 +95,73 @@ fun titulo() {
 fun botones(navController: NavController) {
     Column (
         verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
+            .padding(bottom = 20.dp)
     ) {
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(
-                text = "Ingresar como Invitado",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
-        }
-        OutlinedButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ navController.navigate(AppScreen.loginScreen.route)}
-        ) {
-            Text(
-                text = "Iniciar Sesión",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
-        }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(
-                text = "Registrarse",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
-        }
+        boton(
+            texto = "Ingresar como Invitado",
+            nav = { navController.navigate(AppScreen.loginScreen.route) }
+        )
+        botonLinea(
+            texto = "Iniciar Sesion",
+            nav = { navController.navigate(AppScreen.loginScreen.route) }
+        )
+        boton(
+            texto = "Registrarse",
+            nav = { navController.navigate(AppScreen.estudRegisterScreen.route) }
+        )
     }
 }
 
+@Composable
+fun boton (
+    texto: String,
+    nav: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(.75F),
+        onClick = { nav() }
+    ) {
+        textoBoton(texto)
+    }
+}
+
+@Composable
+fun botonLinea (
+    texto: String,
+    nav: () -> Unit
+) {
+    OutlinedButton(
+        modifier = Modifier
+            .fillMaxWidth(.75F),
+        onClick = { nav() }
+    ) {
+        textoBoton(texto)
+    }
+}
+
+@Composable
+fun textoBoton (
+    texto: String
+) {
+    Text(
+        text = texto,
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .padding(4.dp)
+    )
+}
 
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     val navController = rememberNavController()
     SisvitaG2Theme {
-        MainScreen(navController = navController)
+        MainScreen (navController = navController)
     }
 }

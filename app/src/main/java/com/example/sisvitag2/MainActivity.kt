@@ -18,7 +18,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SisvitaG2Theme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -34,6 +33,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     SisvitaG2Theme {
-        AppNavigation(startDestination = AppScreen.mainScreen.route)
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ){
+            AppNavigation(startDestination = AppScreen.mainScreen.route)
+        }
     }
 }

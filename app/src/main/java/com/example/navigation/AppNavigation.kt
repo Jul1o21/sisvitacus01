@@ -1,4 +1,5 @@
 package com.example.sisvitacus1.navigation
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,8 +20,31 @@ import com.google.gson.Gson
 
 @Composable
 fun AppNavigation(startDestination: String) {
+
     val navController = rememberNavController()
+
     NavHost(navController = navController, startDestination = startDestination) {
+
+        composable(
+            route = AppScreen.mainScreen.route
+        ){
+            MainScreen(navController)
+        }
+
+        composable(
+            route = AppScreen.estudRegisterScreen.route
+        ){
+            EstudRegisterScreen(navController)
+        }
+
+        composable(
+            route = AppScreen.loginScreen.route
+        ){
+            LoginScreen(navController)
+        }
+
+
+
 
         composable(
             route = AppScreen.estudMainScreen.route,
@@ -30,12 +54,6 @@ fun AppNavigation(startDestination: String) {
             val estudiante = Gson().fromJson(estudianteJson, Estudiante::class.java)
             val estudianteState = remember { mutableStateOf(estudiante) }
             EstudMainScreen(navController, estudianteState)
-        }
-
-        composable(
-            route = AppScreen.estudRegisterScreen.route
-        ){
-            EstudRegisterScreen(navController)
         }
 
         composable(
@@ -60,16 +78,6 @@ fun AppNavigation(startDestination: String) {
             EstudTestScreen(navController, idEstudiante, idTest)
         }
 
-        composable(
-            route = AppScreen.loginScreen.route
-        ){
-            LoginScreen(navController)
-        }
 
-        composable(
-            route = AppScreen.mainScreen.route
-        ){
-            MainScreen(navController)
-        }
     }
 }

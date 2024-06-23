@@ -1,12 +1,14 @@
 package com.example.sisvitag2.ui.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,8 +37,12 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.LoginViewModel
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.text.input.ImeAction
 import com.example.sisvitacus1.navigation.AppScreen
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
@@ -48,13 +54,12 @@ fun LoginScreen (
     val showDialog by loginViewModel.showDialog
     val dialogMessage by loginViewModel.dialogMessage
 
-
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar()
+        TopBar(navController)
         Content(navController,loginViewModel)
     }
 
@@ -79,22 +84,29 @@ fun LoginScreen (
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(navController: NavController) {
     Box (
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.1F)
+            .fillMaxHeight(.05F)
             .background(MaterialTheme.colorScheme.primary)
-            .padding(15.dp)
+            .padding(6.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowLeft,
-            contentDescription = null,
-            modifier = Modifier
-                .size(50.dp)
-                .align(Alignment.CenterStart),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+        IconButton(onClick = {
+            // Accion para regresar a la ventana inicial
+            navController.navigate(AppScreen.mainScreen.route) {
+                popUpTo(AppScreen.mainScreen.route) { inclusive = true }
+            }
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(25.dp)
+                    .align(Alignment.CenterStart),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
     }
 }
 
@@ -103,28 +115,25 @@ fun Content(
     navController: NavController,
     loginViewModel: LoginViewModel
 ) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(30.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
-        item {
-            Text(
-                text = "Iniciar Sesión",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 30.dp),
-                textAlign = TextAlign.Center
-            )
-        }
-        item {
-            Formulario(navController, loginViewModel)
-        }
+        Text(
+            text = "Iniciar Sesión",
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp, bottom = 40.dp),
+            textAlign = TextAlign.Center
+        )
+        Formulario(navController, loginViewModel)
     }
 }
 
@@ -132,95 +141,59 @@ fun Content(
 fun Formulario(
     navController: NavController,
     loginViewModel: LoginViewModel
-    ) {
-        val correo: String by loginViewModel.correoState
-        val contrasenia: String by loginViewModel.contraseniaState
-        val isError: Boolean by loginViewModel.isError
-        val loginSuccess: Boolean by loginViewModel.loginSuccess
-        val showDialog: Boolean by loginViewModel.showDialog
-        val dialogMessage:String by loginViewModel.dialogMessage
+) {
+    val correo: String by loginViewModel.correoState
+    val contrasenia: String by loginViewModel.contraseniaState
+    val isError: Boolean by loginViewModel.isError
+    val loginSuccess: Boolean by loginViewModel.loginSuccess
+    val showDialog: Boolean by loginViewModel.showDialog
+    val dialogMessage:String by loginViewModel.dialogMessage
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
 
         //Correo
-        Text(
-            text = "Correo",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-
-        TextField(
+        subtexto( texto = "Correo" )
+        inputText(
             value = correo,
             onValueChange = { loginViewModel.setEmail(it) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
+            placeholder = "example@example.com",
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email
-            ),
-            placeholder = { Text(text = "correo@dominio.com") }
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            )
         )
 
         //Contraseña
-        Text(
-            text = "Contraseña",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        TextField(
+        subtexto( texto = "Contraseña" )
+        inputText(
             value = contrasenia,
             onValueChange = { loginViewModel.setPassword(it) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
+            placeholder = "********",
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password
-            ),
-            placeholder = { Text(text = "********") }
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            )
         )
-        Row (
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = false,
-                onCheckedChange = { it }
-            )
-            Text(
-                text = "Recordarme",
-                fontSize = 18.sp
-            )
-        }
-        Button(
+
+        // Enviar credenciales para verificar
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 30.dp),
-            onClick = { loginViewModel.login() },
+                .padding(top = 20.dp)
         ) {
-            Text(
-                text = "Iniciar Sesión",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(5.dp)
+            botonLogin(
+                texto = "Iniciar Sesión",
+                nav = { loginViewModel.login() }
             )
         }
+        
+        // Error en el login
         if (isError) {
             Text(
-                text = "Error en el login, por favor intente de nuevo",
+                text = "Hubo un error al realizar el inicio de sesión, por favor intente de nuevo...",
                 color = MaterialTheme.colorScheme.error,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(top = 20.dp)
@@ -265,9 +238,58 @@ fun Formulario(
                 }
             )
         }
-
     }
+}
 
+
+@Composable
+fun subtexto (
+    texto: String
+) {
+    Text(
+        text = texto,
+        color = MaterialTheme.colorScheme.secondary,
+        fontSize = 17.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 5.dp, bottom = 10.dp),
+        textAlign = TextAlign.Left
+    )
+}
+
+@Composable
+fun inputText (
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    keyboardOptions: KeyboardOptions
+) {
+    TextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        keyboardOptions = keyboardOptions,
+        placeholder = {
+            Text(text = placeholder)
+        }
+    )
+}
+
+@Composable
+fun botonLogin (
+    texto: String,
+    nav: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(.75F),
+        onClick = { nav() }
+    ) {
+        textoBoton(texto)
+    }
 }
 
 
