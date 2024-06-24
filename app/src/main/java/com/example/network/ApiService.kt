@@ -1,8 +1,10 @@
 package com.example.sisvita_cus1.network
 
 import com.example.data.model.request.LoginRequest
+import com.example.data.model.request.RegTestRequest
 import com.example.data.model.response.LoginResponse
 import com.example.data.model.request.TestRequest
+import com.example.data.model.response.RespondeGen
 import com.example.data.model.response.TestListResponse
 import com.example.data.model.response.TestResponse
 import com.example.sisvita_cus1.data.model.*
@@ -22,5 +24,8 @@ interface ApiService {
 
     @POST("/obtenerTest")
     suspend fun getTest(@Body testRequest: TestRequest): TestResponse
+
+    @POST("/registerTest")
+    suspend fun registrarTest(@Body regTestRequest: RegTestRequest): RespondeGen
 
 }

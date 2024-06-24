@@ -72,7 +72,7 @@ fun EstudMainScreen(
     ) {
         TopBar2(navController)
         Content2(navController, estudiante, tests)
-        BottomBar2(navController, estudiante)
+        BottomBar2(navController)
     }
 }
 
@@ -137,7 +137,7 @@ fun Content2(
                 .padding(bottom = 20.dp)
         )
         tests.forEach { test ->
-            TestCard(test, navController, estudiante.value?.id_usuario)
+            TestCard(test, navController, estudiante.value?.id_estudiante)
         }
     }
 }
@@ -212,8 +212,7 @@ fun TestCard(
 }
 @Composable
 fun BottomBar2(
-    navController: NavController,
-    estudiante: MutableState<Estudiante?>
+    navController: NavController
 ) {
     Row (
         modifier = Modifier
@@ -228,19 +227,19 @@ fun BottomBar2(
             ),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        itemBar3(
+        itemBar2(
             texto = "Cuestion.",
             vector = Icons.Default.Star
         )
-        itemBar3(
+        itemBar2(
             texto = "Result.",
             vector = Icons.Default.CheckCircle
         )
-        itemBar3(
+        itemBar2(
             texto = "Citas",
             vector = Icons.Default.Favorite
         )
-        itemBar3(
+        itemBar2(
             texto = "Perfil",
             vector = Icons.Default.AccountCircle
         )
@@ -248,7 +247,7 @@ fun BottomBar2(
 }
 
 @Composable
-fun itemBar3(
+fun itemBar2(
     texto: String,
     vector: ImageVector
 ) {
