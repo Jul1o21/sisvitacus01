@@ -36,9 +36,8 @@ fun EstudTestScreen(
     idTest: Int,
     viewModel: EstudTestViewModel = viewModel()
 ) {
+    var showDialog by remember { mutableStateOf(false) }
 
-    println("el id del estudiante es $idEstudiante y el id del test es $idTest")
-    // Llamar al método para cargar las preguntas
     LaunchedEffect(Unit) {
         viewModel.obtenerTest(TestRequest(id_test = idTest))
     }
@@ -49,22 +48,42 @@ fun EstudTestScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBar3(navController)
-        Content3(viewModel, navController, idEstudiante)
-        BottomBar3(navController)
+        Box(modifier = Modifier.weight(1f)) {
+            Content3(viewModel)
+        }
         Button(
+            onClick = {
+                viewModel.regTest(idEstudiante)
+                showDialog = true
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 20.dp),
-            onClick = {
-
-            },
+                .padding(16.dp)
         ) {
             Text(
                 text = "Enviar respuestas",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(5.dp)
+                modifier = Modifier.padding(5.dp)
+            )
+        }
+        BottomBar3(navController)
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showDialog = false
+                            navController.navigate(AppScreen.MenuScreen.route)
+                        }
+                    ) {
+                        Text("Ir a Menú")
+                    }
+                },
+                title = { Text("Respuestas Registradas") },
+                text = { Text("Sus respuestas han sido registradas con éxito.") }
             )
         }
     }
@@ -72,10 +91,9 @@ fun EstudTestScreen(
 
 @Composable
 fun TopBar3(navController: NavController) {
-    Box (
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.05F)
             .background(MaterialTheme.colorScheme.primary)
             .padding(6.dp)
     ) {
@@ -85,9 +103,7 @@ fun TopBar3(navController: NavController) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.CenterStart),
+                modifier = Modifier.size(25.dp),
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }
@@ -95,22 +111,16 @@ fun TopBar3(navController: NavController) {
 }
 
 @Composable
-fun Content3(
-    viewModel: EstudTestViewModel,
-    navController: NavController,
-    idEstudiante: Int
-) {
+fun Content3(viewModel: EstudTestViewModel) {
     val respuestas = viewModel.respuestas
     val selectedOptions = viewModel.selectedOptions
     val testResponse by viewModel.testResponse.observeAsState()
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(.92F)
-            .padding(start = 30.dp, end = 30.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
     ) {
         Text(
             text = testResponse?.data?.test?.tipo ?: "Tipo de Test Desconocido",
@@ -119,7 +129,7 @@ fun Content3(
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 30.dp, bottom = 20.dp),
+                .padding(vertical = 20.dp),
             textAlign = TextAlign.Center
         )
 
@@ -138,19 +148,14 @@ fun Content3(
             modifier = Modifier.padding(bottom = 20.dp)
         )
 
-        println("El test recibido del back es: $testResponse")
-
-        /*val respuestas = remember { mutableStateListOf<PregRespuesta>() }
-        val selectedOptions = remember { mutableStateMapOf<Int, Int>() }*/
-
         testResponse?.data?.preguntas?.forEach { pregunta ->
             val maximo = pregunta.puntaje_maximo
             val minimo = pregunta.puntaje_minimo
-            val total = maximo - minimo + 1;
+            val total = maximo - minimo + 1
 
-            var labels = if (total == 3) listOf("Poco", "Regular", "Mucho") else listOf("Nunca", "A veces", "Muchas veces", "Siempre")
+            val labels = if (total == 3) listOf("Poco", "Regular", "Mucho") else listOf("Nunca", "A veces", "Muchas veces", "Siempre")
 
-            var values = if (minimo <= maximo) {
+            val values = if (minimo <= maximo) {
                 (minimo..maximo).toList()
             } else {
                 (minimo downTo maximo).toList()
@@ -159,21 +164,17 @@ fun Content3(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        top = 10.dp,
-                        bottom = 10.dp
-                    )
+                    .padding(vertical = 10.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
                 ) {
-                    println("pregunta del bucle de listas $pregunta")
                     Text(
                         text = pregunta.descripcion,
                         fontSize = 16.sp,
-                        modifier = Modifier.padding(top = 10.dp, bottom = 8.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
                     values.forEachIndexed { index, value ->
                         if (index < labels.size) {
@@ -183,23 +184,14 @@ fun Content3(
                                 idPregunta = pregunta.id_preg,
                                 selectedOptions = selectedOptions,
                                 respuestas = respuestas,
-                                onvalueChange = {
-                                    respuesta -> viewModel.updateRespuesta(respuesta.id_preg, respuesta.puntaje)
+                                onvalueChange = { respuesta ->
+                                    viewModel.updateRespuesta(respuesta.id_preg, respuesta.puntaje)
                                 }
                             )
                         }
                     }
                 }
             }
-        }
-
-        boton3(
-            texto = "Enviar",
-            nav = { viewModel.regTest(idEstudiante) }
-        )
-
-        respuestas.forEach { respuesta ->
-            println("Pregunta ID: ${respuesta.id_preg}, Valor: ${respuesta.puntaje}")
         }
     }
 }
@@ -213,15 +205,12 @@ fun OpcionRow3(
     respuestas: SnapshotStateList<PregRespuesta>,
     onvalueChange: (PregRespuesta) -> Unit
 ) {
-
     val isChecked = selectedOptions[idPregunta] == value
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-
-        println("Se crea un checkbox '$label' con valor '$value'")
         Checkbox(
             checked = isChecked,
             onCheckedChange = { checked ->
@@ -234,97 +223,54 @@ fun OpcionRow3(
                     respuestas.removeAll { it.id_preg == idPregunta }
                 }
             },
-            modifier = Modifier
-                .width(40.dp)
-                .height(35.dp)
+            modifier = Modifier.size(35.dp)
         )
         Text(
-            text = "$label",
+            text = label,
             fontSize = 16.sp
         )
     }
 }
 
 @Composable
-fun BottomBar3(
-    navController: NavController
-) {
-    Row (
+fun BottomBar3(navController: NavController) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
             .background(MaterialTheme.colorScheme.secondary)
-            .padding(
-                start = 20.dp,
-                top = 6.dp,
-                end = 20.dp,
-                bottom = 6.dp
-            ),
+            .padding(6.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        itemBar3(
-            texto = "Cuestion.",
-            vector = Icons.Default.Star
-        )
-        itemBar3(
-            texto = "Result.",
-            vector = Icons.Default.CheckCircle
-        )
-        itemBar3(
-            texto = "Citas",
-            vector = Icons.Default.Favorite
-        )
-        itemBar3(
-            texto = "Perfil",
-            vector = Icons.Default.AccountCircle
-        )
+        itemBar3("Cuestion.", Icons.Default.Star)
+        itemBar3("Result.", Icons.Default.CheckCircle)
+        itemBar3("Citas", Icons.Default.Favorite)
+        itemBar3("Perfil", Icons.Default.AccountCircle)
     }
 }
 
 @Composable
-fun itemBar3(
-    texto: String,
-    vector: ImageVector
-) {
-    Column (
+fun itemBar3(texto: String, vector: ImageVector) {
+    Column(
         modifier = Modifier
             .width(75.dp)
             .height(75.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             imageVector = vector,
             contentDescription = null,
-            modifier = Modifier
-                .size(25.dp)
-                .align(Alignment.CenterHorizontally),
+            modifier = Modifier.size(25.dp),
             tint = MaterialTheme.colorScheme.onSecondary
         )
         Text(
             text = texto,
             fontSize = 15.sp,
             color = MaterialTheme.colorScheme.onSecondary,
-            modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
     }
 }
-
-@Composable
-fun boton3 (
-    texto: String,
-    nav: () -> Unit
-) {
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(.75F),
-        onClick = { nav() }
-    ) {
-        textoBoton(texto)
-    }
-}
-
-
 
 @Preview(showBackground = true)
 @Composable

@@ -10,12 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.data.model.Especialista
 import com.example.sisvita_cus1.data.model.Estudiante
-import com.example.sisvitag2.ui.view.EspMainScreen
-import com.example.sisvitag2.ui.view.EstudMainScreen
-import com.example.sisvitag2.ui.view.EstudRegisterScreen
-import com.example.sisvitag2.ui.view.EstudTestScreen
-import com.example.sisvitag2.ui.view.LoginScreen
-import com.example.sisvitag2.ui.view.MainScreen
+import com.example.sisvitag2.ui.view.*
 import com.google.gson.Gson
 
 @Composable
@@ -43,8 +38,11 @@ fun AppNavigation(startDestination: String) {
             LoginScreen(navController)
         }
 
-
-
+        composable(
+            route = AppScreen.MenuScreen.route
+        ) {
+            MenuScreen(navController)
+        }
 
         composable(
             route = AppScreen.estudMainScreen.route,
@@ -77,7 +75,5 @@ fun AppNavigation(startDestination: String) {
             val idTest = backStackEntry.arguments?.getInt("id_test") ?: 0
             EstudTestScreen(navController, idEstudiante, idTest)
         }
-
-
     }
 }

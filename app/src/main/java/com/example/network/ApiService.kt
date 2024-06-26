@@ -28,4 +28,5 @@ interface ApiService {
     @POST("/registerTest")
     suspend fun registrarTest(@Body regTestRequest: RegTestRequest): RespondeGen
 
+
 }
