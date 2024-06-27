@@ -33,6 +33,14 @@ sealed class AppScreen(val route: String) {
     }
 
     // EspMainScreen - espmain
+
+    object espCitaScreen : AppScreen("espcita/{especialistaJson}") {
+        fun createRoute(especialista: Especialista): String {
+            val especialistaJson = Uri.encode(Gson().toJson(especialista))
+            return "espmain/$especialistaJson"
+        }
+    }
+
     object espMainScreen : AppScreen("espmain/{especialistaJson}") {
         fun createRoute(especialista: Especialista): String {
             val especialistaJson = Uri.encode(Gson().toJson(especialista))
