@@ -1,5 +1,6 @@
 package com.example.sisvitag2.ui.view
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -17,14 +18,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.sisvita_cus1.data.model.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.LoginViewModel
+import com.google.gson.Gson
+import java.net.URLEncoder
 
 @Composable
-fun MenuScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
-    val estudiante by loginViewModel.estudiante.observeAsState()
-
+fun MenuScreen(navController: NavController, estudiante: Estudiante) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,28 +48,27 @@ fun MenuScreen(navController: NavController, loginViewModel: LoginViewModel = vi
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
-            estudiante?.let {
-                Button(onClick = {
-                    navController.navigate(AppScreen.estudMainScreen.createRoute(it))
-                }) {
-                    Text("Realizar Test")
-                }
+            Button(onClick = {
+                val estudianteJson = Uri.encode(Gson().toJson(estudiante))
+                navController.navigate(AppScreen.estudMainScreen.createRoute(estudiante))
+            }) {
+                Text("Realizar Test")
             }
-            // Descomenta y ajusta los botones según tus necesidades
-            // Button(onClick = { navController.navigate(AppScreen.verResultados.route) }) {
-            //     Text("Ver Resultados")
-            // }
-            // Button(onClick = { navController.navigate(AppScreen.nuevaCita.route) }) {
-            //     Text("Nueva Cita")
-            // }
-            // Button(onClick = { navController.navigate(AppScreen.misCitas.route) }) {
-            //     Text("Mis Citas")
-            // }
-            // Button(onClick = { navController.navigate(AppScreen.progreso.route) }) {
-            //     Text("Progreso")
-            // }
         }
+
+        // Descomenta y ajusta los botones según tus necesidades
+        // Button(onClick = { navController.navigate(AppScreen.VerResultados.route) }) {
+        //     Text("Ver Resultados")
+        // }
+        // Button(onClick = { navController.navigate(AppScreen.NuevaCita.route) }) {
+        //     Text("Nueva Cita")
+        // }
+        // Button(onClick = { navController.navigate(AppScreen.MisCitas.route) }) {
+        //     Text("Mis Citas")
+        // }
+        // Button(onClick = { navController.navigate(AppScreen.Progreso.route) }) {
+        //     Text("Progreso")
+        // }
         BottomBar4(navController)
     }
 }
@@ -139,7 +140,8 @@ fun itemBar4(texto: String, vector: ImageVector) {
 @Composable
 fun MenuScreenPreview() {
     val navController = rememberNavController()
+    val estudiante = Estudiante.defaultEstudiante() // Proporciona un estudiante predeterminado para la vista previa
     SisvitaG2Theme {
-        MenuScreen(navController = navController)
+        MenuScreen(navController = navController, estudiante = estudiante)
     }
 }

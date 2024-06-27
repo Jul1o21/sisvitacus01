@@ -39,9 +39,12 @@ fun AppNavigation(startDestination: String) {
         }
 
         composable(
-            route = AppScreen.MenuScreen.route
-        ) {
-            MenuScreen(navController)
+            route = AppScreen.menuScreen.route,
+            arguments = listOf(navArgument("estudianteJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val estudianteJson = backStackEntry.arguments?.getString("estudianteJson")
+            val estudiante = Gson().fromJson(estudianteJson, Estudiante::class.java)
+            MenuScreen(navController, estudiante)
         }
 
         composable(
@@ -68,12 +71,15 @@ fun AppNavigation(startDestination: String) {
             route = AppScreen.estudTestScreen.route,
             arguments = listOf(
                 navArgument("id_estudiante") { type = NavType.IntType },
-                navArgument("id_test") { type = NavType.IntType }
+                navArgument("id_test") { type = NavType.IntType },
+                navArgument("estudianteJson") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val idEstudiante = backStackEntry.arguments?.getInt("id_estudiante") ?: 0
             val idTest = backStackEntry.arguments?.getInt("id_test") ?: 0
-            EstudTestScreen(navController, idEstudiante, idTest)
+            val estudianteJson = backStackEntry.arguments?.getString("estudianteJson")
+            val estudiante = Gson().fromJson(estudianteJson, Estudiante::class.java)
+            EstudTestScreen(navController, idEstudiante, idTest, estudiante)
         }
     }
 }

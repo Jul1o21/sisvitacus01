@@ -193,7 +193,7 @@ fun Formulario(
         // Error en el login
         if (isError) {
             Text(
-                text = "Hubo un error al realizar el inicio de sesión, por favor intente de nuevo...",
+                text = "Correo o contraseña incorrectos, por favor intente de nuevo...",
                 color = MaterialTheme.colorScheme.error,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(top = 20.dp)

@@ -1,6 +1,7 @@
 package com.example.sisvitag2.ui.view
 
 import EstudTestViewModel
+import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.background
@@ -28,12 +29,14 @@ import com.example.data.model.request.TestRequest
 import com.example.sisvita_cus1.data.model.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.google.gson.Gson
 
 @Composable
 fun EstudTestScreen(
     navController: NavController,
     idEstudiante: Int,
     idTest: Int,
+    estudiante: Estudiante, // Añade este parámetro
     viewModel: EstudTestViewModel = viewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -73,13 +76,11 @@ fun EstudTestScreen(
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 confirmButton = {
-                    Button(
-                        onClick = {
-                            showDialog = false
-                            navController.navigate(AppScreen.MenuScreen.route)
-                        }
-                    ) {
-                        Text("Ir a Menú")
+                    Button(onClick = {
+                        val estudianteJson = Uri.encode(Gson().toJson(estudiante))
+                        navController.navigate(AppScreen.menuScreen.createRoute(estudiante))
+                    }) {
+                        Text("Ir al Menú")
                     }
                 },
                 title = { Text("Respuestas Registradas") },
@@ -88,6 +89,7 @@ fun EstudTestScreen(
         }
     }
 }
+
 
 @Composable
 fun TopBar3(navController: NavController) {
@@ -278,7 +280,25 @@ fun EstudTestScreenPreview() {
     val navController = rememberNavController()
     val idEstudiante = 123 // ID de estudiante de prueba
     val idTest = 456 // ID de test de prueba
+    val estudiante = Estudiante(
+        id_estudiante = idEstudiante,
+        id_usuario = 1,
+        nombre_completo = "Juan Perez",
+        correo = "juan.perez@example.com",
+        contrasenia = "password",
+        numero_documento = 12345678,
+        tipo_documento = "DNI",
+        sexo = "M",
+        edad = 20,
+        numero_celular = 987654321,
+        pais = "Perú",
+        departamento = "Lima",
+        distrito = "Cercado de Lima",
+        universidad = "UNMSM"
+    )
     SisvitaG2Theme {
-        EstudTestScreen(navController, idEstudiante, idTest)
+        EstudTestScreen(navController, idEstudiante, idTest, estudiante)
     }
 }
+
+

@@ -1,5 +1,6 @@
 package com.example.sisvitag2.ui.view
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +44,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -55,6 +55,8 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
 
 @Composable
 fun EstudMainScreen(
@@ -78,7 +80,7 @@ fun EstudMainScreen(
 
 @Composable
 fun TopBar2(navController: NavController) {
-    Box (
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(.05F)
@@ -109,7 +111,7 @@ fun Content2(
     estudiante: MutableState<Estudiante?>,
     tests: List<Test>
 ) {
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(.92F)
@@ -120,7 +122,7 @@ fun Content2(
         println("Estudiante recibido en Content2: $estudiante")
         val nombre = estudiante.value?.nombre_completo ?: "sin name"
         Text(
-            text = "Bienvenido "+nombre+"!",
+            text = "Bienvenido $nombre!",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -137,15 +139,16 @@ fun Content2(
                 .padding(bottom = 20.dp)
         )
         tests.forEach { test ->
-            TestCard(test, navController, estudiante.value?.id_estudiante)
+            TestCard(test, navController, estudiante.value)
         }
     }
 }
+
 @Composable
 fun TestCard(
     test: Test,
     navController: NavController,
-    estudianteId: Int?
+    estudiante: Estudiante?
 ) {
     Card(
         modifier = Modifier
@@ -187,7 +190,7 @@ fun TestCard(
                     )
                 }
             }
-            Column (
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 5.dp, top = 5.dp),
@@ -196,9 +199,10 @@ fun TestCard(
                 ClickableText(
                     text = AnnotatedString("Iniciar >"),
                     onClick = {
-                        estudianteId?.let { idEstudiante ->
-                            navController.navigate(AppScreen.estudTestScreen.createRoute(idEstudiante, test.id_test))
-                        }},
+                        estudiante?.let { est ->
+                            navController.navigate(AppScreen.estudTestScreen.createRoute(est.id_estudiante, test.id_test, est))
+                        }
+                    },
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 15.sp,
@@ -210,11 +214,12 @@ fun TestCard(
         }
     }
 }
+
 @Composable
 fun BottomBar2(
     navController: NavController
 ) {
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -251,7 +256,7 @@ fun itemBar2(
     texto: String,
     vector: ImageVector
 ) {
-    Column (
+    Column(
         modifier = Modifier
             .width(75.dp)
             .height(75.dp),
@@ -274,7 +279,6 @@ fun itemBar2(
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
