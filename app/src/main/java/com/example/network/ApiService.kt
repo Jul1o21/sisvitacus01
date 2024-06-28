@@ -1,6 +1,5 @@
 package com.example.sisvita_cus1.network
 
-import com.example.data.model.android.Estudiante
 import com.example.data.model.request.LoginRequest
 import com.example.data.model.request.RegTestRequest
 import com.example.data.model.response.LoginResponse
@@ -29,6 +28,7 @@ interface ApiService {
 
     @POST("/registerTest")
     suspend fun registrarTest(@Body regTestRequest: RegTestRequest): GeneralResponse
+
 
 
 }

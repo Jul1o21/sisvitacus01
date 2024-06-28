@@ -1,25 +1,36 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.android.Resultado
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvitag2.ui.view.EspMainScreen
 
 @Composable
-fun EvaluarResultadosTestScreen(navController: NavHostController, especialista: Especialista) {
+fun EvaluarResultadosTestScreen(
+    navController: NavController,
+    especialista: Especialista,
+) {
     var observacion by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
     val resultado = remember { mutableStateOf(Resultado("Juan Perez", 80, "Alta")) }
@@ -28,48 +39,118 @@ fun EvaluarResultadosTestScreen(navController: NavHostController, especialista: 
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = "Evaluar Resultados Test",
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+        TopBarEvaResult(navController)
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 30.dp),
-            textAlign = TextAlign.Center
-        )
-        // Detalles del Resultado
-        ResultadoDetallesComponent(resultado = resultado.value)
-        // Observaciones y Tratamiento
-        ObservacionesComponent(
-            observacion = observacion,
-            onObservacionChanged = { observacion = it },
-            tratamiento = tratamiento,
-            onTratamientoChanged = { tratamiento = it }
-        )
-        // Botón para Confirmar y Notificar
-        Button(
-            onClick = {
-                // Aquí se puede agregar la lógica para confirmar el resultado y notificar
-                println("Resultado confirmado: $observacion, $tratamiento")
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .weight(1f)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Confirmar y Notificar",
-                fontSize = 18.sp,
+                text = "Evaluar Resultados Test",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(5.dp)
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 30.dp),
+                textAlign = TextAlign.Center
+            )
+            // Detalles del Resultado
+            ResultadoDetallesComponent(resultado = resultado.value)
+            // Observaciones y Tratamiento
+            ObservacionesComponent(
+                observacion = observacion,
+                onObservacionChanged = { observacion = it },
+                tratamiento = tratamiento,
+                onTratamientoChanged = { tratamiento = it }
+            )
+            // Botón para Confirmar y Notificar
+            Button(
+                onClick = {
+                    // Aquí se puede agregar la lógica para confirmar el resultado y notificar
+                    println("Resultado confirmado: $observacion, $tratamiento")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(
+                    text = "Confirmar y Notificar",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(5.dp)
+                )
+            }
+        }
+        BottomBarEvaResult(navController)
+    }
+}
+@Composable
+fun TopBarEvaResult(navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(6.dp)
+    ) {
+        IconButton(onClick = {
+            navController.popBackStack()
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
 }
+
+@Composable
+fun BottomBarEvaResult(navController: NavController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondary)
+            .padding(6.dp),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        itemBarEvaResult("Cuestion.", Icons.Default.Star, navController, "cuestion")
+        itemBarEvaResult("Result.", Icons.Default.CheckCircle, navController, "result")
+        itemBarEvaResult("Citas", Icons.Default.Favorite, navController, "citas")
+        itemBarEvaResult("Perfil", Icons.Default.AccountCircle, navController, "perfil")
+    }
+}
+
+@Composable
+fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavController, route: String) {
+    Column(
+        modifier = Modifier
+            .width(75.dp)
+            .height(75.dp)
+            .clickable { navController.navigate(route) },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = vector,
+            contentDescription = null,
+            modifier = Modifier.size(25.dp),
+            tint = MaterialTheme.colorScheme.onSecondary
+        )
+        Text(
+            text = texto,
+            fontSize = 15.sp,
+            color = MaterialTheme.colorScheme.onSecondary,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
 
 @Composable
 fun ResultadoDetallesComponent(resultado: Resultado) {
@@ -142,11 +223,11 @@ fun ObservacionesComponent(
 
 @Preview(showBackground = true)
 @Composable
-fun EspMainScreenPreview() {
+fun EvaluarResultadosTestScreenPreview() {
     val navController = rememberNavController()
     val especialistaState = remember { mutableStateOf<Especialista?>(null) }
     SisvitaG2Theme {
-        EspMainScreen(
+        EvaluarResultadosTestScreen(
             navController = navController,
             especialista = especialistaState
         )

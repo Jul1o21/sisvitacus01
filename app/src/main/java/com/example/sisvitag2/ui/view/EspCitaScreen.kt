@@ -5,11 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,44 +25,43 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EspCitaViewModel
 
 @Composable
-
 fun EspCitaScreen(
     navController: NavController,
     especialista: MutableState<Especialista?>,
     viewModel: EspCitaViewModel = viewModel()
 ) {
-    Column {
-        Text("Bienvenido, ${especialista.value?.nombre_completo}")
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+    Scaffold(
+        topBar = { TopBarEspCita(navController, especialista) },
+        bottomBar = { BottomBarEspCita() }
     ) {
-        TopBarEspCita(navController, especialista)
-        val citasList = listOf(
-            Cita(id_usuario = 1, fecha_cita = "2024-06-21", observaciones = "Todo bien", tratamiento = "Continuar con la medicación", estado = "Pendiente"),
-            Cita(id_usuario = 2, fecha_cita = "2024-06-22", observaciones = "Revisión de rutina", tratamiento = "Ninguno", estado = "Completado"),
-            // Añadir más citas según sea necesario
-        )
-        ContentEspCita(citasList)
-        BottomBarEspCita()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(it) // Adds padding to accommodate the top and bottom bars
+        ) {
+            val citasList = listOf(
+                Cita(id_usuario = 1, fecha_cita = "2024-06-21", observaciones = "Todo bien", tratamiento = "Continuar con la medicación", estado = "Pendiente"),
+                Cita(id_usuario = 2, fecha_cita = "2024-06-22", observaciones = "Revisión de rutina", tratamiento = "Ninguno", estado = "Completado"),
+            )
+            ContentEspCita(citasList)
+        }
     }
 }
+
 @Composable
 fun TopBarEspCita(
     navController: NavController,
-    estudiante: MutableState<Especialista?>
+    especialista: MutableState<Especialista?>
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.1f)
             .background(MaterialTheme.colorScheme.primary)
             .padding(15.dp)
     ) {
         IconButton(onClick = {
-            // Accion para regresar al login
+            // Acción para regresar al login
             navController.navigate(AppScreen.loginScreen.route) {
                 popUpTo(AppScreen.loginScreen.route) { inclusive = true }
             }
@@ -84,12 +79,10 @@ fun TopBarEspCita(
 }
 
 @Composable
-fun BottomBarEspCita(
-) {
+fun BottomBarEspCita() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.1f)
             .background(MaterialTheme.colorScheme.secondary)
             .padding(
                 start = 20.dp,
@@ -191,16 +184,12 @@ fun BottomBarEspCita(
 }
 
 @Composable
-fun ContentEspCita(
-    citas: List<Cita>
-) {
-
+fun ContentEspCita(citas: List<Cita>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.89F)
-            .padding(start = 30.dp, end = 30.dp)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .padding(start = 30.dp, end = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
