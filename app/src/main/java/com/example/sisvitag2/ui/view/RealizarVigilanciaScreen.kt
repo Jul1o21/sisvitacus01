@@ -12,11 +12,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.data.model.android.Especialista
 import com.example.data.model.android.Participante
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
-fun RealizarVigilanciaScreen() {
+fun RealizarVigilanciaScreen(navController: NavHostController, especialista: Especialista) {
     var fechaFiltro by remember { mutableStateOf("") }
     var tipoTestFiltro by remember { mutableStateOf("") }
     val participantes = remember { mutableStateOf(listOf(
@@ -147,7 +150,22 @@ fun ParticipantesList(participantes: List<Participante>) {
 @Preview(showBackground = true)
 @Composable
 fun RealizarVigilanciaScreenPreview() {
+    val navController = rememberNavController()
+    val especialista = Especialista(
+        id_especialista = 1,
+        id_usuario = 1,
+        nombre_completo = "Dr. John Doe",
+        correo = "johndoe@example.com",
+        contrasenia = "password",
+        numero_documento = 12345678,
+        tipo_documento = "DNI",
+        sexo = "M",
+        edad = 40,
+        numero_celular = 987654321,
+        pais = "Perú"
+    )
     SisvitaG2Theme {
-        RealizarVigilanciaScreen()
+        RealizarVigilanciaScreen(navController, especialista)
     }
 }
+

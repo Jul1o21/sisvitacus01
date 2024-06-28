@@ -1,6 +1,7 @@
 package com.example.sisvitacus1.navigation
 
 import EvaluarResultadosTestScreen
+import RealizarVigilanciaScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,29 +17,24 @@ import com.google.gson.Gson
 
 @Composable
 fun AppNavigation(startDestination: String) {
-
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
-
         composable(
             route = AppScreen.mainScreen.route
         ) {
             MainScreen(navController)
         }
-
         composable(
             route = AppScreen.estudRegisterScreen.route
         ) {
             EstudRegisterScreen(navController)
         }
-
         composable(
             route = AppScreen.loginScreen.route
         ) {
             LoginScreen(navController)
         }
-
         composable(
             route = AppScreen.menuScreen.route,
             arguments = listOf(navArgument("estudianteJson") { type = NavType.StringType })
@@ -47,7 +43,6 @@ fun AppNavigation(startDestination: String) {
             val estudiante = Gson().fromJson(estudianteJson, Estudiante::class.java)
             MenuScreen(navController, estudiante)
         }
-
         composable(
             route = AppScreen.estudMainScreen.route,
             arguments = listOf(navArgument("estudianteJson") { type = NavType.StringType })
@@ -57,7 +52,6 @@ fun AppNavigation(startDestination: String) {
             val estudianteState = remember { mutableStateOf(estudiante) }
             EstudMainScreen(navController, estudianteState)
         }
-
         composable(
             route = AppScreen.espMainScreen.route,
             arguments = listOf(navArgument("especialistaJson") { type = NavType.StringType })
@@ -67,7 +61,6 @@ fun AppNavigation(startDestination: String) {
             val especialistaState = remember { mutableStateOf(especialista) }
             EspMainScreen(navController, especialistaState)
         }
-
         composable(
             route = AppScreen.espCitaScreen.route,
             arguments = listOf(navArgument("especialistaJson") { type = NavType.StringType })
@@ -77,7 +70,6 @@ fun AppNavigation(startDestination: String) {
             val especialistaState = remember { mutableStateOf(especialista) }
             EspCitaScreen(navController, especialistaState)
         }
-
         composable(
             route = AppScreen.estudTestScreen.route,
             arguments = listOf(
@@ -99,6 +91,14 @@ fun AppNavigation(startDestination: String) {
             val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
             val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
             EvaluarResultadosTestScreen(navController, especialista)
+        }
+        composable(
+            route = AppScreen.realizarVigilanciaScreen.route,
+            arguments = listOf(navArgument("especialistaJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
+            val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
+            RealizarVigilanciaScreen(navController, especialista)
         }
     }
 }

@@ -146,9 +146,9 @@ fun ContentEsp(navController: NavController, especialista: MutableState<Especial
 fun GridMenu(navController: NavController, especialista: MutableState<Especialista?>) {
     val menuItems = listOf(
         MenuItem1("Ver mis citas", painterResource(R.drawable.ver_citas), AppScreen.espCitaScreen),
-        MenuItem1("Programar citas", painterResource(R.drawable.agregar_cita), AppScreen.espCitaScreen),
-        MenuItem1("Evaluar test", painterResource(R.drawable.test_icon), AppScreen.espCitaScreen),
-        MenuItem1("Realizar vigilancia", painterResource(R.drawable.seguimiento), AppScreen.espCitaScreen)
+        MenuItem1("Programar citas", painterResource(R.drawable.agregar_cita), AppScreen.espCitaScreen), // Reemplaza con la ruta correcta si es diferente
+        MenuItem1("Evaluar test", painterResource(R.drawable.test_icon), AppScreen.evaluarResultadosTestScreen),
+        MenuItem1("Realizar vigilancia", painterResource(R.drawable.seguimiento), AppScreen.espCitaScreen) // Reemplaza con la ruta correcta si es diferente
     )
 
     Column {
@@ -169,6 +169,7 @@ fun GridMenu(navController: NavController, especialista: MutableState<Especialis
     }
 }
 
+
 data class MenuItem1(val title: String, val icon: Painter, val screen: AppScreen)
 
 @Composable
@@ -178,7 +179,13 @@ fun MenuItemCard1(item: MenuItem1, navController: NavController, especialista: M
             .aspectRatio(1f)
             .clickable {
                 val especialistaJson = Uri.encode(Gson().toJson(especialista.value))
-                navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!))
+                when (item.title) {
+                    "Ver mis citas" -> navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!))
+                    "Programar citas" -> navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!)) // Reemplaza con la ruta correcta si es diferente
+                    "Evaluar test" -> navController.navigate(AppScreen.evaluarResultadosTestScreen.createRoute(especialista.value!!))
+                    "Realizar vigilancia" -> navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!)) // Reemplaza con la ruta correcta si es diferente
+                    else -> {} // Maneja otras rutas si es necesario
+                }
             },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
@@ -208,6 +215,8 @@ fun MenuItemCard1(item: MenuItem1, navController: NavController, especialista: M
         }
     }
 }
+
+
 
 
 @Preview(showBackground = true)

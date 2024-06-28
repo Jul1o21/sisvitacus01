@@ -12,9 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.android.Resultado
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.example.sisvitag2.ui.view.EspMainScreen
 
 @Composable
 fun EvaluarResultadosTestScreen(navController: NavHostController, especialista: Especialista) {
@@ -140,8 +142,13 @@ fun ObservacionesComponent(
 
 @Preview(showBackground = true)
 @Composable
-fun EvaluarResultadosTestScreenPreview() {
+fun EspMainScreenPreview() {
+    val navController = rememberNavController()
+    val especialistaState = remember { mutableStateOf<Especialista?>(null) }
     SisvitaG2Theme {
-        EvaluarResultadosTestScreen(navController, especialista)
+        EspMainScreen(
+            navController = navController,
+            especialista = especialistaState
+        )
     }
 }
