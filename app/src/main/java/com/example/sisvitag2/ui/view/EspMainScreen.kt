@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.data.model.Especialista
+import com.example.data.model.android.Especialista
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme

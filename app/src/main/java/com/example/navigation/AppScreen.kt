@@ -1,8 +1,8 @@
 package com.example.sisvitacus1.navigation
 
 import android.net.Uri
-import com.example.data.model.Especialista
-import com.example.sisvita_cus1.data.model.Estudiante
+import com.example.data.model.android.Especialista
+import com.example.data.model.android.Estudiante
 import com.google.gson.Gson
 
 sealed class AppScreen(val route: String) {

@@ -1,6 +1,5 @@
 package com.example.sisvitag2.ui.view
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +28,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,13 +40,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.data.model.response.Test
-import com.example.sisvita_cus1.data.model.Estudiante
+import com.example.data.model.android.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
@@ -56,7 +52,7 @@ import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
-import com.google.gson.Gson
+import com.example.data.model.response.TestResponse
 
 @Composable
 fun EstudMainScreen(
@@ -109,7 +105,7 @@ fun TopBar2(navController: NavController) {
 fun Content2(
     navController: NavController,
     estudiante: MutableState<Estudiante?>,
-    tests: List<Test>
+    tests: List<TestResponse>
 ) {
     Column(
         modifier = Modifier
@@ -146,7 +142,7 @@ fun Content2(
 
 @Composable
 fun TestCard(
-    test: Test,
+    test: TestResponse,
     navController: NavController,
     estudiante: Estudiante?
 ) {

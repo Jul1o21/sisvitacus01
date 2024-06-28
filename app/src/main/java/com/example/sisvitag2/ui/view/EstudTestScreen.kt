@@ -24,9 +24,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.data.model.request.PregRespuesta
+import com.example.data.model.request.PregRespuestaRequest
 import com.example.data.model.request.TestRequest
-import com.example.sisvita_cus1.data.model.Estudiante
+import com.example.data.model.android.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.google.gson.Gson
@@ -116,8 +116,9 @@ fun TopBar3(navController: NavController) {
 fun Content3(viewModel: EstudTestViewModel) {
     val respuestas = viewModel.respuestas
     val selectedOptions = viewModel.selectedOptions
-    val testResponse by viewModel.testResponse.observeAsState()
+    val testResponse by viewModel.testSingleResponse.observeAsState()
 
+    println("Los test recibidos son: $testResponse")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -204,8 +205,8 @@ fun OpcionRow3(
     value: Int,
     idPregunta: Int,
     selectedOptions: MutableMap<Int, Int>,
-    respuestas: SnapshotStateList<PregRespuesta>,
-    onvalueChange: (PregRespuesta) -> Unit
+    respuestas: SnapshotStateList<PregRespuestaRequest>,
+    onvalueChange: (PregRespuestaRequest) -> Unit
 ) {
     val isChecked = selectedOptions[idPregunta] == value
 
@@ -218,7 +219,7 @@ fun OpcionRow3(
             onCheckedChange = { checked ->
                 if (checked) {
                     selectedOptions[idPregunta] = value
-                    val respuesta = PregRespuesta(id_preg = idPregunta, puntaje = value)
+                    val respuesta = PregRespuestaRequest(id_preg = idPregunta, puntaje = value)
                     onvalueChange(respuesta)
                 } else {
                     selectedOptions.remove(idPregunta)

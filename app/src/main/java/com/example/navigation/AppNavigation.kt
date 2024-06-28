@@ -8,8 +8,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.data.model.Especialista
-import com.example.sisvita_cus1.data.model.Estudiante
+import com.example.data.model.android.Especialista
+import com.example.data.model.android.Estudiante
 import com.example.sisvitag2.ui.view.*
 import com.google.gson.Gson
 

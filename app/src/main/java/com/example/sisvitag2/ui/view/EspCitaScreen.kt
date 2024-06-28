@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.data.model.Cita
-import com.example.data.model.Especialista
+import com.example.data.model.android.Cita
+import com.example.data.model.android.Especialista
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EspCitaViewModel

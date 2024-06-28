@@ -1,4 +1,4 @@
-package com.example.sisvita_cus1.data.model
+package com.example.data.model.android
 
 data class Estudiante(
     val id_estudiante: Int,

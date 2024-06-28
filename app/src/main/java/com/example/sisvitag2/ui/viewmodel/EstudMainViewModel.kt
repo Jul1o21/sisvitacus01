@@ -3,16 +3,16 @@ package com.example.sisvitag2.ui.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.model.response.Test
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.*
-import com.example.sisvita_cus1.domain.TestUseCase
+import com.example.data.model.response.TestResponse
+import com.example.domain.RealizarTestUseCase
 
 class EstudMainViewModel: ViewModel()  {
-    private val testUseCase = TestUseCase()
+    private val realizarTestUseCase = RealizarTestUseCase()
 
-    private val _tests = mutableStateOf<List<Test>>(emptyList())
-    val tests: State<List<Test>> = _tests
+    private val _tests = mutableStateOf<List<TestResponse>>(emptyList())
+    val tests: State<List<TestResponse>> = _tests
 
     init {
         fetchTests()
@@ -22,7 +22,7 @@ class EstudMainViewModel: ViewModel()  {
         println("SE obtienen los test")
         viewModelScope.launch {
             try {
-                val response = testUseCase.getTodosTests()
+                val response = realizarTestUseCase.getTodosTests()
                 if (response.success) {
                     _tests.value = response.data
                     println("Los test obtenidos son: $_tests.value")

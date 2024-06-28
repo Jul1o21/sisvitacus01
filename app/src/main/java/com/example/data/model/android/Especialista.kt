@@ -1,4 +1,4 @@
-package com.example.data.model
+package com.example.data.model.android
 
 data class Especialista(
     val id_especialista: Int,

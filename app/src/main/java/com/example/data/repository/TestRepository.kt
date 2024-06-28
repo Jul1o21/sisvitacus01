@@ -1,21 +1,28 @@
 package com.example.sisvita_cus1.data.repository
 
+import com.example.data.model.request.RegTestRequest
 import com.example.data.model.request.TestRequest
-import com.example.data.model.response.TestListResponse
-import com.example.data.model.response.TestResponse
+import com.example.data.model.response.GeneralResponse
+import com.example.data.model.response.TestsAllResponse
+import com.example.data.model.response.TestSingleResponse
 import com.example.sisvita_cus1.network.ApiInstance
 
 class TestRepository {
     private val apiService = ApiInstance.apiInstance
 
-    // Obetener todos los test de la BD
-    suspend fun getTodosTests(): TestListResponse {
+    // Obtener todos los test de la BD
+    suspend fun getTodosTests(): TestsAllResponse {
         return apiService.getTests()
     }
 
-    suspend fun getTest(testRequest: TestRequest): TestResponse {
+    // Obtener las preguntas de un solo test con su id
+    suspend fun getTest(testRequest: TestRequest): TestSingleResponse {
         return apiService.getTest(testRequest)
     }
-    // Obetener las preguntas de un test con su id
+
+    //Registrar el test dado por el estudiante en la BD
+    suspend fun regTest(regTestRequest: RegTestRequest): GeneralResponse {
+        return apiService.registrarTest(regTestRequest)
+    }
 
 }

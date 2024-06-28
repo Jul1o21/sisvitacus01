@@ -4,13 +4,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sisvita_cus1.data.model.Estudiante
-import com.example.sisvita_cus1.data.repository.RegEstudRepository
+import com.example.data.model.android.Estudiante
+import com.example.sisvita_cus1.domain.RegistrarEstudUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class EstudRegisterViewModel: ViewModel()  {
-    private val repository = RegEstudRepository()
+    private val repository = RegistrarEstudUseCase()
 
     private val _nombresState = mutableStateOf("")
     val nombresState: State<String> = _nombresState
@@ -62,11 +62,11 @@ class EstudRegisterViewModel: ViewModel()  {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
-    fun registrarEstudiante(estudiante: Estudiante) {
+    fun registrarEstudiante() {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                repository.registrarEstudiante(estudiante)
+                repository.registrarEstudiante()
                 _isLoading.value = false
             } catch (e: Exception) {
                 _isError.value = true
