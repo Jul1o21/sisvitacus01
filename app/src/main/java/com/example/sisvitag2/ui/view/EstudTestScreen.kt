@@ -51,24 +51,37 @@ fun EstudTestScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBar3(navController)
-        Box(modifier = Modifier.weight(1f)) {
-            Content3(viewModel)
-        }
-        Button(
-            onClick = {
-                viewModel.regTest(idEstudiante)
-                showDialog = true
-            },
+        Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .fillMaxHeight(0.92F)
         ) {
-            Text(
-                text = "Enviar respuestas",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(5.dp)
-            )
+            Box(modifier = Modifier.weight(1f)) {
+                Content3(viewModel)
+            }
+            Column (
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = {
+                        viewModel.regTest(idEstudiante)
+                        showDialog = true
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(.75f)
+                        .padding(10.dp)
+                ) {
+                    Text(
+                        text = "Enviar respuestas",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(4.dp)
+                    )
+                }
+            }
         }
         BottomBar3(navController)
 
@@ -80,7 +93,7 @@ fun EstudTestScreen(
                         val estudianteJson = Uri.encode(Gson().toJson(estudiante))
                         navController.navigate(AppScreen.menuScreen.createRoute(estudiante))
                     }) {
-                        Text("Ir al Menú")
+                        Text("Ver resultados")
                     }
                 },
                 title = { Text("Respuestas Registradas") },
@@ -241,8 +254,14 @@ fun BottomBar3(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxHeight()
             .background(MaterialTheme.colorScheme.secondary)
-            .padding(6.dp),
+            .padding(
+                start = 20.dp,
+                top = 6.dp,
+                end = 20.dp,
+                bottom = 6.dp
+            ),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         itemBar3("Cuestion.", Icons.Default.Star)

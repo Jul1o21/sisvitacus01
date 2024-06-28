@@ -53,6 +53,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
 import com.example.data.model.response.TestResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 
 @Composable
 fun EstudMainScreen(
@@ -196,7 +201,8 @@ fun TestCard(
                     text = AnnotatedString("Iniciar >"),
                     onClick = {
                         estudiante?.let { est ->
-                            navController.navigate(AppScreen.estudTestScreen.createRoute(est.id_estudiante, test.id_test, est))
+                            val ruta = AppScreen.estudTestScreen.createRoute(est.id_estudiante, test.id_test, est)
+                            navController.navigate(ruta)
                         }
                     },
                     style = TextStyle(
