@@ -7,16 +7,12 @@ import com.google.gson.Gson
 
 sealed class AppScreen(val route: String) {
 
-    // Pantalla de inicio (MainScreen)
     object mainScreen: AppScreen("inicio")
 
-    // Pantalla de registro (EstudRegisterScreen)
     object estudRegisterScreen: AppScreen("register")
 
-    // Pantala de login (LoginScreen)
     object loginScreen: AppScreen("login")
 
-    // Pantalla de Menú del estudiante (MenuScreen)
     object menuScreen : AppScreen("menu/{estudianteJson}") {
         fun createRoute(estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
@@ -24,20 +20,10 @@ sealed class AppScreen(val route: String) {
         }
     }
 
-    // Pantalla principal del estudiante (EstudMainScreen)
     object estudMainScreen : AppScreen("estudmain/{estudianteJson}") {
         fun createRoute(estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
             return "estudmain/$estudianteJson"
-        }
-    }
-
-    // EspMainScreen - espmain
-
-    object espCitaScreen : AppScreen("espcita/{especialistaJson}") {
-        fun createRoute(especialista: Especialista): String {
-            val especialistaJson = Uri.encode(Gson().toJson(especialista))
-            return "espmain/$especialistaJson"
         }
     }
 
@@ -48,12 +34,23 @@ sealed class AppScreen(val route: String) {
         }
     }
 
+    object espCitaScreen : AppScreen("espcita/{especialistaJson}") {
+        fun createRoute(especialista: Especialista): String {
+            val especialistaJson = Uri.encode(Gson().toJson(especialista))
+            return "espcita/$especialistaJson"
+        }
+    }
 
-    //EstudTestScreen - test
     object estudTestScreen: AppScreen("test/{id_estudiante}/{id_test}/{estudianteJson}") {
         fun createRoute(idEstudiante: Int, idTest: Int, estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
             return "test/$idEstudiante/$idTest/$estudianteJson"
+        }
+    }
+    object evaluarResultadosTestScreen : AppScreen("evaluar_resultados_test/{especialistaJson}") {
+        fun createRoute(especialista: Especialista): String {
+            val especialistaJson = Uri.encode(Gson().toJson(especialista))
+            return "evaluar_resultados_test/$especialistaJson"
         }
     }
 }

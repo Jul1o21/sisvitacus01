@@ -93,8 +93,6 @@ fun MenuItemCard(item: MenuItem, navController: NavController, estudiante: Estud
             .aspectRatio(1f)
             .clickable {
                 if (item.route == "test") {
-                    val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-                    val idTest = 456 // ID del test que deseas pasar
                     navController.navigate(AppScreen.estudMainScreen.createRoute(estudiante))
                 } else {
                     val estudianteJson = Uri.encode(Gson().toJson(estudiante))
@@ -130,6 +128,7 @@ fun MenuItemCard(item: MenuItem, navController: NavController, estudiante: Estud
         }
     }
 }
+
 
 
 @Composable

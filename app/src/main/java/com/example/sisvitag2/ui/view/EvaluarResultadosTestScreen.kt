@@ -11,11 +11,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.data.model.android.Especialista
 import com.example.data.model.android.Resultado
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
-fun EvaluarResultadosTestScreen() {
+fun EvaluarResultadosTestScreen(navController: NavHostController, especialista: Especialista) {
     var observacion by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
     val resultado = remember { mutableStateOf(Resultado("Juan Perez", 80, "Alta")) }
@@ -140,6 +142,6 @@ fun ObservacionesComponent(
 @Composable
 fun EvaluarResultadosTestScreenPreview() {
     SisvitaG2Theme {
-        EvaluarResultadosTestScreen()
+        EvaluarResultadosTestScreen(navController, especialista)
     }
 }

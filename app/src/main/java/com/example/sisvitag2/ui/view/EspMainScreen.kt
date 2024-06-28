@@ -1,5 +1,6 @@
 package com.example.sisvitag2.ui.view
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,7 @@ import com.example.data.model.android.Especialista
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.google.gson.Gson
 
 @Composable
 fun EspMainScreen(
@@ -38,7 +40,7 @@ fun EspMainScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBarEsp(navController)
-        ContentEsp(navController)
+        ContentEsp(navController, especialista)
         Spacer(modifier = Modifier.weight(1f))
         BottomBarEsp(navController)
     }
@@ -117,7 +119,7 @@ fun BottomBarItem(texto: String, icono: ImageVector, navController: NavControlle
 }
 
 @Composable
-fun ContentEsp(navController: NavController) {
+fun ContentEsp(navController: NavController, especialista: MutableState<Especialista?>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,17 +138,17 @@ fun ContentEsp(navController: NavController) {
             textAlign = TextAlign.Left
         )
 
-        GridMenu(navController)
+        GridMenu(navController, especialista)
     }
 }
 
 @Composable
-fun GridMenu(navController: NavController) {
+fun GridMenu(navController: NavController, especialista: MutableState<Especialista?>) {
     val menuItems = listOf(
-        MenuItem1("Ver mis citas", painterResource(R.drawable.ver_citas), "ver_mis_citas"),
-        MenuItem1("Programar citas", painterResource(R.drawable.agregar_cita), "programar_citas"),
-        MenuItem1("Evaluar test", painterResource(R.drawable.test_icon), "evaluar_test"),
-        MenuItem1("Realizar vigilancia", painterResource(R.drawable.seguimiento), "realizar_vigilancia")
+        MenuItem1("Ver mis citas", painterResource(R.drawable.ver_citas), AppScreen.espCitaScreen),
+        MenuItem1("Programar citas", painterResource(R.drawable.agregar_cita), AppScreen.espCitaScreen),
+        MenuItem1("Evaluar test", painterResource(R.drawable.test_icon), AppScreen.espCitaScreen),
+        MenuItem1("Realizar vigilancia", painterResource(R.drawable.seguimiento), AppScreen.espCitaScreen)
     )
 
     Column {
@@ -156,7 +158,7 @@ fun GridMenu(navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 rowItems.forEach { item ->
-                    MenuItemCard1(item, navController, Modifier.weight(1f))
+                    MenuItemCard1(item, navController, especialista, Modifier.weight(1f))
                 }
                 if (rowItems.size < 2) {
                     Spacer(modifier = Modifier.weight(1f))
@@ -167,14 +169,17 @@ fun GridMenu(navController: NavController) {
     }
 }
 
-data class MenuItem1(val title: String, val icon: Painter, val route: String)
+data class MenuItem1(val title: String, val icon: Painter, val screen: AppScreen)
 
 @Composable
-fun MenuItemCard1(item: MenuItem1, navController: NavController, modifier: Modifier = Modifier) {
+fun MenuItemCard1(item: MenuItem1, navController: NavController, especialista: MutableState<Especialista?>, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .aspectRatio(1f)
-            .clickable { navController.navigate(item.route) },
+            .clickable {
+                val especialistaJson = Uri.encode(Gson().toJson(especialista.value))
+                navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!))
+            },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -203,6 +208,7 @@ fun MenuItemCard1(item: MenuItem1, navController: NavController, modifier: Modif
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
