@@ -48,6 +48,7 @@ sealed class AppScreen(val route: String) {
         }
     }
 
+
     //EstudTestScreen - test
     object estudTestScreen: AppScreen("test/{id_estudiante}/{id_test}/{estudianteJson}") {
         fun createRoute(idEstudiante: Int, idTest: Int, estudiante: Estudiante): String {

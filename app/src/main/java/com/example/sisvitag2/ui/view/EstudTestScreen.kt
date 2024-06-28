@@ -36,7 +36,7 @@ fun EstudTestScreen(
     navController: NavController,
     idEstudiante: Int,
     idTest: Int,
-    estudiante: Estudiante, // Añade este parámetro
+    estudiante: Estudiante,
     viewModel: EstudTestViewModel = viewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -89,6 +89,8 @@ fun EstudTestScreen(
         }
     }
 }
+
+
 
 
 @Composable

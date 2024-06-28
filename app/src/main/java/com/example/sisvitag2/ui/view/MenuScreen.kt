@@ -56,7 +56,7 @@ fun MenuScreen(navController: NavController, estudiante: Estudiante) {
 @Composable
 fun MenuGrid(navController: NavController, estudiante: Estudiante) {
     val menuItems = listOf(
-        MenuItem("Realizar Test", Icons.Default.Star, "estudMainScreen"),
+        MenuItem("Realizar Test", Icons.Default.Star, "test"),
         MenuItem("Ver Resultados", Icons.Default.CheckCircle, "resultadosScreen"),
         MenuItem("Nueva Cita", Icons.Default.Favorite, "nuevaCitaScreen"),
         MenuItem("Mis Citas", Icons.Default.DateRange, "misCitasScreen"),
@@ -92,8 +92,14 @@ fun MenuItemCard(item: MenuItem, navController: NavController, estudiante: Estud
         modifier = modifier
             .aspectRatio(1f)
             .clickable {
-                val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-                navController.navigate(item.route)
+                if (item.route == "test") {
+                    val estudianteJson = Uri.encode(Gson().toJson(estudiante))
+                    val idTest = 456 // ID del test que deseas pasar
+                    navController.navigate(AppScreen.estudMainScreen.createRoute(estudiante))
+                } else {
+                    val estudianteJson = Uri.encode(Gson().toJson(estudiante))
+                    navController.navigate("${item.route}/$estudianteJson")
+                }
             },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
@@ -105,8 +111,6 @@ fun MenuItemCard(item: MenuItem, navController: NavController, estudiante: Estud
             modifier = Modifier
                 .padding(top = 36.dp)
                 .align(Alignment.CenterHorizontally)
-
-
         ) {
             Icon(
                 item.icon,
@@ -126,6 +130,7 @@ fun MenuItemCard(item: MenuItem, navController: NavController, estudiante: Estud
         }
     }
 }
+
 
 @Composable
 fun TopBar4(navController: NavController) {
