@@ -48,39 +48,38 @@ import com.example.data.model.android.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.example.sisvitag2.ui.viewmodel.EstudMainViewModel
+import com.example.sisvitag2.ui.viewmodel.EstudTestsListViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
 import com.example.data.model.response.TestResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 
 @Composable
-fun EstudMainScreen(
+fun EstudTestsListScreen(
     navController: NavController,
-    estudiante: MutableState<Estudiante?>,
-    viewModel: EstudMainViewModel = viewModel()
+    estudiante: Estudiante,
+    viewModel: EstudTestsListViewModel = viewModel()
 ) {
     val tests by viewModel.tests
-    println("Usuario recibido en EstudMainScreen: ${estudiante.value}")
+    println("Usuario recibido en EstudMainScreen: ${estudiante}")
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopBar2(navController)
+        TopBar2(navController, estudiante, viewModel )
         Content2(navController, estudiante, tests)
         BottomBar2(navController)
     }
 }
 
 @Composable
-fun TopBar2(navController: NavController) {
+fun TopBar2(
+    navController: NavController,
+    estudiante: Estudiante,
+    viewModel: EstudTestsListViewModel
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,9 +89,14 @@ fun TopBar2(navController: NavController) {
     ) {
         IconButton(onClick = {
             // Accion para regresar a la ventana inicial
-            navController.navigate(AppScreen.mainScreen.route) {
-                popUpTo(AppScreen.mainScreen.route) { inclusive = true }
+
+            navController.navigate(AppScreen.estudMenuScreen.createRoute(estudiante)) {
+                popUpTo(AppScreen.estudMenuScreen.route) { inclusive = true }
+
             }
+
+
+
         }) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
@@ -109,7 +113,7 @@ fun TopBar2(navController: NavController) {
 @Composable
 fun Content2(
     navController: NavController,
-    estudiante: MutableState<Estudiante?>,
+    estudiante: Estudiante,
     tests: List<TestResponse>
 ) {
     Column(
@@ -121,7 +125,7 @@ fun Content2(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         println("Estudiante recibido en Content2: $estudiante")
-        val nombre = estudiante.value?.nombre_completo ?: "sin name"
+        val nombre = estudiante.nombre_completo ?: "sin name"
         Text(
             text = "Bienvenido $nombre!",
             color = MaterialTheme.colorScheme.primary,
@@ -140,7 +144,7 @@ fun Content2(
                 .padding(bottom = 20.dp)
         )
         tests.forEach { test ->
-            TestCard(test, navController, estudiante.value)
+            TestCard(test, navController, estudiante)
         }
     }
 }
@@ -201,7 +205,7 @@ fun TestCard(
                     text = AnnotatedString("Iniciar >"),
                     onClick = {
                         estudiante?.let { est ->
-                            val ruta = AppScreen.estudTestScreen.createRoute(est.id_estudiante, test.id_test, est)
+                            val ruta = AppScreen.estudRealizarTestScreen.createRoute(est.id_estudiante, test.id_test, est)
                             navController.navigate(ruta)
                         }
                     },
@@ -286,9 +290,9 @@ fun itemBar2(
 @Composable
 fun EstudMainScreenPreview() {
     val navController = rememberNavController()
-    val estudianteState = remember { mutableStateOf<Estudiante?>(null) }
+    val estudianteState = Estudiante.defaultEstudiante()
     SisvitaG2Theme {
-        EstudMainScreen(
+        EstudTestsListScreen(
             navController = navController,
             estudiante = estudianteState
         )

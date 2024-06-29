@@ -32,7 +32,7 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.google.gson.Gson
 
 @Composable
-fun EstudTestScreen(
+fun EstudRealizarTestScreen(
     navController: NavController,
     idEstudiante: Int,
     idTest: Int,
@@ -90,8 +90,7 @@ fun EstudTestScreen(
                 onDismissRequest = { showDialog = false },
                 confirmButton = {
                     Button(onClick = {
-                        val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-                        navController.navigate(AppScreen.menuScreen.createRoute(estudiante))
+                        navController.navigate(AppScreen.estudMenuScreen.createRoute(estudiante))
                     }) {
                         Text("Ver resultados")
                     }
@@ -318,7 +317,7 @@ fun EstudTestScreenPreview() {
         universidad = "UNMSM"
     )
     SisvitaG2Theme {
-        EstudTestScreen(navController, idEstudiante, idTest, estudiante)
+        EstudRealizarTestScreen(navController, idEstudiante, idTest, estudiante)
     }
 }
 

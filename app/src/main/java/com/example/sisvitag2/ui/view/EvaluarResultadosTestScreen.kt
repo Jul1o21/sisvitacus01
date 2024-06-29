@@ -19,7 +19,11 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.view.EspMainScreen
 
 @Composable
-fun EvaluarResultadosTestScreen(navController: NavHostController, especialista: Especialista) {
+fun EvaluarResultadosTestScreen(
+    navController: NavHostController,
+    especialista: Especialista
+) {
+
     var observacion by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
     val resultado = remember { mutableStateOf(Resultado("Juan Perez", 80, "Alta")) }
@@ -144,7 +148,7 @@ fun ObservacionesComponent(
 @Composable
 fun EspMainScreenPreview() {
     val navController = rememberNavController()
-    val especialistaState = remember { mutableStateOf<Especialista?>(null) }
+    val especialistaState = Especialista.defaultEspecialista()
     SisvitaG2Theme {
         EspMainScreen(
             navController = navController,

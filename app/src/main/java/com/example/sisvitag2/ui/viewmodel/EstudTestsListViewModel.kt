@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import com.example.data.model.response.TestResponse
 import com.example.domain.RealizarTestUseCase
 
-class EstudMainViewModel: ViewModel()  {
+class EstudTestsListViewModel: ViewModel()  {
     private val realizarTestUseCase = RealizarTestUseCase()
 
     private val _tests = mutableStateOf<List<TestResponse>>(emptyList())

@@ -32,7 +32,7 @@ import com.google.gson.Gson
 @Composable
 fun EspMainScreen(
     navController: NavController,
-    especialista: MutableState<Especialista?>,
+    especialista: Especialista,
 ) {
     Column(
         modifier = Modifier
@@ -119,7 +119,11 @@ fun BottomBarItem(texto: String, icono: ImageVector, navController: NavControlle
 }
 
 @Composable
-fun ContentEsp(navController: NavController, especialista: MutableState<Especialista?>) {
+fun ContentEsp(
+    navController: NavController,
+    especialista: Especialista
+)
+{
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -143,7 +147,10 @@ fun ContentEsp(navController: NavController, especialista: MutableState<Especial
 }
 
 @Composable
-fun GridMenu(navController: NavController, especialista: MutableState<Especialista?>) {
+fun GridMenu(
+    navController: NavController,
+    especialista: Especialista
+) {
     val menuItems = listOf(
         MenuItem1("Ver mis citas", painterResource(R.drawable.ver_citas), AppScreen.espCitaScreen),
         MenuItem1("Programar citas", painterResource(R.drawable.agregar_cita), AppScreen.espCitaScreen), // Reemplaza con la ruta correcta si es diferente
@@ -173,17 +180,30 @@ fun GridMenu(navController: NavController, especialista: MutableState<Especialis
 data class MenuItem1(val title: String, val icon: Painter, val screen: AppScreen)
 
 @Composable
-fun MenuItemCard1(item: MenuItem1, navController: NavController, especialista: MutableState<Especialista?>, modifier: Modifier = Modifier) {
+fun MenuItemCard1(
+    item: MenuItem1,
+    navController: NavController,
+    especialista: Especialista,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier
             .aspectRatio(1f)
             .clickable {
-                val especialistaJson = Uri.encode(Gson().toJson(especialista.value))
+                val especialistaJson = Uri.encode(Gson().toJson(especialista))
                 when (item.title) {
-                    "Ver mis citas" -> navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!))
-                    "Programar citas" -> navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!)) // Reemplaza con la ruta correcta si es diferente
-                    "Evaluar test" -> navController.navigate(AppScreen.evaluarResultadosTestScreen.createRoute(especialista.value!!))
-                    "Realizar vigilancia" -> navController.navigate(AppScreen.espCitaScreen.createRoute(especialista.value!!)) // Reemplaza con la ruta correcta si es diferente
+                    "Ver mis citas" ->
+                        navController.navigate(
+                            AppScreen.espCitaScreen.createRoute(especialista!!))
+                    "Programar citas" ->
+                        navController.navigate(
+                            AppScreen.espCitaScreen.createRoute(especialista!!)) // Reemplaza con la ruta correcta si es diferente
+                    "Evaluar test" ->
+                        navController.navigate(
+                            AppScreen.evaluarResultadosTestScreen.createRoute(especialista!!))
+                    "Realizar vigilancia" ->
+                        navController.navigate(
+                            AppScreen.espCitaScreen.createRoute(especialista!!)) // Reemplaza con la ruta correcta si es diferente
                     else -> {} // Maneja otras rutas si es necesario
                 }
             },
@@ -223,7 +243,7 @@ fun MenuItemCard1(item: MenuItem1, navController: NavController, especialista: M
 @Composable
 fun EspMainScreenPreview() {
     val navController = rememberNavController()
-    val especialistaState = remember { mutableStateOf<Especialista?>(null) }
+    val especialistaState = Especialista.defaultEspecialista()
     SisvitaG2Theme {
         EspMainScreen(
             navController = navController,

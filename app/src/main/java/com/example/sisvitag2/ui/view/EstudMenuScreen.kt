@@ -17,15 +17,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.example.sisvitag2.ui.viewmodel.EstudMenuViewModel
 import com.google.gson.Gson
 
 @Composable
-fun MenuScreen(navController: NavController, estudiante: Estudiante) {
+fun EstudMenuScreen(
+    navController: NavController,
+    estudiante: Estudiante,
+    viewModel: EstudMenuViewModel = viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,8 +47,9 @@ fun MenuScreen(navController: NavController, estudiante: Estudiante) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val nombre = viewModel.estudiante.value?.nombre_completo ?: "sin name"
             Text(
-                text = "Menú Principal",
+                text = "Bienvenido $nombre!",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -87,16 +94,19 @@ fun MenuGrid(navController: NavController, estudiante: Estudiante) {
 data class MenuItem(val title: String, val icon: ImageVector, val route: String)
 
 @Composable
-fun MenuItemCard(item: MenuItem, navController: NavController, estudiante: Estudiante, modifier: Modifier = Modifier) {
+fun MenuItemCard(
+    item: MenuItem,
+    navController: NavController,
+    estudiante: Estudiante,
+    modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .aspectRatio(1f)
             .clickable {
                 if (item.route == "test") {
-                    navController.navigate(AppScreen.estudMainScreen.createRoute(estudiante))
+                    navController.navigate(AppScreen.estudTestsListScreen.createRoute(estudiante))
                 } else {
-                    val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-                    navController.navigate("${item.route}/$estudianteJson")
+                    //
                 }
             },
         shape = RoundedCornerShape(8.dp),
@@ -198,24 +208,10 @@ fun itemBar4(texto: String, vector: ImageVector) {
 @Composable
 fun MenuScreenPreview() {
     val navController = rememberNavController()
-    val estudiante = Estudiante(
-        contrasenia = "password",
-        correo = "estudiante@correo.com",
-        departamento = "Departamento",
-        distrito = "Distrito",
-        edad = 20,
-        id_estudiante = 1,
-        id_usuario = 1,
-        nombre_completo = "John Doe",
-        numero_celular = 123456789,
-        numero_documento = 12345678,
-        pais = "Perú",
-        sexo = "Masculino",
-        tipo_documento = "DNI",
-        tipo_usuario = "Estudiante",
-        universidad = "Universidad XYZ"
-    )
+    val estudiante = Estudiante.defaultEstudiante()
     SisvitaG2Theme {
-        MenuScreen(navController = navController, estudiante = estudiante)
+        EstudMenuScreen(
+            navController = navController,
+            estudiante = estudiante)
     }
 }

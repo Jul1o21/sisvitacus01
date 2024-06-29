@@ -2,7 +2,8 @@ package com.example.data.model.response
 
 
 /*
-* Para cada response JSON del backend le corresponde un archivo JSON
+* Recordar que para cada  JSON  que sea una respuesta del backend (response)
+* le corresponde un archivo JSON
 * por ejemplo del backend se recibe con obtenerTest, la siguiente
 * estructura JSON:
 *

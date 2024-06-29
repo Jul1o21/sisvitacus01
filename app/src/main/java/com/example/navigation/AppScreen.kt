@@ -10,16 +10,18 @@ sealed class AppScreen(val route: String) {
     object mainScreen: AppScreen("inicio")
     object estudRegisterScreen: AppScreen("register")
     object loginScreen: AppScreen("login")
-    object menuScreen : AppScreen("menu/{estudianteJson}") {
+
+
+    object estudMenuScreen : AppScreen("menu/{estudianteJson}") {
         fun createRoute(estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
             return "menu/$estudianteJson"
         }
     }
-    object estudMainScreen : AppScreen("estudmain/{estudianteJson}") {
+    object estudTestsListScreen : AppScreen("tests_list/{estudianteJson}") {
         fun createRoute(estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-            return "estudmain/$estudianteJson"
+            return "tests_list/$estudianteJson"
         }
     }
     object espMainScreen : AppScreen("espmain/{especialistaJson}") {
@@ -34,10 +36,10 @@ sealed class AppScreen(val route: String) {
             return "espcita/$especialistaJson"
         }
     }
-    object estudTestScreen: AppScreen("test/{id_estudiante}/{id_test}/{estudianteJson}") {
+    object estudRealizarTestScreen: AppScreen("realizar_test/{id_estudiante}/{id_test}/{estudianteJson}") {
         fun createRoute(idEstudiante: Int, idTest: Int, estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-            return "test/$idEstudiante/$idTest/$estudianteJson"
+            return "realizar_test/$idEstudiante/$idTest/$estudianteJson"
         }
     }
     object evaluarResultadosTestScreen : AppScreen("evaluar_resultados_test/{especialistaJson}") {
