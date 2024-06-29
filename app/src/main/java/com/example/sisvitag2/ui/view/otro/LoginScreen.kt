@@ -1,4 +1,4 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.otro
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -197,8 +197,8 @@ fun Formulario(
 
 
         if (loginSuccess) {
-            val estudiante = loginViewModel.estudiante.value
-            val especialista = loginViewModel.especialista.value
+            val estudiante = loginViewModel.estudiante
+            val especialista = loginViewModel.especialista
             estudiante?.let {
                 LaunchedEffect(estudiante) {
                     println("Estudiante en la ventana: $estudiante")
@@ -211,7 +211,7 @@ fun Formulario(
                 loginViewModel.mostrarDialog()
                 LaunchedEffect(especialista) {
                     println("Especialista en la ventana: $especialista")
-                    navController.navigate(AppScreen.espMainScreen.createRoute(especialista))
+                    navController.navigate(AppScreen.espMenuScreen.createRoute(especialista))
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.especialista
 
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -11,9 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -33,12 +30,12 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.google.gson.Gson
 
 @Composable
-fun EspMainScreen(
+fun EspMenuScreen(
     navController: NavController,
     especialista: Especialista,
 ) {
     Scaffold(
-        topBar = { TopBarEsp(navController) },
+        topBar = { TopBarEsp(navController,especialista) },
         bottomBar = { BottomBarEsp(navController) }
     ) { paddingValues ->
         Column(
@@ -53,7 +50,10 @@ fun EspMainScreen(
 }
 
 @Composable
-fun TopBarEsp(navController: NavController) {
+fun TopBarEsp(
+    navController: NavController,
+    especialista: Especialista
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -67,9 +67,11 @@ fun TopBarEsp(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = {
+
                 navController.navigate(AppScreen.loginScreen.route) {
                     popUpTo(AppScreen.loginScreen.route) { inclusive = true }
                 }
+
             }) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
@@ -243,11 +245,11 @@ fun MenuItemCard1(
 
 @Preview(showBackground = true)
 @Composable
-fun EspMainScreenPreview() {
+fun EspMenuScreenPreview() {
     val navController = rememberNavController()
     val especialistaState = Especialista.defaultEspecialista()
     SisvitaG2Theme {
-        EspMainScreen(
+        EspMenuScreen(
             navController = navController,
             especialista = especialistaState
         )

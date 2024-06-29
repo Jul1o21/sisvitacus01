@@ -12,10 +12,10 @@ sealed class AppScreen(val route: String) {
     object loginScreen: AppScreen("login")
 
 
-    object estudMenuScreen : AppScreen("menu/{estudianteJson}") {
+    object estudMenuScreen : AppScreen("est_menu/{estudianteJson}") {
         fun createRoute(estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-            return "menu/$estudianteJson"
+            return "est_menu/$estudianteJson"
         }
     }
     object estudTestsListScreen : AppScreen("tests_list/{estudianteJson}") {
@@ -24,10 +24,10 @@ sealed class AppScreen(val route: String) {
             return "tests_list/$estudianteJson"
         }
     }
-    object espMainScreen : AppScreen("espmain/{especialistaJson}") {
+    object espMenuScreen : AppScreen("esp_menu/{especialistaJson}") {
         fun createRoute(especialista: Especialista): String {
             val especialistaJson = Uri.encode(Gson().toJson(especialista))
-            return "espmain/$especialistaJson"
+            return "esp_menu/$especialistaJson"
         }
     }
     object espCitaScreen : AppScreen("espcita/{especialistaJson}") {

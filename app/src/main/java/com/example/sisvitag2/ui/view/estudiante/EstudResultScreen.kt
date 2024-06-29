@@ -1,4 +1,4 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.estudiante
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

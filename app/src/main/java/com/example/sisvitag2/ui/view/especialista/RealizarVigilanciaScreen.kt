@@ -1,4 +1,4 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.especialista
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,9 +30,12 @@ import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
-fun RealizarVigilanciaScreen(navController: NavHostController, especialista: Especialista) {
+fun RealizarVigilanciaScreen(
+    navController: NavHostController,
+    especialista: Especialista
+) {
     Scaffold(
-        topBar = { TopBarVigilancia(navController) },
+        topBar = { TopBarVigilancia(navController,especialista) },
         bottomBar = { BottomBarVigilancia() }
     ) { paddingValues ->
         Column(
@@ -74,7 +77,10 @@ fun RealizarVigilanciaScreen(navController: NavHostController, especialista: Esp
 }
 
 @Composable
-fun TopBarVigilancia(navController: NavController) {
+fun TopBarVigilancia(
+    navController: NavController,
+    especialista: Especialista
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,7 +88,10 @@ fun TopBarVigilancia(navController: NavController) {
             .padding(6.dp)
     ) {
         IconButton(onClick = {
-            navController.popBackStack()
+            navController.navigate(AppScreen.espMenuScreen.createRoute(especialista)) {
+                popUpTo(AppScreen.espMenuScreen.route) { inclusive = true }
+
+            }
         }) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,

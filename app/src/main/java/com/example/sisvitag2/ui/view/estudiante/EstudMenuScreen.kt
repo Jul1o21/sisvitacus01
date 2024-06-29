@@ -1,6 +1,5 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.estudiante
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,7 +23,6 @@ import com.example.data.model.android.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EstudMenuViewModel
-import com.google.gson.Gson
 
 @Composable
 fun EstudMenuScreen(
@@ -149,8 +147,8 @@ fun TopBar4(navController: NavController) {
             .padding(6.dp)
     ) {
         IconButton(onClick = {
-            navController.navigate(AppScreen.mainScreen.route) {
-                popUpTo(AppScreen.mainScreen.route) { inclusive = true }
+            navController.navigate(AppScreen.loginScreen.route) {
+                popUpTo(AppScreen.loginScreen.route) { inclusive = true }
             }
         }) {
             Icon(

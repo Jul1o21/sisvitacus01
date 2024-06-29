@@ -31,8 +31,6 @@ class LoginViewModel : ViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
-
-
     private val _loginSuccess = mutableStateOf(false)
     val loginSuccess: State<Boolean> = _loginSuccess
 
@@ -42,14 +40,17 @@ class LoginViewModel : ViewModel() {
     private val _dialogMessage = mutableStateOf("")
     val dialogMessage: State<String> = _dialogMessage
 
-    private val _estudiante = mutableStateOf<Estudiante?>(null)
-    val estudiante: State<Estudiante?> = _estudiante
+    private var _estudiante:Estudiante? = null
+    val estudiante: Estudiante? get() = _estudiante
 
-    private val _especialista = mutableStateOf<Especialista?>(null)
-    val especialista: State<Especialista?> = _especialista
+    private var _especialista: Especialista? = null
+    val especialista: Especialista? get() = _especialista
+
+
     fun setEmail(email: String) {
         _correoState.value = email
     }
+
 
     fun setPassword(password: String) {
         _contraseniaState.value = password
@@ -95,7 +96,7 @@ class LoginViewModel : ViewModel() {
                     // Verificar el tipo de usuario
                     if (usuarioResponse.tipo_usuario == "estudiante") {
                         println("Es un estudiante")
-                        _estudiante.value = Estudiante(
+                        _estudiante = Estudiante(
                             id_estudiante = usuarioResponse.id_estudiante ?: 0,
                             id_usuario = usuarioResponse.id_usuario,
                             nombre_completo = usuarioResponse.nombre_completo,
@@ -113,7 +114,7 @@ class LoginViewModel : ViewModel() {
                         )
                     } else if (usuarioResponse.tipo_usuario == "especialista") {
                         println("Es un especialista")
-                        _especialista.value = Especialista(
+                        _especialista = Especialista(
                             id_especialista = usuarioResponse.id_especialista ?: 0,
                             id_usuario = usuarioResponse.id_usuario,
                             nombre_completo = usuarioResponse.nombre_completo,

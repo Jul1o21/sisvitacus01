@@ -1,4 +1,4 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.estudiante
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.example.sisvitag2.ui.view.otro.textoBoton
 import com.example.sisvitag2.ui.viewmodel.EstudRegisterViewModel
 
 @Composable

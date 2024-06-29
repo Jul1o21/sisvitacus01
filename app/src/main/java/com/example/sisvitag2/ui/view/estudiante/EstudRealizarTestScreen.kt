@@ -1,7 +1,6 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.estudiante
 
 import EstudTestViewModel
-import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.background
@@ -29,7 +28,6 @@ import com.example.data.model.request.TestRequest
 import com.example.data.model.android.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
-import com.google.gson.Gson
 
 @Composable
 fun EstudRealizarTestScreen(

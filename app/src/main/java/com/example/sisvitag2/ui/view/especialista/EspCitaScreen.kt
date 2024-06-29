@@ -1,4 +1,4 @@
-package com.example.sisvitag2.ui.view
+package com.example.sisvitag2.ui.view.especialista
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +27,7 @@ import com.example.sisvitag2.ui.viewmodel.EspCitaViewModel
 @Composable
 fun EspCitaScreen(
     navController: NavController,
-    especialista: MutableState<Especialista?>,
+    especialista: Especialista,
     viewModel: EspCitaViewModel = viewModel()
 ) {
     Scaffold(
@@ -44,7 +44,7 @@ fun EspCitaScreen(
                 Cita(id_usuario = 1, fecha_cita = "2024-06-21", observaciones = "Todo bien", tratamiento = "Continuar con la medicación", estado = "Pendiente"),
                 Cita(id_usuario = 2, fecha_cita = "2024-06-22", observaciones = "Revisión de rutina", tratamiento = "Ninguno", estado = "Completado"),
             )
-            ContentEspCita(citasList)
+            ContentEspCita(citasList,especialista)
         }
     }
 }
@@ -52,7 +52,7 @@ fun EspCitaScreen(
 @Composable
 fun TopBarEspCita(
     navController: NavController,
-    especialista: MutableState<Especialista?>
+    especialista: Especialista
 ) {
     Box(
         modifier = Modifier
@@ -62,8 +62,10 @@ fun TopBarEspCita(
     ) {
         IconButton(onClick = {
             // Acción para regresar al login
-            navController.navigate(AppScreen.loginScreen.route) {
-                popUpTo(AppScreen.loginScreen.route) { inclusive = true }
+
+            navController.navigate(AppScreen.espMenuScreen.createRoute(especialista)) {
+                popUpTo(AppScreen.espMenuScreen.route) { inclusive = true }
+
             }
         }) {
             Icon(
@@ -184,7 +186,10 @@ fun BottomBarEspCita() {
 }
 
 @Composable
-fun ContentEspCita(citas: List<Cita>) {
+fun ContentEspCita(
+    citas: List<Cita>,
+    especialista: Especialista
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -192,8 +197,10 @@ fun ContentEspCita(citas: List<Cita>) {
             .padding(start = 30.dp, end = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        val nombre = especialista.nombre_completo
         Text(
-            text = "Bienvenido Especialista ",
+
+            text = "Especialista $nombre",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
@@ -258,7 +265,7 @@ fun ContentEspCita(citas: List<Cita>) {
 @Composable
 fun EspCitaScreenPreview() {
     val navController = rememberNavController()
-    val especialistaState = remember { mutableStateOf<Especialista?>(null) }
+    val especialistaState = Especialista.defaultEspecialista()
     SisvitaG2Theme {
         EspCitaScreen(
             navController = navController,

@@ -1,3 +1,6 @@
+package com.example.sisvitag2.ui.view.especialista
+
+import EvaluarResultadosTestViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,8 +28,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
-import com.example.data.model.android.Resultado
 import com.example.data.model.response.TestResponseResult
+import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
@@ -51,6 +54,7 @@ fun EvaluarResultadosTestScreen(
             .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
     ) {
+        TopBarEvaResult(navController,especialista)
         Text(
             text = "Evaluar Resultados Test",
             color = MaterialTheme.colorScheme.primary,
@@ -98,43 +102,11 @@ fun EvaluarResultadosTestScreen(
 
         // Espacio para empujar el BottomBarEvaResult hacia abajo
         Spacer(modifier = Modifier.weight(1f))
+        BottomBarEvaResult(navController = navController)
 
     }
+
 }
-
-
-@Composable
-fun TestResultComponent(result: TestResponseResult) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "Test: ${result.id_test_res}",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Tipo de test: ${result.tipo_test}",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Puntaje Total: ${result.puntaje_total}",
-                fontSize = 14.sp,
-            )
-        }
-    }
-}
-
-
 @Composable
 fun ObservacionesComponent(
     observacion: String,
@@ -183,4 +155,120 @@ fun ObservacionesComponent(
         )
     }
 }
+
+
+@Composable
+fun TopBarEvaResult(
+    navController: NavController,
+    especialista : Especialista
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+    ) {
+        IconButton(onClick = {
+            navController.navigate(AppScreen.espMenuScreen.createRoute(especialista)) {
+                popUpTo(AppScreen.espMenuScreen.route) { inclusive = true }
+
+            }
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomBarEvaResult(navController: NavController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondary)
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+    horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        itemBarEvaResult("Cuestion.", Icons.Default.Star, navController, "cuestion")
+        itemBarEvaResult("Result.", Icons.Default.CheckCircle, navController, "result")
+        itemBarEvaResult("Citas", Icons.Default.Favorite, navController, "citas")
+        itemBarEvaResult("Perfil", Icons.Default.AccountCircle, navController, "perfil")
+    }
+}
+
+@Composable
+fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavController, route: String) {
+    Column(
+        modifier = Modifier
+            .width(75.dp)
+            .height(75.dp)
+            .clickable { navController.navigate(route) },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = vector,
+            contentDescription = null,
+            modifier = Modifier.size(25.dp),
+            tint = MaterialTheme.colorScheme.onSecondary
+        )
+        Text(
+            text = texto,
+            fontSize = 15.sp,
+            color = MaterialTheme.colorScheme.onSecondary,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+
+@Composable
+fun TestResultComponent(result: TestResponseResult) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Test: ${result.id_test_res}",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Tipo de test: ${result.tipo_test}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Puntaje Total: ${result.puntaje_total}",
+                fontSize = 14.sp,
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun EvaluarResultadosTestScreen() {
+    val navController = rememberNavController()
+    val especialista = Especialista.defaultEspecialista()
+    SisvitaG2Theme {
+        EvaluarResultadosTestScreen(
+            especialista = especialista,
+            navController = navController
+            )
+    }
+}
+
 
