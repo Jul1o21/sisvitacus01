@@ -20,82 +20,178 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.android.Resultado
+import com.example.data.model.response.TestResponseResult
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
 fun EvaluarResultadosTestScreen(
-    navController: NavController,
-    especialista: Especialista,
+    navController: NavHostController,
+    viewModel: EvaluarResultadosTestViewModel = viewModel()
 ) {
     var observacion by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
-    val resultado = remember { mutableStateOf(Resultado("Juan Perez", 80, "Alta")) }
+    val testResults = viewModel.testsRespondidos
+
+    LaunchedEffect(Unit) {
+        viewModel.obtenerTodosTestsRespondidos()
+    }
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
     ) {
-        TopBarEvaResult(navController)
-        Column(
+        TopBarEvaResult(navController = navController)
+        Text(
+            text = "Evaluar Resultados Test",
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState())
+                .padding(top = 10.dp, bottom = 30.dp),
+            textAlign = TextAlign.Center
+        )
+
+        // Mostrar resultados de tests
+        testResults.forEach { result ->
+            TestResultComponent(result)
+        }
+
+        // Observaciones y Tratamiento
+        ObservacionesComponent(
+            observacion = observacion,
+            onObservacionChanged = { observacion = it },
+            tratamiento = tratamiento,
+            onTratamientoChanged = { tratamiento = it }
+        )
+
+        // Botón para Confirmar y Notificar
+        Button(
+            onClick = {
+                // Aquí se puede agregar la lógica para confirmar el resultado y notificar
+                println("Resultado confirmado: $observacion, $tratamiento")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .padding(vertical = 8.dp)
         ) {
             Text(
-                text = "Evaluar Resultados Test",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 32.sp,
+                text = "Confirmar y Notificar",
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 30.dp),
-                textAlign = TextAlign.Center
+                    .padding(5.dp)
             )
-            // Detalles del Resultado
-            ResultadoDetallesComponent(resultado = resultado.value)
-            // Observaciones y Tratamiento
-            ObservacionesComponent(
-                observacion = observacion,
-                onObservacionChanged = { observacion = it },
-                tratamiento = tratamiento,
-                onTratamientoChanged = { tratamiento = it }
-            )
-            // Botón para Confirmar y Notificar
-            Button(
-                onClick = {
-                    // Aquí se puede agregar la lógica para confirmar el resultado y notificar
-                    println("Resultado confirmado: $observacion, $tratamiento")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(
-                    text = "Confirmar y Notificar",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(5.dp)
-                )
-            }
         }
-        BottomBarEvaResult(navController)
+
+        // Espacio para empujar el BottomBarEvaResult hacia abajo
+        Spacer(modifier = Modifier.weight(1f))
+
+        BottomBarEvaResult(navController = navController)
     }
 }
+
+
+@Composable
+fun TestResultComponent(result: TestResponseResult) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Test: ${result.id_test_res}",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Tipo de test: ${result.tipo_test}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Puntaje Total: ${result.puntaje_total}",
+                fontSize = 14.sp,
+            )
+        }
+    }
+}
+
+
+@Composable
+fun ObservacionesComponent(
+    observacion: String,
+    onObservacionChanged: (String) -> Unit,
+    tratamiento: String,
+    onTratamientoChanged: (String) -> Unit
+) {
+    Column {
+        Text(
+            text = "Observaciones",
+            color = MaterialTheme.colorScheme.secondary,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .padding(top = 5.dp, bottom = 10.dp),
+            textAlign = TextAlign.Left
+        )
+        BasicTextField(
+            value = observacion,
+            onValueChange = onObservacionChanged,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            singleLine = true
+        )
+        Text(
+            text = "Tratamiento",
+            color = MaterialTheme.colorScheme.secondary,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .padding(top = 5.dp, bottom = 10.dp),
+            textAlign = TextAlign.Left
+        )
+        BasicTextField(
+            value = tratamiento,
+            onValueChange = onTratamientoChanged,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            singleLine = true
+        )
+    }
+}
+
+
 @Composable
 fun TopBarEvaResult(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(6.dp)
+            .padding(horizontal = 16.dp, vertical = 6.dp)
     ) {
         IconButton(onClick = {
             navController.popBackStack()
@@ -110,13 +206,14 @@ fun TopBarEvaResult(navController: NavController) {
     }
 }
 
+
 @Composable
 fun BottomBarEvaResult(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.secondary)
-            .padding(6.dp),
+            .padding(horizontal = 16.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         itemBarEvaResult("Cuestion.", Icons.Default.Star, navController, "cuestion")
@@ -125,6 +222,7 @@ fun BottomBarEvaResult(navController: NavController) {
         itemBarEvaResult("Perfil", Icons.Default.AccountCircle, navController, "perfil")
     }
 }
+
 
 @Composable
 fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavController, route: String) {
@@ -151,85 +249,13 @@ fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavContr
     }
 }
 
-
-@Composable
-fun ResultadoDetallesComponent(resultado: Resultado) {
-    Column {
-        Text(
-            text = "Nombre: ${resultado.nombre}",
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "Puntaje: ${resultado.puntaje}",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal
-        )
-        Text(
-            text = "Nivel de Ansiedad: ${resultado.nivelAnsiedad}",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal
-        )
-    }
-}
-
-@Composable
-fun ObservacionesComponent(
-    observacion: String,
-    onObservacionChanged: (String) -> Unit,
-    tratamiento: String,
-    onTratamientoChanged: (String) -> Unit
-) {
-    Column {
-        Text(
-            text = "Observaciones",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        BasicTextField(
-            value = observacion,
-            onValueChange = onObservacionChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            singleLine = true
-        )
-        Text(
-            text = "Tratamiento",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        BasicTextField(
-            value = tratamiento,
-            onValueChange = onTratamientoChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            singleLine = true
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun EvaluarResultadosTestScreenPreview() {
     val navController = rememberNavController()
-    val especialistaState = remember { mutableStateOf<Especialista?>(null) }
     SisvitaG2Theme {
         EvaluarResultadosTestScreen(
-            navController = navController,
-            especialista = especialistaState
+            navController = navController
         )
     }
 }

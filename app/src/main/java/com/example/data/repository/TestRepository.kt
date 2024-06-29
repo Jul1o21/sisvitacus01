@@ -5,6 +5,7 @@ import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
 import com.example.data.model.response.TestsAllResponse
 import com.example.data.model.response.TestSingleResponse
+import com.example.data.model.response.TestsResult
 import com.example.sisvita_cus1.network.ApiInstance
 
 
@@ -25,6 +26,10 @@ class TestRepository {
     //Registrar el test dado por el estudiante en la BD
     suspend fun regTest(regTestRequest: RegTestRequest): GeneralResponse {
         return apiService.registrarTest(regTestRequest)
+    }
+
+    suspend fun getTodosTestsResultados(): TestsResult {
+        return apiService.getTodosTests()
     }
 
 }
