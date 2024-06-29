@@ -32,11 +32,14 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 @Composable
 fun EvaluarResultadosTestScreen(
     navController: NavHostController,
+<<<<<<< HEAD
     especialista: Especialista
 ) {
 
+=======
     viewModel: EvaluarResultadosTestViewModel = viewModel()
 ) {
+>>>>>>> f6dd4c31512b7f50b24387caf3eb853a3c37008d
     var observacion by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
     val testResults = viewModel.testsRespondidos
@@ -197,6 +200,7 @@ fun EspMainScreenPreview() {
         EspMainScreen(
             navController = navController,
             especialista = especialistaState
+=======
 fun TopBarEvaResult(navController: NavController) {
     Box(
         modifier = Modifier
@@ -256,6 +260,7 @@ fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavContr
             fontSize = 15.sp,
             color = MaterialTheme.colorScheme.onSecondary,
             textAlign = TextAlign.Center
+>>>>>>> f6dd4c31512b7f50b24387caf3eb853a3c37008d
         )
     }
 }
