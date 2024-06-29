@@ -1,10 +1,19 @@
+package com.example.sisvitag2.ui.view
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -12,47 +21,173 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.android.Participante
+import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
 fun RealizarVigilanciaScreen(navController: NavHostController, especialista: Especialista) {
-    var fechaFiltro by remember { mutableStateOf("") }
-    var tipoTestFiltro by remember { mutableStateOf("") }
-    val participantes = remember { mutableStateOf(listOf(
-        Participante("Juan Perez", 80, "A"),
-        Participante("Maria Lopez", 75, "B")
-    )) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(
-            text = "Realizar Vigilancia",
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+    Scaffold(
+        topBar = { TopBarVigilancia(navController) },
+        bottomBar = { BottomBarVigilancia() }
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 30.dp),
-            textAlign = TextAlign.Center
-        )
-        // Filtros
-        FiltroComponent(
-            fechaFiltro = fechaFiltro,
-            onFechaChanged = { fechaFiltro = it },
-            tipoTestFiltro = tipoTestFiltro,
-            onTipoTestChanged = { tipoTestFiltro = it }
-        )
-        // Lista de Participantes
-        ParticipantesList(participantes = participantes.value)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            var fechaFiltro by remember { mutableStateOf("") }
+            var tipoTestFiltro by remember { mutableStateOf("") }
+            val participantes = remember { mutableStateOf(listOf(
+                Participante("Juan Perez", 80, "A"),
+                Participante("Maria Lopez", 75, "B")
+            )) }
+
+            Text(
+                text = "Realizar Vigilancia",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 30.dp),
+                textAlign = TextAlign.Center
+            )
+            // Filtros
+            FiltroComponent(
+                fechaFiltro = fechaFiltro,
+                onFechaChanged = { fechaFiltro = it },
+                tipoTestFiltro = tipoTestFiltro,
+                onTipoTestChanged = { tipoTestFiltro = it }
+            )
+            // Lista de Participantes
+            ParticipantesList(participantes = participantes.value)
+        }
+    }
+}
+
+@Composable
+fun TopBarVigilancia(navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(6.dp)
+    ) {
+        IconButton(onClick = {
+            navController.popBackStack()
+        }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomBarVigilancia() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondary)
+            .padding(
+                start = 20.dp,
+                top = 6.dp,
+                end = 20.dp,
+                bottom = 6.dp
+            ),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        Column(
+            modifier = Modifier
+                .width(75.dp)
+                .height(75.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+            Text(
+                text = "Cuestion.",
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onSecondary,
+                textAlign = TextAlign.Center
+            )
+        }
+        Column(
+            modifier = Modifier
+                .width(75.dp)
+                .height(75.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.CheckCircle,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+            Text(
+                text = "Result.",
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onSecondary,
+                textAlign = TextAlign.Center
+            )
+        }
+        Column(
+            modifier = Modifier
+                .width(75.dp)
+                .height(75.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+            Text(
+                text = "Citas",
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onSecondary,
+                textAlign = TextAlign.Center
+            )
+        }
+        Column(
+            modifier = Modifier
+                .width(75.dp)
+                .height(75.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+            Text(
+                text = "Perfil",
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onSecondary,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -162,10 +297,10 @@ fun RealizarVigilanciaScreenPreview() {
         sexo = "M",
         edad = 40,
         numero_celular = 987654321,
-        pais = "Perú"
+        pais = "Perú",
+        tipo_usuario = "especialista"
     )
     SisvitaG2Theme {
         RealizarVigilanciaScreen(navController, especialista)
     }
 }
-

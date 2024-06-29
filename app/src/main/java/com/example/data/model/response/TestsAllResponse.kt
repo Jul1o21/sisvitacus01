@@ -5,9 +5,10 @@ data class TestsAllResponse(
     val message: String,
     val success: Boolean
 )
+
 data class TestResponse(
     val descripcion: String,
     val id_test: Int,
     val recomendacion: String,
-    val tipo: String
+    val tipo: String,
 )

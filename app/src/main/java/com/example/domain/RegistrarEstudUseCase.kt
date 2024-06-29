@@ -1,7 +1,5 @@
 package com.example.sisvita_cus1.domain
 
-
-import com.example.data.model.android.Estudiante
 import com.example.data.model.response.GeneralResponse
 import com.example.data.repository.EstudianteRepository
 

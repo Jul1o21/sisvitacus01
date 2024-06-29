@@ -1,7 +1,6 @@
 package com.example.sisvitacus1.navigation
 
 import EvaluarResultadosTestScreen
-import RealizarVigilanciaScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -103,7 +102,7 @@ fun AppNavigation(startDestination: String) {
         ) { backStackEntry ->
             val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
             val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
-            EvaluarResultadosTestScreen(navController, especialista)
+            EvaluarResultadosTestScreen(navController)
         }
 
         composable(

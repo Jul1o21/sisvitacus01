@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.model.android.Estudiante
 import com.example.sisvita_cus1.domain.RegistrarEstudUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

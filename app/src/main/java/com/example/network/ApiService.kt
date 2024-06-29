@@ -1,6 +1,5 @@
 package com.example.sisvita_cus1.network
 
-import com.example.data.model.android.Estudiante
 import com.example.data.model.request.LoginRequest
 import com.example.data.model.request.RegTestRequest
 import com.example.data.model.response.LoginResponse
@@ -8,12 +7,13 @@ import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
 import com.example.data.model.response.TestsAllResponse
 import com.example.data.model.response.TestSingleResponse
+import com.example.data.model.response.TestsResult
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {
-    /* Metodo faltante */
+
     @POST("/regEstudiante")
     suspend fun registrarEstudiante(): GeneralResponse
 
@@ -29,6 +29,10 @@ interface ApiService {
 
     @POST("/registerTest")
     suspend fun registrarTest(@Body regTestRequest: RegTestRequest): GeneralResponse
+
+    @GET("/obtenerTodosTest")
+    suspend fun getTodosTests(): TestsResult
+
 
 
 }

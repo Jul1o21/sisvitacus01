@@ -10,7 +10,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -34,15 +37,18 @@ fun EspMainScreen(
     navController: NavController,
     especialista: Especialista,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        TopBarEsp(navController)
-        ContentEsp(navController, especialista)
-        Spacer(modifier = Modifier.weight(1f))
-        BottomBarEsp(navController)
+    Scaffold(
+        topBar = { TopBarEsp(navController) },
+        bottomBar = { BottomBarEsp(navController) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
+        ) {
+            ContentEsp(navController, especialista)
+        }
     }
 }
 
@@ -214,30 +220,26 @@ fun MenuItemCard1(
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 painter = item.icon,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .align(Alignment.CenterHorizontally)
+                modifier = Modifier.size(66.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = item.title,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                textAlign = TextAlign.Center
             )
         }
     }
 }
-
-
-
 
 @Preview(showBackground = true)
 @Composable
@@ -251,3 +253,4 @@ fun EspMainScreenPreview() {
         )
     }
 }
+

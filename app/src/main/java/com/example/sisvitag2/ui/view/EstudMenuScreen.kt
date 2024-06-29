@@ -56,7 +56,6 @@ fun EstudMenuScreen(
             )
             MenuGrid(navController, estudiante)
         }
-        BottomBar4(navController)
     }
 }
 
@@ -161,46 +160,6 @@ fun TopBar4(navController: NavController) {
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }
-    }
-}
-
-@Composable
-fun BottomBar4(navController: NavController) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondary)
-            .padding(6.dp),
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        itemBar4(texto = "Cuestion.", vector = Icons.Default.Star)
-        itemBar4(texto = "Result.", vector = Icons.Default.CheckCircle)
-        itemBar4(texto = "Citas", vector = Icons.Default.Favorite)
-        itemBar4(texto = "Perfil", vector = Icons.Default.AccountCircle)
-    }
-}
-
-@Composable
-fun itemBar4(texto: String, vector: ImageVector) {
-    Column(
-        modifier = Modifier
-            .width(75.dp)
-            .height(75.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = vector,
-            contentDescription = null,
-            modifier = Modifier.size(25.dp),
-            tint = MaterialTheme.colorScheme.onSecondary
-        )
-        Text(
-            text = texto,
-            fontSize = 15.sp,
-            color = MaterialTheme.colorScheme.onSecondary,
-            textAlign = TextAlign.Center
-        )
     }
 }
 
