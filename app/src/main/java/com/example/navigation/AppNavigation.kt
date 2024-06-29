@@ -102,7 +102,7 @@ fun AppNavigation(startDestination: String) {
         ) { backStackEntry ->
             val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
             val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
-            EvaluarResultadosTestScreen(navController)
+            EvaluarResultadosTestScreen(navController, especialista)
         }
 
         composable(

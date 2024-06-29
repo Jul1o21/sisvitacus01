@@ -32,14 +32,10 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 @Composable
 fun EvaluarResultadosTestScreen(
     navController: NavHostController,
-<<<<<<< HEAD
-    especialista: Especialista
-) {
-
-=======
+    especialista: Especialista,
     viewModel: EvaluarResultadosTestViewModel = viewModel()
 ) {
->>>>>>> f6dd4c31512b7f50b24387caf3eb853a3c37008d
+
     var observacion by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
     val testResults = viewModel.testsRespondidos
@@ -55,7 +51,6 @@ fun EvaluarResultadosTestScreen(
             .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
     ) {
-        TopBarEvaResult(navController = navController)
         Text(
             text = "Evaluar Resultados Test",
             color = MaterialTheme.colorScheme.primary,
@@ -104,7 +99,6 @@ fun EvaluarResultadosTestScreen(
         // Espacio para empujar el BottomBarEvaResult hacia abajo
         Spacer(modifier = Modifier.weight(1f))
 
-        BottomBarEvaResult(navController = navController)
     }
 }
 
@@ -190,88 +184,3 @@ fun ObservacionesComponent(
     }
 }
 
-
-@Composable
-<<<<<<< HEAD
-fun EspMainScreenPreview() {
-    val navController = rememberNavController()
-    val especialistaState = Especialista.defaultEspecialista()
-    SisvitaG2Theme {
-        EspMainScreen(
-            navController = navController,
-            especialista = especialistaState
-=======
-fun TopBarEvaResult(navController: NavController) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(horizontal = 16.dp, vertical = 6.dp)
-    ) {
-        IconButton(onClick = {
-            navController.popBackStack()
-        }) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowLeft,
-                contentDescription = null,
-                modifier = Modifier.size(25.dp),
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-    }
-}
-
-
-@Composable
-fun BottomBarEvaResult(navController: NavController) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondary)
-            .padding(horizontal = 16.dp, vertical = 6.dp),
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        itemBarEvaResult("Cuestion.", Icons.Default.Star, navController, "cuestion")
-        itemBarEvaResult("Result.", Icons.Default.CheckCircle, navController, "result")
-        itemBarEvaResult("Citas", Icons.Default.Favorite, navController, "citas")
-        itemBarEvaResult("Perfil", Icons.Default.AccountCircle, navController, "perfil")
-    }
-}
-
-
-@Composable
-fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavController, route: String) {
-    Column(
-        modifier = Modifier
-            .width(75.dp)
-            .height(75.dp)
-            .clickable { navController.navigate(route) },
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = vector,
-            contentDescription = null,
-            modifier = Modifier.size(25.dp),
-            tint = MaterialTheme.colorScheme.onSecondary
-        )
-        Text(
-            text = texto,
-            fontSize = 15.sp,
-            color = MaterialTheme.colorScheme.onSecondary,
-            textAlign = TextAlign.Center
->>>>>>> f6dd4c31512b7f50b24387caf3eb853a3c37008d
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EvaluarResultadosTestScreenPreview() {
-    val navController = rememberNavController()
-    SisvitaG2Theme {
-        EvaluarResultadosTestScreen(
-            navController = navController
-        )
-    }
-}
