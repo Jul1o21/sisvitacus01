@@ -30,7 +30,7 @@ import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
-fun RealizarVigilanciaScreen(
+fun EspRealizarVigilanciaScreen(
     navController: NavHostController,
     especialista: Especialista
 ) {
@@ -310,6 +310,6 @@ fun RealizarVigilanciaScreenPreview() {
         tipo_usuario = "especialista"
     )
     SisvitaG2Theme {
-        RealizarVigilanciaScreen(navController, especialista)
+        EspRealizarVigilanciaScreen(navController, especialista)
     }
 }

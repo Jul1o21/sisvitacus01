@@ -207,8 +207,14 @@ fun Formulario(
                     navController.navigate(AppScreen.estudMenuScreen.createRoute(estudiante))
                 }
             } ?: especialista?.let {
+
+
+                /*
                 loginViewModel.setDialogMessage("Bienvenido, ${it.nombre_completo}. Aún no se ha implementado el menú para especialistas.")
                 loginViewModel.mostrarDialog()
+                */
+
+
                 LaunchedEffect(especialista) {
                     println("Especialista en la ventana: $especialista")
                     navController.navigate(AppScreen.espMenuScreen.createRoute(especialista))

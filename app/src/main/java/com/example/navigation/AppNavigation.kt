@@ -1,6 +1,6 @@
 package com.example.sisvitacus1.navigation
 
-import com.example.sisvitag2.ui.view.especialista.EvaluarResultadosTestScreen
+import com.example.sisvitag2.ui.view.especialista.EspEvaluarResultadosTestScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.rememberNavController
@@ -11,7 +11,7 @@ import com.example.data.model.android.Especialista
 import com.example.data.model.android.Estudiante
 import com.example.sisvitag2.ui.view.especialista.EspCitaScreen
 import com.example.sisvitag2.ui.view.especialista.EspMenuScreen
-import com.example.sisvitag2.ui.view.especialista.RealizarVigilanciaScreen
+import com.example.sisvitag2.ui.view.especialista.EspRealizarVigilanciaScreen
 import com.example.sisvitag2.ui.view.estudiante.EstudMenuScreen
 import com.example.sisvitag2.ui.view.estudiante.EstudRealizarTestScreen
 import com.example.sisvitag2.ui.view.estudiante.EstudRegisterScreen
@@ -66,8 +66,6 @@ fun AppNavigation(startDestination: String) {
         }
 
 
-
-
         composable(
             route = AppScreen.espMenuScreen.route,
             arguments = listOf(navArgument("especialistaJson") { type = NavType.StringType })
@@ -107,7 +105,7 @@ fun AppNavigation(startDestination: String) {
         ) { backStackEntry ->
             val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
             val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
-            EvaluarResultadosTestScreen(navController, especialista)
+            EspEvaluarResultadosTestScreen(navController, especialista)
         }
 
 
@@ -117,7 +115,7 @@ fun AppNavigation(startDestination: String) {
         ) { backStackEntry ->
             val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
             val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
-            RealizarVigilanciaScreen(navController, especialista)
+            EspRealizarVigilanciaScreen(navController, especialista)
         }
 
     }

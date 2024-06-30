@@ -33,7 +33,7 @@ import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
 @Composable
-fun EvaluarResultadosTestScreen(
+fun EspEvaluarResultadosTestScreen(
     navController: NavHostController,
     especialista: Especialista,
     viewModel: EvaluarResultadosTestViewModel = viewModel()
@@ -169,10 +169,12 @@ fun TopBarEvaResult(
             .padding(horizontal = 16.dp, vertical = 6.dp)
     ) {
         IconButton(onClick = {
+
             navController.navigate(AppScreen.espMenuScreen.createRoute(especialista)) {
                 popUpTo(AppScreen.espMenuScreen.route) { inclusive = true }
 
             }
+            
         }) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
@@ -227,7 +229,9 @@ fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavContr
 
 
 @Composable
-fun TestResultComponent(result: TestResponseResult) {
+fun TestResultComponent(
+    result: TestResponseResult
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -260,11 +264,11 @@ fun TestResultComponent(result: TestResponseResult) {
 
 @Preview(showBackground = true)
 @Composable
-fun EvaluarResultadosTestScreen() {
+fun EspEvaluarResultadosTestScreen() {
     val navController = rememberNavController()
     val especialista = Especialista.defaultEspecialista()
     SisvitaG2Theme {
-        EvaluarResultadosTestScreen(
+        EspEvaluarResultadosTestScreen(
             especialista = especialista,
             navController = navController
             )

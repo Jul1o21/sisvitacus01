@@ -81,7 +81,7 @@ fun EstudRealizarTestScreen(
                 }
             }
         }
-        BottomBar3(navController)
+        BottomBar2(navController)
 
         if (showDialog) {
             AlertDialog(
@@ -315,7 +315,12 @@ fun EstudTestScreenPreview() {
         universidad = "UNMSM"
     )
     SisvitaG2Theme {
-        EstudRealizarTestScreen(navController, idEstudiante, idTest, estudiante)
+        EstudRealizarTestScreen(
+            navController,
+            idEstudiante,
+            idTest,
+            estudiante
+        )
     }
 }
 

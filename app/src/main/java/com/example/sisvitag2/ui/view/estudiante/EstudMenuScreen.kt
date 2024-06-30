@@ -147,9 +147,11 @@ fun TopBar4(navController: NavController) {
             .padding(6.dp)
     ) {
         IconButton(onClick = {
+
             navController.navigate(AppScreen.loginScreen.route) {
                 popUpTo(AppScreen.loginScreen.route) { inclusive = true }
             }
+
         }) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,

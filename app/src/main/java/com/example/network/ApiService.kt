@@ -30,9 +30,15 @@ interface ApiService {
     @POST("/registerTest")
     suspend fun registrarTest(@Body regTestRequest: RegTestRequest): GeneralResponse
 
+
+    //Obetener inforamcion de los tests respondidos
     @GET("/obtenerTodosTest")
     suspend fun getTodosTests(): TestsResult
 
+    //
+    @GET("/obtenerTestHistoria")
+    suspend fun getobtenerTestHistoria(): TestsResult
 
+    //
 
 }

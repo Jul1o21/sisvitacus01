@@ -10,5 +10,5 @@ data class TestResponseResult(
     val desc_test: String,
     val id_test_res: Int,
     val puntaje_total: Int,
-    val tipo_test: String
+    val tipo_test: String,
 )
