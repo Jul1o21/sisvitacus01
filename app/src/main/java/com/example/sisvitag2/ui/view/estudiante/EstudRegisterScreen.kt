@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,7 +21,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +53,7 @@ fun EstudRegisterScreen (
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopBar1(navController)
-        Content1(registerViewModel)
+        Content1(navController,registerViewModel)
     }
 }
 
@@ -82,6 +86,7 @@ fun TopBar1(navController: NavController) {
 
 @Composable
 fun Content1(
+    navController: NavController,
     registerViewModel: EstudRegisterViewModel
 ) {
     Column (
@@ -93,7 +98,7 @@ fun Content1(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Registrase",
+            text = "Registrarse",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
@@ -102,13 +107,15 @@ fun Content1(
                 .padding(top = 10.dp, bottom = 30.dp),
             textAlign = TextAlign.Center
         )
-        Formulario1(registerViewModel)
+        Formulario1(navController, registerViewModel)
     }
 }
 
 @Composable
 fun Formulario1(
+    navController: NavController,
     registerViewModel: EstudRegisterViewModel
+
 ) {
     val nombres: String by registerViewModel.nombresState
     val paterno: String by registerViewModel.paternoState
@@ -116,6 +123,8 @@ fun Formulario1(
     val tipo: String by registerViewModel.tipoState
     val correo: String by registerViewModel.correoState
     val contra: String by registerViewModel.contraState
+    val showDialog = remember { mutableStateOf(false) }
+
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -152,17 +161,6 @@ fun Formulario1(
             )
         )
 
-        // Tipo de usuario
-        subtexto1( texto = "Tipo de usuario" )
-        desplegable1(
-            value = tipo,
-            onValueChange = { registerViewModel.setTipo(it) },
-            placeholder = "Tipo de usuario",
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            )
-        )
 
         // Correo y contraseña
         subtexto1( texto = "Correo" )
@@ -193,9 +191,46 @@ fun Formulario1(
                 .padding(top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             boton1(
                 texto = "Registrarse",
-                nav = { "" }
+                nav = { registerViewModel.registrarEstudiante() }
+            )
+        }
+        val isError: Boolean by registerViewModel.isError
+        val rSuccess: Boolean by registerViewModel.rSuccess
+        if (isError) {
+            Text(
+                text = "Ha ocurrido un error en el registro",
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(top = 20.dp)
+            )
+        }
+        if (rSuccess) {
+            LaunchedEffect(rSuccess) {
+                showDialog.value = true
+            }
+            navController.navigate(AppScreen.mainScreen.route)
+        }
+        if (showDialog.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    showDialog.value = false
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        showDialog.value = false
+                    }) {
+                        Text("OK")
+                    }
+                },
+                title = {
+                    Text(text = "Registro")
+                },
+                text = {
+                    Text("Registrado correctamente")
+                }
             )
         }
     }
@@ -236,6 +271,9 @@ fun inputText1 (
         }
     )
 }
+
+
+
 
 @Composable
 fun boton1 (

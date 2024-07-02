@@ -4,12 +4,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.data.model.request.RegisterRequest
 import com.example.sisvita_cus1.domain.RegistrarEstudUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class EstudRegisterViewModel: ViewModel()  {
     private val repository = RegistrarEstudUseCase()
+
+    val tipo: String = "estudiante"
 
     private val _nombresState = mutableStateOf("")
     val nombresState: State<String> = _nombresState
@@ -61,12 +64,25 @@ class EstudRegisterViewModel: ViewModel()  {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
+    private val _rSuccess = mutableStateOf(false)
+    val rSuccess: State<Boolean> = _rSuccess
+
     fun registrarEstudiante() {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                repository.registrarEstudiante()
+                val RegisterRequesti = RegisterRequest(3000,
+                    _nombresState.value,
+                    _paternoState.value,
+                    _maternoState.value,
+                    _correoState.value,
+                    _contraState.value)
+                val response = repository.registrar(RegisterRequesti)
                 _isLoading.value = false
+                if (response.success && response.data != null){
+                    println("JSON recibido con éxito: $response") // Mensaje para la consola de Tomcat
+                    _rSuccess.value=true
+                }
             } catch (e: Exception) {
                 _isError.value = true
                 _isLoading.value = false
