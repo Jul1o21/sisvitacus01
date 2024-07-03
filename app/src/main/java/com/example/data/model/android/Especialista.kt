@@ -1,34 +1,23 @@
 package com.example.data.model.android
 
 data class Especialista(
+    val id_pers: Int,
     val id_especialista: Int,
-    val id_usuario: Int,
+    val materno: String,
     val nombre_completo: String,
-    val correo: String,
-    val contrasenia: String,
-    val numero_documento: Int,
-    val tipo_documento: String,
-    val sexo: String,
-    val edad: Int,
-    val numero_celular: Int,
-    val pais: String,
-    val tipo_usuario: String = "especialista"
+    val paterno: String,
+    val rol: String
 )
 {
     companion object {
         fun defaultEspecialista(): Especialista {
             return Especialista(
-                id_especialista = 100, // Ajusta el ID según tus necesidades
-                id_usuario = 200, // Ajusta el ID según tus necesidades
+                id_pers = 20000,
+                id_especialista= 100,
+                materno = "Lopez",
                 nombre_completo = "Ana Maria Lopez",
-                correo = "ana_lopez@example.com",
-                contrasenia = "ana_lopez123",
-                numero_documento = 45678912,
-                tipo_documento = "DNI",
-                sexo = "F",
-                edad = 35,
-                numero_celular = 987654321,
-                pais = "Peru"
+                paterno = "Lopez",
+                rol = "Doctor"
             )
         }
     }

@@ -295,20 +295,7 @@ fun ParticipantesList(participantes: List<Participante>) {
 @Composable
 fun RealizarVigilanciaScreenPreview() {
     val navController = rememberNavController()
-    val especialista = Especialista(
-        id_especialista = 1,
-        id_usuario = 1,
-        nombre_completo = "Dr. John Doe",
-        correo = "johndoe@example.com",
-        contrasenia = "password",
-        numero_documento = 12345678,
-        tipo_documento = "DNI",
-        sexo = "M",
-        edad = 40,
-        numero_celular = 987654321,
-        pais = "Perú",
-        tipo_usuario = "especialista"
-    )
+    val especialista = Especialista.defaultEspecialista()
     SisvitaG2Theme {
         EspRealizarVigilanciaScreen(navController, especialista)
     }

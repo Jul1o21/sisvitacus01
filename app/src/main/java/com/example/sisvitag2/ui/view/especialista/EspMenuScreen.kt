@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -21,19 +22,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.R
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.example.sisvitag2.ui.viewmodel.EspMenuViewModel
 import com.google.gson.Gson
 
 @Composable
 fun EspMenuScreen(
     navController: NavController,
     especialista: Especialista,
+    viewModel: EspMenuViewModel = EspMenuViewModel()
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.setEspecialista(especialista)
+    }
     Scaffold(
         topBar = { TopBarEsp(navController,especialista) },
         bottomBar = { BottomBarEsp(navController) }
@@ -44,7 +51,7 @@ fun EspMenuScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
-            ContentEsp(navController, especialista)
+            ContentEsp(navController, especialista, viewModel)
         }
     }
 }
@@ -129,7 +136,8 @@ fun BottomBarItem(texto: String, icono: ImageVector, navController: NavControlle
 @Composable
 fun ContentEsp(
     navController: NavController,
-    especialista: Especialista
+    especialista: Especialista,
+    viewModel: EspMenuViewModel
 )
 {
     Column(
@@ -139,8 +147,9 @@ fun ContentEsp(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val nombre = viewModel.especialista.value?.nombre_completo ?: "sin name"
         Text(
-            text = "Bienvenido Especialista",
+            text = "Hola! $nombre",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -202,16 +211,22 @@ fun MenuItemCard1(
                 when (item.title) {
                     "Ver mis citas" ->
                         navController.navigate(
-                            AppScreen.espCitaScreen.createRoute(especialista!!))
+                            AppScreen.espCitaScreen.createRoute(especialista!!)
+                        )
+
                     "Programar citas" ->
                         navController.navigate(
-                            AppScreen.espCitaScreen.createRoute(especialista!!)) // Reemplaza con la ruta correcta si es diferente
+                            AppScreen.espCitaScreen.createRoute(especialista!!)
+                        ) // Reemplaza con la ruta correcta si es diferente
                     "Evaluar test" ->
                         navController.navigate(
-                            AppScreen.evaluarResultadosTestScreen.createRoute(especialista!!))
+                            AppScreen.evaluarResultadosTestScreen.createRoute(especialista!!)
+                        )
+
                     "Realizar vigilancia" ->
                         navController.navigate(
-                            AppScreen.espCitaScreen.createRoute(especialista!!)) // Reemplaza con la ruta correcta si es diferente
+                            AppScreen.espCitaScreen.createRoute(especialista!!)
+                        ) // Reemplaza con la ruta correcta si es diferente
                     else -> {} // Maneja otras rutas si es necesario
                 }
             },

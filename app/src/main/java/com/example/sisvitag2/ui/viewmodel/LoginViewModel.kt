@@ -94,38 +94,25 @@ class LoginViewModel : ViewModel() {
                     val usuarioResponse = response.data.usuario
                     println("UsuarioResponse: $usuarioResponse") // Mensaje para la consola de Tomcat
                     // Verificar el tipo de usuario
-                    if (usuarioResponse.tipo_usuario == "estudiante") {
+                    if (usuarioResponse.rol == "estudiante") {
                         println("Es un estudiante")
                         _estudiante = Estudiante(
-                            id_estudiante = usuarioResponse.id_estudiante ?: 0,
-                            id_usuario = usuarioResponse.id_usuario,
-                            nombre_completo = usuarioResponse.nombre_completo,
-                            correo = usuarioResponse.correo,
-                            contrasenia = usuarioResponse.contrasenia,
-                            numero_documento = usuarioResponse.numero_documento,
-                            tipo_documento = usuarioResponse.tipo_documento,
-                            sexo = usuarioResponse.sexo,
-                            edad = usuarioResponse.edad,
-                            numero_celular = usuarioResponse.numero_celular,
-                            pais = usuarioResponse.pais,
-                            departamento = usuarioResponse.departamento ?: "",
-                            distrito = usuarioResponse.distrito ?: "",
-                            universidad = usuarioResponse.universidad ?: ""
+                            id_pers = usuarioResponse.id_pers ?:0,
+                            id_estudiante = usuarioResponse.id_usu ?:0,
+                            materno = usuarioResponse.materno ?:"",
+                            nombre_completo = usuarioResponse.nombres ?: "",
+                            paterno = usuarioResponse.paterno ?: "",
+                            rol = usuarioResponse.rol ?: "sin_rol"
                         )
-                    } else if (usuarioResponse.tipo_usuario == "especialista") {
+                    } else if (usuarioResponse.rol == "especialista") {
                         println("Es un especialista")
                         _especialista = Especialista(
-                            id_especialista = usuarioResponse.id_especialista ?: 0,
-                            id_usuario = usuarioResponse.id_usuario,
-                            nombre_completo = usuarioResponse.nombre_completo,
-                            correo = usuarioResponse.correo,
-                            contrasenia = usuarioResponse.contrasenia,
-                            numero_documento = usuarioResponse.numero_documento,
-                            tipo_documento = usuarioResponse.tipo_documento,
-                            sexo = usuarioResponse.sexo,
-                            edad = usuarioResponse.edad,
-                            numero_celular = usuarioResponse.numero_celular,
-                            pais = usuarioResponse.pais
+                            id_pers = usuarioResponse.id_pers?:0,
+                            id_especialista = usuarioResponse.id_usu?:0,
+                            materno = usuarioResponse.materno ?:"",
+                            nombre_completo = usuarioResponse.nombres ?: "",
+                            paterno = usuarioResponse.paterno ?: "",
+                            rol = usuarioResponse.rol ?: "sin_rol"
                         )
                     }
                     _loginSuccess.value = true

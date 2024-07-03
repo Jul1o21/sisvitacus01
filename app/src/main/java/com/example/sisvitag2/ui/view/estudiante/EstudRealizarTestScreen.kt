@@ -298,22 +298,7 @@ fun EstudTestScreenPreview() {
     val navController = rememberNavController()
     val idEstudiante = 123 // ID de estudiante de prueba
     val idTest = 456 // ID de test de prueba
-    val estudiante = Estudiante(
-        id_estudiante = idEstudiante,
-        id_usuario = 1,
-        nombre_completo = "Juan Perez",
-        correo = "juan.perez@example.com",
-        contrasenia = "password",
-        numero_documento = 12345678,
-        tipo_documento = "DNI",
-        sexo = "M",
-        edad = 20,
-        numero_celular = 987654321,
-        pais = "Perú",
-        departamento = "Lima",
-        distrito = "Cercado de Lima",
-        universidad = "UNMSM"
-    )
+    val estudiante = Estudiante.defaultEstudiante()
     SisvitaG2Theme {
         EstudRealizarTestScreen(
             navController,

@@ -30,6 +30,13 @@ fun EstudMenuScreen(
     estudiante: Estudiante,
     viewModel: EstudMenuViewModel = viewModel()
 ) {
+
+    // Establecer el estudiante en el ViewModel cuando la Composable se inicia
+    LaunchedEffect(Unit) {
+        viewModel.setEstudiante(estudiante)
+    }
+
+    println("Estudiante recibido en EstudMainScreen: $estudiante")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +54,7 @@ fun EstudMenuScreen(
         ) {
             val nombre = viewModel.estudiante.value?.nombre_completo ?: "sin name"
             Text(
-                text = "Bienvenido $nombre!",
+                text = "Hola! $nombre",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
