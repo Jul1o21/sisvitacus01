@@ -21,6 +21,4 @@ class EstudMenuViewModel: ViewModel()  {
     fun clearEstudiante() {
         _estudiante.value = null
     }
-
-
 }

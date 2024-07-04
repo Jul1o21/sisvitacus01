@@ -21,6 +21,4 @@ class EspMenuViewModel {
     fun clearEspecialista() {
         _especialista.value = null
     }
-
-
 }
