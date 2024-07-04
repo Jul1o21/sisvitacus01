@@ -50,7 +50,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -58,14 +57,23 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+
+    // Usar solo una versión de material3
+    implementation("androidx.compose.material3:material3:1.2.1")
+
+    // Eliminar duplicados y versiones viejas
+    // implementation(libs.androidx.material3)
+    // implementation(libs.androidx.material3.android)
+    // implementation ("androidx.compose.material3:material3:1.0.0-alpha01")
+
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation ("androidx.compose.ui:ui-text-google-fonts:1.4.0")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.0")
     implementation("androidx.navigation:navigation-compose:2.6.0")
-    implementation ("androidx.compose.runtime:runtime-livedata:1.0.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
+    implementation("androidx.compose.material:material:1.0.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -75,15 +83,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
-    //Nuevo
-    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
+    // Nuevo
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
     implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
     // To use constraintlayout in compose
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
-
-
-
 }

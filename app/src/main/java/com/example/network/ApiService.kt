@@ -6,6 +6,7 @@ import com.example.data.model.request.RegTestRequest
 import com.example.data.model.response.LoginResponse
 import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
+import com.example.data.model.response.TestResponseResult
 import com.example.data.model.response.TestsAllResponse
 import com.example.data.model.response.TestSingleResponse
 import com.example.data.model.response.TestsResult
@@ -39,7 +40,5 @@ interface ApiService {
     //
     @GET("/obtenerTestHistoria")
     suspend fun getobtenerTestHistoria(): TestsResult
-
-    //
 
 }

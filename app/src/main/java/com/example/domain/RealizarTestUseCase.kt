@@ -5,7 +5,6 @@ import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
 import com.example.data.model.response.TestSingleResponse
 import com.example.data.model.response.TestsAllResponse
-import com.example.data.model.response.TestsResult
 import com.example.sisvita_cus1.data.repository.TestRepository
 
 //Representa el CUS 2.0 "Realizar Test"
@@ -28,8 +27,6 @@ class RealizarTestUseCase {
         return testRepository.getTest(testRequest)
     }
 
-    suspend fun getTodosTestsResultados(): TestsResult {
-        return testRepository.getTodosTestsResultados()
-    }
+
 
 }

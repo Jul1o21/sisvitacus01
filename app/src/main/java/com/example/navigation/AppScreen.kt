@@ -30,6 +30,7 @@ sealed class AppScreen(val route: String) {
             return "esp_menu/$especialistaJson"
         }
     }
+
     object espCitaScreen : AppScreen("espcita/{especialistaJson}") {
         fun createRoute(especialista: Especialista): String {
             val especialistaJson = Uri.encode(Gson().toJson(especialista))

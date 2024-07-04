@@ -1,14 +1,15 @@
 package com.example.sisvitag2.ui.viewmodel
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.example.data.model.android.Especialista
-import com.example.data.model.android.Estudiante
+import androidx.compose.runtime.*
+import androidx.lifecycle.ViewModel
 
-class EspMenuViewModel {
+
+class EspMenuViewModel: ViewModel()  {
+
     private val _especialista = mutableStateOf<Especialista?>(null)
-    val especialista: State<Especialista?> = _especialista
-
+    val especialista: State<Especialista?> get() = _especialista
 
     fun setEspecialista(especialista: Especialista?) {
         _especialista.value = especialista
@@ -18,7 +19,7 @@ class EspMenuViewModel {
         return _especialista.value
     }
 
-    fun clearEspecialista() {
+    fun clearEstudiante() {
         _especialista.value = null
     }
 }
