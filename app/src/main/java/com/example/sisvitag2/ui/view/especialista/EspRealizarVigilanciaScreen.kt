@@ -1,10 +1,10 @@
 package com.example.sisvitag2.ui.view.especialista
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -12,29 +12,40 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
-import com.example.data.model.android.Participante
+import com.example.data.model.response.TestEvaluable
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+
 
 @Composable
 fun EspRealizarVigilanciaScreen(
     navController: NavHostController,
     especialista: Especialista,
-
+    viewModel: EspRealizarVigilanciaViewModel = viewModel()
 ) {
+    val testsEvaluable by viewModel.testsEvaluables.observeAsState(emptyList())
+
+    // Log the size of the list
+    Log.d("EspRealizarVigilanciaScreen", "Tests evaluables: ${testsEvaluable.size}")
+
+    LaunchedEffect(Unit) {
+        viewModel.obtenerTestsEvaluables()
+    }
+
     Scaffold(
         topBar = { TopBarVigilancia(navController, especialista) },
         bottomBar = { BottomBarVigilancia() }
@@ -51,10 +62,6 @@ fun EspRealizarVigilanciaScreen(
             var fechaFin by remember { mutableStateOf("") }
             var tipoTest by remember { mutableStateOf("") }
             var nivelGravedad by remember { mutableStateOf("") }
-            val participantes = remember { mutableStateOf(listOf(
-                Participante("Juan Perez", 80, "A"),
-                Participante("Maria Lopez", 75, "B")
-            )) }
 
             Text(
                 text = "Evaluar Estudiantes",
@@ -79,8 +86,20 @@ fun EspRealizarVigilanciaScreen(
                 onNivelGravedadChanged = { nivelGravedad = it }
             )
 
-            // Lista de Participantes
-            ParticipantesList(participantes = participantes.value)
+            // Lista de Tests Evaluables
+            if (testsEvaluable.isNotEmpty()) {
+                testsEvaluable.forEach { test ->
+                    TestEvaluableCard(test)
+                }
+            } else {
+                Text(
+                    text = "No se encontraron tests evaluables.",
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -273,63 +292,51 @@ fun DropdownMenuComponent(
 }
 
 @Composable
-fun ParticipantesList(participantes: List<Participante>) {
-    Column {
-        participantes.forEach { participante ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val color = when (participante.calificacion) {
-                        "A" -> Color.Green
-                        "B" -> Color.Yellow
-                        else -> Color.Red
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(color = color, shape = CircleShape)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(
-                            text = "Test T-${participante.hashCode()}",
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Estudiante: ${participante.nombre}",
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                        Text(
-                            text = "Puntuación: ${participante.puntaje}",
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                        Text(
-                            text = "Calificación: ${participante.calificacion}",
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Ver detalles >",
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.align(Alignment.End)
-                        )
-                    }
-                }
-            }
+fun TestEvaluableCard(test: TestEvaluable) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            Text(
+                text = "Estudiante: ${test.estudiante}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Text(
+                text = "Fecha: ${test.fecha}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Nivel: ${test.nivel}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Puntaje Total: ${test.puntaje_total}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Resomendación: ${test.recomend}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Resultado: ${test.resultado}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Tipo: ${test.tipo}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }

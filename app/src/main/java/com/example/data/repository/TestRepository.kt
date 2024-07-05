@@ -5,10 +5,9 @@ import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
 import com.example.data.model.response.TestsAllResponse
 import com.example.data.model.response.TestSingleResponse
-import com.example.data.model.response.TestsResult
+import com.example.data.model.response.TestsEvaluableResponse
+import com.example.data.model.response.TestsResultResponse
 import com.example.sisvita_cus1.network.ApiInstance
-
-
 
 class TestRepository {
     private val apiService = ApiInstance.apiInstance
@@ -28,10 +27,11 @@ class TestRepository {
         return apiService.registrarTest(regTestRequest)
     }
 
-    suspend fun getTodosTestsResultados(): TestsResult {
+    suspend fun getTodosTestsResultados(): TestsResultResponse {
         return apiService.getTodosTests()
     }
 
-
+    suspend fun getTestsEvaluables(): TestsEvaluableResponse {
+        return apiService.obtenerTestEvaluables()
+    }
 }
-

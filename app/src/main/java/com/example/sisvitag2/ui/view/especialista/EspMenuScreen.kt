@@ -82,7 +82,7 @@ fun EspMenuScreen(
                     MenuButton(
                         text = "Visualizar Mapa Calor",
                         icon = Icons.Default.CheckCircle,
-                        onClick = { /* Navegar a la pantalla de Mapa Calor */ }
+                        onClick = { }
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))

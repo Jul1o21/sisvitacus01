@@ -1,10 +1,12 @@
 package com.example.domain
 
-//Representa el CUS 3.0 "Realizar Seguimiento"
+import com.example.data.model.response.TestsEvaluableResponse
+import com.example.sisvita_cus1.data.repository.TestRepository
+
 class RealizarVigilanciaUseCase {
-    //TODO
+    private val testRepository = TestRepository()
 
-
-
-
+    suspend fun getTestsEvaluables(): TestsEvaluableResponse {
+        return testRepository.getTestsEvaluables()
+    }
 }
