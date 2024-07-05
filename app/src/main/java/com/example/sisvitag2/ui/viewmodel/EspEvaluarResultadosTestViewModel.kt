@@ -1,5 +1,6 @@
 package com.example.sisvitag2.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,21 +13,6 @@ import kotlinx.coroutines.launch
 class EspEvaluarResultadosTestViewModel : ViewModel() {
     private val repository = EvaluarResultadosTestUseCase()
 
-    private val _descripcionState = mutableStateOf("")
-    val descripcionState: State<String> = _descripcionState
-
-    private val _resultadoState = mutableStateOf("")
-    val resultadoState: State<String> = _resultadoState
-
-    private val _tratamientoState = mutableStateOf("")
-    val tratamientoState: State<String> = _tratamientoState
-
-    private val _recomendacionState = mutableStateOf("")
-    val recomendacionState: State<String> = _recomendacionState
-
-    private val _notasState = mutableStateOf("")
-    val notasState: State<String> = _notasState
-
     private val _isError = mutableStateOf(false)
     val isError: State<Boolean> = _isError
 
@@ -38,26 +24,6 @@ class EspEvaluarResultadosTestViewModel : ViewModel() {
 
     private val _showDialog = mutableStateOf(false)
     val showDialog: State<Boolean> = _showDialog
-
-    fun setDescripcion(descripcion: String) {
-        _descripcionState.value = descripcion
-    }
-
-    fun setResultado(resultado: String) {
-        _resultadoState.value = resultado
-    }
-
-    fun setTratamiento(tratamiento: String) {
-        _tratamientoState.value = tratamiento
-    }
-
-    fun setRecomendacion(recomendacion: String) {
-        _recomendacionState.value = recomendacion
-    }
-
-    fun setNotas(notas: String) {
-        _notasState.value = notas
-    }
 
     fun registrarDiagnostico(
         idUsu: Int,
@@ -74,37 +40,32 @@ class EspEvaluarResultadosTestViewModel : ViewModel() {
                 val request = DiagnosticoRequest(
                     id_usu = idUsu,
                     id_test_res = idTestRes,
-                    descripcion = _descripcionState.value,
-                    resultado = _resultadoState.value,
-                    tratamiento = _tratamientoState.value,
-                    recomendacion = _recomendacionState.value,
-                    notas = _notasState.value
+                    descripcion = descripcion,
+                    resultado = resultado,
+                    tratamiento = tratamiento,
+                    recomendacion = recomendacion,
+                    notas = notas
                 )
+                Log.d("ApiRequest", "Request: $request")
                 val response = repository.registrarDiagnostico(request)
                 _isLoading.value = false
                 if (response != null && response.success) {
                     _rSuccess.value = true
-                    _showDialog.value = true  // Actualiza el estado showDialog
+                    _showDialog.value = true
                 } else {
                     _isError.value = true
                 }
             } catch (e: Exception) {
                 _isError.value = true
                 _isLoading.value = false
+                Log.e("ViewModel", "Error al registrar diagnóstico: ${e.message}")
             }
         }
-    }
-
-    fun updateIsError(value: Boolean) {
-        _isError.value = value
-    }
-
-    fun updateRSuccess(value: Boolean) {
-        _rSuccess.value = value
     }
 
     fun updateShowDialog(value: Boolean) {
         _showDialog.value = value
     }
 }
+
 

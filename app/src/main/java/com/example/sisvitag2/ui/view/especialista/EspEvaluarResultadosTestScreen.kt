@@ -159,8 +159,6 @@ fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvalu
     }
 }
 
-
-
 @Composable
 fun TopBarDiagnostico(navController: NavController) {
     Box(
