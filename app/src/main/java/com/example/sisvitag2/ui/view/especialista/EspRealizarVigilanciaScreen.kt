@@ -19,14 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.response.TestEvaluable
 import com.example.sisvitacus1.navigation.AppScreen
+import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -388,5 +391,17 @@ fun TestEvaluableCard(test: TestEvaluable) {
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun EspRealizarVigilanciaPreview() {
+    val navController = rememberNavController()
+    val especialista = Especialista.defaultEspecialista()
+    SisvitaG2Theme {
+        EspRealizarVigilanciaScreen(navController, especialista)
     }
 }
