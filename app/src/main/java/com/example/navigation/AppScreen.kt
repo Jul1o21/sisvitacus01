@@ -47,13 +47,6 @@ sealed class AppScreen(val route: String) {
         }
     }
 
-    object evaluarResultadosTestScreen : AppScreen("evaluar_resultados_test/{testJson}") {
-        fun createRoute(test: TestEvaluable): String {
-            val testJson = Uri.encode(Gson().toJson(test))
-            return "evaluar_resultados_test/$testJson"
-        }
-    }
-
     object realizarVigilanciaScreen : AppScreen("realizar_vigilancia/{especialistaJson}") {
         fun createRoute(especialista: Especialista): String {
             val especialistaJson = Uri.encode(Gson().toJson(especialista))
@@ -75,10 +68,11 @@ sealed class AppScreen(val route: String) {
         }
     }
 
-    object espEvaluarResultadosTest: AppScreen("evaluar_test/{testJson}"){
-        fun createRoute(test: TestEvaluable): String {
+    object espEvaluarResultadosTest: AppScreen("evaluar_test/{testJson}/{especialistaJson}"){
+        fun createRoute(test: TestEvaluable,especialista: Especialista): String {
             val testJson = Uri.encode(Gson().toJson(test))
-            return "evaluar_test/$testJson"
+            val especialistaJson = Uri.encode(Gson().toJson(especialista))
+            return "evaluar_test/$testJson/$especialistaJson"
         }
     }
 }

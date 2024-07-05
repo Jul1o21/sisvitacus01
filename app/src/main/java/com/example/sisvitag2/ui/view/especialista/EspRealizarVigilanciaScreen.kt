@@ -90,7 +90,7 @@ fun EspRealizarVigilanciaScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Evaluar Estudiantes",
+                text = "Evaluar Estudiantes ",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
@@ -131,7 +131,7 @@ fun EspRealizarVigilanciaScreen(
             // Lista de Tests Evaluables
             if (filteredTests.isNotEmpty()) {
                 filteredTests.forEach { test ->
-                    TestEvaluableCard(test, navController)
+                    TestEvaluableCard(test, especialista,navController)
                 }
             } else {
                 Text(
@@ -355,7 +355,7 @@ fun DropdownMenuComponent(
 
 // EspRealizarVigilanciaScreen.kt
 @Composable
-fun TestEvaluableCard(test: TestEvaluable, navController: NavController) {
+fun TestEvaluableCard(test: TestEvaluable, especialista: Especialista,navController: NavController) {
     val color = when (test.nivel.toLowerCase()) {
         "alto" -> Color.Red
         "medio" -> Color.Yellow
@@ -441,7 +441,7 @@ fun TestEvaluableCard(test: TestEvaluable, navController: NavController) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = { navController.navigate(AppScreen.espEvaluarResultadosTest.createRoute(test)) },
+                onClick = { navController.navigate(AppScreen.espEvaluarResultadosTest.createRoute(test, especialista))},
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(text = "Evaluar")
@@ -487,8 +487,9 @@ fun TestEvaluableCardPreview() {
         resultado = "Ansiedad minima a moderada",
         tipo = "Test de Ansiedad de Zung"
     )
+    val especialista = Especialista(10, 10, "Salazar", "Lucas", "Gutierrez", "especialista")
     SisvitaG2Theme {
-        TestEvaluableCard(test = test, navController = navController)
+        TestEvaluableCard(test = test, especialista=especialista, navController = navController)
     }
 }
 

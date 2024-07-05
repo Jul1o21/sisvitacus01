@@ -117,13 +117,15 @@ fun AppNavigation(startDestination: String) {
 
         composable(
             route = AppScreen.espEvaluarResultadosTest.route,
-            arguments = listOf(navArgument("testJson") { type = NavType.StringType })
+            arguments =
+                listOf(navArgument("testJson") { type = NavType.StringType },
+                navArgument("especialistaJson") { type = NavType.StringType })
         ) { backStackEntry ->
             val testJson = backStackEntry.arguments?.getString("testJson")
             val test = Gson().fromJson(testJson, TestEvaluable::class.java)
-            EspEvaluarResultadosTestScreen(navController, test, Especialista(
-                10, 10, "Salazar", "Maria Salazar", "Gutierrez", "especialista"
-            ))
+            val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
+            val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
+            EspEvaluarResultadosTestScreen(navController, test,especialista)
         }
 
         composable(

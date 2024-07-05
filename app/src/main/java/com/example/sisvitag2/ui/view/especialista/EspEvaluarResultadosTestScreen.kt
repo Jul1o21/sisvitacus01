@@ -1,6 +1,7 @@
-// EspEvaluarResultadosTestScreen.kt
 package com.example.sisvitag2.ui.view.especialista
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,38 +9,55 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.response.TestEvaluable
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import com.example.sisvitag2.ui.viewmodel.EspEvaluarResultadosTestViewModel
 
-// EspEvaluarResultadosTestScreen.kt
 @Composable
-fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvaluable, especialista: Especialista) {
+fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvaluable, especialista: Especialista, viewModel: EspEvaluarResultadosTestViewModel = viewModel()) {
     var descripcion by remember { mutableStateOf("") }
     var resultado by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
     var recomendacion by remember { mutableStateOf("") }
     var notas by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    fun saveDiagnostico() {
+        if (descripcion.isBlank() || resultado.isBlank() || tratamiento.isBlank() || recomendacion.isBlank() || notas.isBlank()) {
+            Toast.makeText(context, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Log.d("ApiRequest", "Request: DiagnosticoRequest(id_usu=${especialista.id_usu}, id_test_res=${test.id_test_res}, descripcion=$descripcion, resultado=$resultado, recomendacion=$recomendacion, tratamiento=$tratamiento, notas=$notas)")
+        viewModel.registrarDiagnostico(
+            idUsu = especialista.id_usu,
+            idTestRes = test.id_test_res,
+            descripcion = descripcion,
+            resultado = resultado,
+            tratamiento = tratamiento,
+            recomendacion = recomendacion,
+            notas = notas
+        )
+    }
 
     Scaffold(
         topBar = { TopBarDiagnostico(navController) }
@@ -63,8 +81,7 @@ fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvalu
                 textAlign = TextAlign.Center
             )
 
-            // Mostrar detalles del test
-            DiagnosticoCard(test, navController)
+            DiagnosticoCard(test, navController, especialista)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -114,7 +131,7 @@ fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvalu
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { showDialog = true },
+                onClick = { saveDiagnostico() },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(text = "Guardar cambios")
@@ -200,8 +217,9 @@ fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavContr
         )
     }
 }
+
 @Composable
-fun DiagnosticoCard(test: TestEvaluable, navController: NavController) {
+fun DiagnosticoCard(test: TestEvaluable, navController: NavController, especialista: Especialista) {
     val color = when (test.nivel.toLowerCase()) {
         "alto" -> Color.Red
         "medio" -> Color.Yellow
@@ -232,6 +250,18 @@ fun DiagnosticoCard(test: TestEvaluable, navController: NavController) {
                         .background(color, shape = CircleShape)
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "especialista: ${especialista.id_usu} ${especialista.nombre_completo}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "ID: ${test.id_test_res}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Estudiante: ${test.estudiante}",
@@ -304,7 +334,7 @@ fun EspEvaluarResultadosTestScreenPreview() {
         resultado = "Ansiedad minima a moderada",
         tipo = "Test de Ansiedad de Zung"
     )
-    val especialista = Especialista(10, 10, "Salazar", "Maria Salazar", "Gutierrez", "especialista")
+    val especialista = Especialista(10, 10, "Salazar", "Lucas", "Gutierrez", "especialista")
     SisvitaG2Theme {
         EspEvaluarResultadosTestScreen(navController, test, especialista)
     }
