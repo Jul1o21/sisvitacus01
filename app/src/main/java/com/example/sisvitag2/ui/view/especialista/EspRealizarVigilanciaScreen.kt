@@ -1,5 +1,7 @@
 package com.example.sisvitag2.ui.view.especialista
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,18 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.response.TestEvaluable
 import com.example.sisvitacus1.navigation.AppScreen
-import com.example.sisvitag2.ui.theme.SisvitaG2Theme
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EspRealizarVigilanciaScreen(
     navController: NavHostController,
@@ -44,11 +48,24 @@ fun EspRealizarVigilanciaScreen(
     var tipoTest by remember { mutableStateOf("") }
     var nivelGravedad by remember { mutableStateOf("") }
 
+    val fechaInicioParsed = try {
+        LocalDate.parse(fechaInicio, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    } catch (e: DateTimeParseException) {
+        null
+    }
+    val fechaFinParsed = try {
+        LocalDate.parse(fechaFin, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    } catch (e: DateTimeParseException) {
+        null
+    }
+
     val filteredTests = testsEvaluable.filter { test ->
+        val testDate = parseDate(test.fecha)
+
         (tipoTest.isEmpty() || test.tipo == tipoTest) &&
                 (nivelGravedad.isEmpty() || test.nivel == nivelGravedad) &&
-                (fechaInicio.isEmpty() || test.fecha >= fechaInicio) &&
-                (fechaFin.isEmpty() || test.fecha <= fechaFin)
+                (fechaInicioParsed == null || (testDate != null && !testDate.isBefore(fechaInicioParsed))) &&
+                (fechaFinParsed == null || (testDate != null && !testDate.isAfter(fechaFinParsed)))
     }
 
     LaunchedEffect(Unit) {
@@ -115,7 +132,6 @@ fun EspRealizarVigilanciaScreen(
         }
     }
 }
-
 
 @Composable
 fun TopBarVigilancia(
@@ -185,6 +201,16 @@ fun BottomBarItem(text: String, icon: ImageVector) {
             color = MaterialTheme.colorScheme.onSecondary,
             textAlign = TextAlign.Center
         )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun parseDate(dateStr: String): LocalDate? {
+    return try {
+        val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.ENGLISH)
+        LocalDate.parse(dateStr, formatter)
+    } catch (e: DateTimeParseException) {
+        null
     }
 }
 
@@ -274,7 +300,6 @@ fun FiltrosComponent(
     }
 }
 
-
 @Composable
 fun DropdownMenuComponent(
     value: String,
@@ -363,15 +388,5 @@ fun TestEvaluableCard(test: TestEvaluable) {
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RealizarVigilanciaScreenPreview() {
-    val navController = rememberNavController()
-    val especialista = Especialista.defaultEspecialista()
-    SisvitaG2Theme {
-        EspRealizarVigilanciaScreen(navController, especialista)
     }
 }
