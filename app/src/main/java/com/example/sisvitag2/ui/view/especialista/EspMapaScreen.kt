@@ -12,10 +12,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,11 +29,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
-import com.example.data.model.android.Estudiante
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EspMapaViewModel
-import com.example.sisvitag2.ui.viewmodel.EstudMenuViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
@@ -41,6 +45,7 @@ fun EspMapaScreen(
     especialista: Especialista,
     viewModel: EspMapaViewModel = viewModel()
 ) {
+    println("Se crea EspMapaScreen")
     Scaffold(
         topBar = { TopBarMapa(navController,especialista) },
         bottomBar = { BottomBarMapaScreen() }
@@ -198,33 +203,32 @@ fun BottomBarMapaScreen() {
 fun FiltroComponentMap(
     viewModel: EspMapaViewModel
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
         Text(
             text = "Filtros:",
             color = MaterialTheme.colorScheme.primary,
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp),
+                .padding(bottom = 10.dp),
             textAlign = TextAlign.Left
         )
-
         Text(
-            text = "Periodo",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 18.sp,
+            text = "• Periodo",
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
+            modifier = Modifier.padding(top = 10.dp)
         )
 
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             inputTextPeriodoStart(
                 value = viewModel.startPeriodo.value,
@@ -239,7 +243,9 @@ fun FiltroComponentMap(
                 text = "-",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 8.dp) // Espaciado horizontal
+                modifier = Modifier
+                    .padding(horizontal = 8.dp) // Espaciado horizontal
+                    .align(Alignment.CenterVertically) // Centrar verticalmente
             )
             inputTextPeriodoEnd(
                 value = viewModel.startPeriodo.value,
@@ -264,7 +270,7 @@ fun FiltroComponentMap(
             textAlign = TextAlign.Left
         )
 
-        ComboBoxTipoDeTest()
+        ComboBoxTipoDeTest(viewModel)
 
         Text(
             text = "Nivel de gravedad",
@@ -285,9 +291,11 @@ fun FiltroComponentMap(
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp),
+                .padding(top = 10.dp, bottom = 12.dp),
             textAlign = TextAlign.Left
         )
+
+        CrearGoogleMap()
     }
 }
 
@@ -298,17 +306,23 @@ fun inputTextPeriodoStart(
     placeholder: String,
     keyboardOptions: KeyboardOptions
 ) {
-    TextField(
+
+    OutlinedTextField(
         value = value,
         onValueChange = { onValueChange(it) },
         modifier = Modifier
-            .padding(end = 10.dp) // Reducir el espacio en el lado derecho
-            .width(140.dp), // Ajustar el ancho según tus necesidades
+            .width(130.dp),
         keyboardOptions = keyboardOptions,
         placeholder = {
-            Text(text = placeholder)
+            Text(
+                text = placeholder,
+                style = TextStyle(fontSize = 12.sp)
+            )
+
         }
     )
+
+
 }
 
 
@@ -319,25 +333,33 @@ fun inputTextPeriodoEnd(
     placeholder: String,
     keyboardOptions: KeyboardOptions
 ) {
-    TextField(
+
+    OutlinedTextField(
         value = value,
         onValueChange = { onValueChange(it) },
         modifier = Modifier
-            .padding(start = 10.dp)
-            .width(140.dp), // Ajustar el ancho según tus necesidades
+            .width(130.dp),
         keyboardOptions = keyboardOptions,
         placeholder = {
-            Text(text = placeholder)
+            Text(
+                text = placeholder,
+                style = TextStyle(fontSize = 12.sp)
+            )
+
         }
     )
 }
 
 
 @Composable
-fun ComboBoxTipoDeTest() {
+fun ComboBoxTipoDeTest(
+    viewModel: EspMapaViewModel
+) {
+    println("Se llama a ComboBoxTipoDeTest")
+
     var expanded by remember { mutableStateOf(false) }
-    val tipoDeTestOptions = listOf("Test A", "Test B", "Test C") // Opciones para el ComboBox
-    var selectedTest by remember { mutableStateOf(tipoDeTestOptions[0]) }
+    val tipoDeTestOptions by viewModel.tiposTestsLista.observeAsState(emptyList())
+    var selectedTest by remember { mutableStateOf(tipoDeTestOptions.getOrElse(0) { "" }) }
 
     Box(
         modifier = Modifier
@@ -347,6 +369,7 @@ fun ComboBoxTipoDeTest() {
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(4.dp))
             .clickable { expanded = true }
             .padding(16.dp)
+
     ) {
         Text(text = selectedTest)
         DropdownMenu(
@@ -371,10 +394,12 @@ fun ComboBoxTipoDeTest() {
 
 
 @Composable
-fun ComboBoxNivelGravedad() {
+fun ComboBoxNivelGravedad(
+    viewModel: EspMapaViewModel = viewModel()
+) {
     var expanded by remember { mutableStateOf(false) }
-    val tipoDeTestOptions = listOf("Bajo", "Medio", "Alto") // Opciones para el ComboBox
-    var selectedTest by remember { mutableStateOf(tipoDeTestOptions[0]) }
+    val tipoGravedadLista by viewModel.gravedadLista.observeAsState(emptyList())
+    var selected by remember { mutableStateOf(tipoGravedadLista.getOrElse(0) { "" }) }
 
     Box(
         modifier = Modifier
@@ -385,7 +410,7 @@ fun ComboBoxNivelGravedad() {
             .clickable { expanded = true }
             .padding(16.dp)
     ) {
-        Text(text = selectedTest)
+        Text(text = selected)
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
@@ -393,11 +418,11 @@ fun ComboBoxNivelGravedad() {
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-            tipoDeTestOptions.forEach { test ->
+            tipoGravedadLista.forEach { test ->
                 DropdownMenuItem(
                     text = { Text(test) },
                     onClick = {
-                        selectedTest = test
+                        selected = test
                         expanded = false
                     }
                 )
@@ -407,8 +432,31 @@ fun ComboBoxNivelGravedad() {
 }
 
 @Composable
-fun CrearGoogleMap(){
+fun CrearGoogleMap() {
+    val cameraPositionState = rememberCameraPositionState {
+        position = com.google.android.gms.maps.model.CameraPosition.fromLatLngZoom(LatLng(-12.0464, -77.0428), 10f)
+    }
 
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .padding(16.dp)
+            .border(1.dp, Color.Gray)
+    ) {
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            uiSettings = MapUiSettings(
+                zoomControlsEnabled = false,
+                compassEnabled = true,
+                myLocationButtonEnabled = true
+            ),
+            onMapLoaded = {
+                cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(LatLng(-12.0464, -77.0428), 10f))
+            }
+        )
+    }
 }
 
 @Preview(showBackground = true)
