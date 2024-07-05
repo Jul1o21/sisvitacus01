@@ -1,12 +1,12 @@
 package com.example.data.model.response
 
-data class TestsResult(
-    val data: List<TestResponseResult>,
+data class TestsResultResponse(
+    val data: List<TestResult>,
     val message: String,
     val success: Boolean
 )
 
-data class TestResponseResult(
+data class TestResult(
     val desc_test: String,
     val id_test_res: Int,
     val puntaje_total: Int,

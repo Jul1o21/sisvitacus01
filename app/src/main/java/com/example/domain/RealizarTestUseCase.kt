@@ -28,6 +28,4 @@ class RealizarTestUseCase {
         return testRepository.getTest(testRequest)
     }
 
-
-
 }

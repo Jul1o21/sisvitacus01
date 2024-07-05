@@ -28,7 +28,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
-import com.example.data.model.response.TestResponseResult
+import com.example.data.model.response.TestResult
+
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
@@ -36,7 +37,7 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 fun EspEvaluarResultadosTestScreen(
     navController: NavHostController,
     especialista: Especialista,
-    viewModel: EvaluarResultadosTestViewModel = viewModel()
+    viewModel: EvaluarResultadosTestViewModel= viewModel()
 ) {
 
     var observacion by remember { mutableStateOf("") }
@@ -67,10 +68,11 @@ fun EspEvaluarResultadosTestScreen(
             textAlign = TextAlign.Center
         )
 
-        // Mostrar resultados de tests
-        testResults.forEach { result ->
-            TestResultComponent(result)
+
+        testResults.forEach { tests ->
+            TestResultComponent(tests)
         }
+
 
         // Observaciones y Tratamiento
         ObservacionesComponent(
@@ -230,7 +232,7 @@ fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavContr
 
 @Composable
 fun TestResultComponent(
-    result: TestResponseResult
+    result: TestResult
 ) {
     Card(
         modifier = Modifier
