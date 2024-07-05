@@ -37,10 +37,10 @@ sealed class AppScreen(val route: String) {
             return "espcita/$especialistaJson"
         }
     }
-    object estudRealizarTestScreen: AppScreen("realizar_test/{id_estudiante}/{id_test}/{estudianteJson}") {
-        fun createRoute(idEstudiante: Int, idTest: Int, estudiante: Estudiante): String {
+    object estudRealizarTestScreen: AppScreen("realizar_test/{id_test}/{estudianteJson}") {
+        fun createRoute(idTest: Int, estudiante: Estudiante): String {
             val estudianteJson = Uri.encode(Gson().toJson(estudiante))
-            return "realizar_test/$idEstudiante/$idTest/$estudianteJson"
+            return "realizar_test/$idTest/$estudianteJson"
         }
     }
     object evaluarResultadosTestScreen : AppScreen("evaluar_resultados_test/{especialistaJson}") {
@@ -53,6 +53,12 @@ sealed class AppScreen(val route: String) {
         fun createRoute(especialista: Especialista): String {
             val especialistaJson = Uri.encode(Gson().toJson(especialista))
             return "realizar_vigilancia/$especialistaJson"
+        }
+    }
+    object espVisualizarMapaScreen : AppScreen("visualizar_mapa/{especialistaJson}") {
+        fun createRoute(especialista: Especialista): String {
+            val especialistaJson = Uri.encode(Gson().toJson(especialista))
+            return "visualizar_mapa/$especialistaJson"
         }
     }
 }

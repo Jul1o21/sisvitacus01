@@ -202,7 +202,7 @@ fun TestCard(
                     text = AnnotatedString("Iniciar >"),
                     onClick = {
                         estudiante?.let { est ->
-                            val ruta = AppScreen.estudRealizarTestScreen.createRoute(est.id_estudiante, test.id_test, est)
+                            val ruta = AppScreen.estudRealizarTestScreen.createRoute(test.id_test, est)
                             navController.navigate(ruta)
                         }
                     },

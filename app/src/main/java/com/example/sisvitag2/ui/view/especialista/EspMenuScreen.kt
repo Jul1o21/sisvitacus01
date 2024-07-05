@@ -82,7 +82,7 @@ fun EspMenuScreen(
                     MenuButton(
                         text = "Visualizar Mapa Calor",
                         icon = Icons.Default.CheckCircle,
-                        onClick = { /* Navegar a la pantalla de Mapa Calor */ }
+                        onClick = { navController.navigate(AppScreen.espVisualizarMapaScreen.createRoute(especialista)) }
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))

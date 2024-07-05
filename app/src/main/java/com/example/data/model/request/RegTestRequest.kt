@@ -1,7 +1,7 @@
 package com.example.data.model.request
 
 data class RegTestRequest (
-    val id_est: Int,
+    val id_usu: Int,
     val preguntas: List<PregRespuestaRequest>
 )
 

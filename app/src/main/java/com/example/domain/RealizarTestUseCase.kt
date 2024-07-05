@@ -3,6 +3,7 @@ package com.example.domain
 import com.example.data.model.request.RegTestRequest
 import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
+import com.example.data.model.response.RegistrarTestResponse
 import com.example.data.model.response.TestSingleResponse
 import com.example.data.model.response.TestsAllResponse
 import com.example.sisvita_cus1.data.repository.TestRepository
@@ -13,7 +14,7 @@ class RealizarTestUseCase {
     private val testRepository = TestRepository()
 
     //Registrar el test dado por el estudiante en la BD
-    suspend fun regTest(regTestRequest: RegTestRequest): GeneralResponse {
+    suspend fun regTest(regTestRequest: RegTestRequest): RegistrarTestResponse {
         return testRepository.regTest(regTestRequest)
     }
 

@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.example.data.model.android.Especialista
 import com.example.data.model.android.Estudiante
 import com.example.sisvitag2.ui.view.especialista.EspCitaScreen
+import com.example.sisvitag2.ui.view.especialista.EspMapaScreen
 import com.example.sisvitag2.ui.view.especialista.EspMenuScreen
 import com.example.sisvitag2.ui.view.especialista.EspRealizarVigilanciaScreen
 import com.example.sisvitag2.ui.view.estudiante.EstudMenuScreen
@@ -87,16 +88,14 @@ fun AppNavigation(startDestination: String) {
         composable(
             route = AppScreen.estudRealizarTestScreen.route,
             arguments = listOf(
-                navArgument("id_estudiante") { type = NavType.IntType },
                 navArgument("id_test") { type = NavType.IntType },
                 navArgument("estudianteJson") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val idEstudiante = backStackEntry.arguments?.getInt("id_estudiante") ?: 0
             val idTest = backStackEntry.arguments?.getInt("id_test") ?: 0
             val estudianteJson = backStackEntry.arguments?.getString("estudianteJson")
             val estudiante = Gson().fromJson(estudianteJson, Estudiante::class.java)
-            EstudRealizarTestScreen(navController, idEstudiante, idTest, estudiante)
+            EstudRealizarTestScreen(navController, idTest, estudiante)
         }
 
         composable(
@@ -117,6 +116,16 @@ fun AppNavigation(startDestination: String) {
             val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
             EspRealizarVigilanciaScreen(navController, especialista)
         }
+
+        composable(
+            route = AppScreen.espVisualizarMapaScreen.route,
+            arguments = listOf(navArgument("especialistaJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val especialistaJson = backStackEntry.arguments?.getString("especialistaJson")
+            val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
+            EspMapaScreen(navController, especialista)
+        }
+
 
     }
 }

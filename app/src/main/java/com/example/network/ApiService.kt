@@ -6,6 +6,7 @@ import com.example.data.model.request.RegTestRequest
 import com.example.data.model.response.LoginResponse
 import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
+import com.example.data.model.response.RegistrarTestResponse
 import com.example.data.model.response.TestResponseResult
 import com.example.data.model.response.TestsAllResponse
 import com.example.data.model.response.TestSingleResponse
@@ -30,7 +31,7 @@ interface ApiService {
     suspend fun getTest(@Body testRequest: TestRequest): TestSingleResponse
 
     @POST("/registerTest")
-    suspend fun registrarTest(@Body regTestRequest: RegTestRequest): GeneralResponse
+    suspend fun registrarTest(@Body regTestRequest: RegTestRequest): RegistrarTestResponse
 
 
     //Obetener inforamcion de los tests respondidos

@@ -9,12 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.model.request.PregRespuestaRequest
 import com.example.data.model.request.RegTestRequest
 import com.example.data.model.request.TestRequest
+import com.example.data.model.response.DiagnosticoAutomatico
 import com.example.data.model.response.TestSingleResponse
 import com.example.domain.RealizarTestUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EstudTestViewModel : ViewModel() {
+class EstudRealizarTestViewModel : ViewModel() {
     private val realizarTestUseCase = RealizarTestUseCase()
 
     private val _testSingleResponse = MutableLiveData<TestSingleResponse>()
@@ -25,6 +26,10 @@ class EstudTestViewModel : ViewModel() {
 
     private val _selectedOptions = mutableStateMapOf<Int, Int>()
     val selectedOptions: SnapshotStateMap<Int, Int> get() = _selectedOptions
+
+    private val _diagnosticoAutomatico = MutableLiveData<DiagnosticoAutomatico>()
+    val diagnosticoAutomatico: LiveData<DiagnosticoAutomatico> get() = _diagnosticoAutomatico
+
 
     fun updateRespuesta(id_preg: Int, puntaje: Int) {
         _selectedOptions[id_preg] = puntaje
@@ -46,6 +51,12 @@ class EstudTestViewModel : ViewModel() {
         }
     }
 
+
+    fun setDiagnosticoAutomatico(diagnosticoAutomatico: DiagnosticoAutomatico) {
+        _diagnosticoAutomatico.postValue(diagnosticoAutomatico)
+        println("Diagnostico automatico actualizado: $_diagnosticoAutomatico")
+    }
+
     fun regTest(id_est: Int) {
         println("se llama a la funcion regTest()")
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,6 +66,13 @@ class EstudTestViewModel : ViewModel() {
 
                 if(response.success && response.message == "COMPLETE") {
                     println("JSON recibido con éxito: $response")
+
+                    val diagnosticoAutomatico = response.data.diagnostico_automatico
+                    println("Diagnostico automatico: $diagnosticoAutomatico")
+
+                    // Usar postValue para actualizar el LiveData desde un hilo de fondo
+                    setDiagnosticoAutomatico(diagnosticoAutomatico)
+
                 }
             } catch(e: Exception) {
                 println("ERROR: "+e)

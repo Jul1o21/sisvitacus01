@@ -98,7 +98,7 @@ class LoginViewModel : ViewModel() {
                         println("Es un estudiante")
                         _estudiante = Estudiante(
                             id_pers = usuarioResponse.id_pers ?:0,
-                            id_estudiante = usuarioResponse.id_usu ?:0,
+                            id_usu = usuarioResponse.id_usu ?:0,
                             materno = usuarioResponse.materno ?:"",
                             nombre_completo = usuarioResponse.nombres ?: "",
                             paterno = usuarioResponse.paterno ?: "",
@@ -108,7 +108,7 @@ class LoginViewModel : ViewModel() {
                         println("Es un especialista")
                         _especialista = Especialista(
                             id_pers = usuarioResponse.id_pers?:0,
-                            id_especialista = usuarioResponse.id_usu?:0,
+                            id_usu = usuarioResponse.id_usu?:0,
                             materno = usuarioResponse.materno ?:"",
                             nombre_completo = usuarioResponse.nombres ?: "",
                             paterno = usuarioResponse.paterno ?: "",

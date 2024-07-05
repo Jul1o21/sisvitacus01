@@ -1,6 +1,6 @@
 package com.example.sisvitag2.ui.view.estudiante
 
-import EstudTestViewModel
+import EstudRealizarTestViewModel
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.background
@@ -32,11 +32,12 @@ import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 @Composable
 fun EstudRealizarTestScreen(
     navController: NavController,
-    idEstudiante: Int,
     idTest: Int,
     estudiante: Estudiante,
-    viewModel: EstudTestViewModel = viewModel()
+    viewModel: EstudRealizarTestViewModel = viewModel()
 ) {
+    val diagnosticoAutomatico by viewModel.diagnosticoAutomatico.observeAsState()
+
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -64,7 +65,7 @@ fun EstudRealizarTestScreen(
             ) {
                 Button(
                     onClick = {
-                        viewModel.regTest(idEstudiante)
+                        viewModel.regTest(estudiante.id_usu)
                         showDialog = true
                     },
                     modifier = Modifier
@@ -94,7 +95,23 @@ fun EstudRealizarTestScreen(
                     }
                 },
                 title = { Text("Respuestas Registradas") },
-                text = { Text("Sus respuestas han sido registradas con éxito.") }
+                text = {
+                    if (diagnosticoAutomatico != null) {
+                        Column {
+                            Text("Sus respuestas han sido registradas con éxito.")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("Diagnóstico:")
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text("Descripción: ${diagnosticoAutomatico?.descripcion}")
+                            Text("Puntaje Total: ${diagnosticoAutomatico?.puntaje_total}")
+                            Text("Rango: ${diagnosticoAutomatico?.rango}")
+                            Text("Recomendación: ${diagnosticoAutomatico?.recomendacion}")
+                            Text("Resultado: ${diagnosticoAutomatico?.resultado}")
+                        }
+                    } else {
+                        Text("Sus respuestas han sido registradas con éxito.")
+                    }
+                }
             )
         }
     }
@@ -124,7 +141,7 @@ fun TopBar3(navController: NavController) {
 }
 
 @Composable
-fun Content3(viewModel: EstudTestViewModel) {
+fun Content3(viewModel: EstudRealizarTestViewModel) {
     val respuestas = viewModel.respuestas
     val selectedOptions = viewModel.selectedOptions
     val testResponse by viewModel.testSingleResponse.observeAsState()
@@ -302,7 +319,6 @@ fun EstudTestScreenPreview() {
     SisvitaG2Theme {
         EstudRealizarTestScreen(
             navController,
-            idEstudiante,
             idTest,
             estudiante
         )
