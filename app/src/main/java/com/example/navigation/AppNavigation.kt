@@ -11,6 +11,7 @@ import com.example.data.model.android.Especialista
 import com.example.data.model.android.Estudiante
 import com.example.sisvitag2.ui.view.especialista.EspCitaScreen
 import com.example.sisvitag2.ui.view.especialista.EspMapaScreen
+import com.example.sisvitag2.ui.view.especialista.EspMapaScreenPreview
 import com.example.sisvitag2.ui.view.especialista.EspMenuScreen
 import com.example.sisvitag2.ui.view.especialista.EspRealizarVigilanciaScreen
 import com.example.sisvitag2.ui.view.estudiante.EstudMenuScreen
@@ -125,7 +126,6 @@ fun AppNavigation(startDestination: String) {
             val especialista = Gson().fromJson(especialistaJson, Especialista::class.java)
             EspMapaScreen(navController, especialista)
         }
-
 
     }
 }

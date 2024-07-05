@@ -6,6 +6,7 @@ import com.example.data.model.request.RegisterRequest
 import com.example.data.model.request.TestRequest
 import com.example.data.model.response.GeneralResponse
 import com.example.data.model.response.LoginResponse
+import com.example.data.model.response.RegistrarTestResponse
 import com.example.data.model.response.TestsEvaluableResponse
 import com.example.data.model.response.TestSingleResponse
 import com.example.data.model.response.TestsAllResponse
