@@ -253,18 +253,8 @@ fun DiagnosticoCard(test: TestEvaluable, navController: NavController, especiali
                         .background(color, shape = CircleShape)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "especialista: ${especialista.id_usu} ${especialista.nombre_completo}",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "ID: ${test.id_test_res}",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+
+            
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Estudiante: ${test.estudiante}",
