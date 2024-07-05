@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -16,17 +17,21 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
 import com.example.data.model.response.TestEvaluable
 import com.example.sisvitacus1.navigation.AppScreen
+import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -115,10 +120,18 @@ fun EspRealizarVigilanciaScreen(
                 }
             )
 
+            Text(
+                text = "Tests a evaluar:",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 20.dp, bottom = 10.dp)
+            )
+
             // Lista de Tests Evaluables
             if (filteredTests.isNotEmpty()) {
                 filteredTests.forEach { test ->
-                    TestEvaluableCard(test)
+                    TestEvaluableCard(test, navController)
                 }
             } else {
                 Text(
@@ -340,8 +353,15 @@ fun DropdownMenuComponent(
     }
 }
 
+// EspRealizarVigilanciaScreen.kt
 @Composable
-fun TestEvaluableCard(test: TestEvaluable) {
+fun TestEvaluableCard(test: TestEvaluable, navController: NavController) {
+    val color = when (test.nivel.toLowerCase()) {
+        "alto" -> Color.Red
+        "medio" -> Color.Yellow
+        else -> Color.Green
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -350,12 +370,22 @@ fun TestEvaluableCard(test: TestEvaluable) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = "Test: ${test.descripcion}",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Test: ${test.descripcion}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.weight(1f)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(16.dp)
+                        .background(color, shape = CircleShape)
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Estudiante: ${test.estudiante}",
@@ -363,12 +393,7 @@ fun TestEvaluableCard(test: TestEvaluable) {
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Fecha: ${test.fecha}",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Text(
-                text = "Nivel: ${test.nivel}",
+                text = "Tipo de Test: ${test.tipo}",
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -378,15 +403,92 @@ fun TestEvaluableCard(test: TestEvaluable) {
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Resultado: ${test.resultado}",
+                text = "Fecha: ${test.fecha}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(
+                    onClick = { navController.navigate(AppScreen.testResumenScreen.createRoute(test)) }
+                ) {
+                    Text(
+                        text = "Ver más detalles",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Diagnóstico automático:",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Black,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Text(
+                text = "Descripción: ${test.resultado}",
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Tipo: ${test.tipo}",
+                text = "Recomendación: ${test.recomend}",
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = { navController.navigate(AppScreen.espEvaluarResultadosTest.createRoute(test)) },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(text = "Evaluar")
+            }
         }
     }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun RealizarVigilanciaScreenPreview() {
+    val navController = rememberNavController()
+    val especialista = Especialista(
+        1,
+        2001,
+        "Perez",
+        "Juan",
+        "Robles",
+        "especialista"
+    )
+    SisvitaG2Theme {
+        EspRealizarVigilanciaScreen(
+            navController = navController,
+            especialista = especialista
+        )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun TestEvaluableCardPreview() {
+    val navController = rememberNavController()
+    val test = TestEvaluable(
+        descripcion = "Resultado Zung",
+        estudiante = "Diego Flores Quinonez",
+        fecha = "Mon, 01 Jul 2024 00:00:00 GMT",
+        id_test_res = 3000002,
+        nivel = "medio",
+        puntaje_total = 42,
+        recomend = "-",
+        resultado = "Ansiedad minima a moderada",
+        tipo = "Test de Ansiedad de Zung"
+    )
+    SisvitaG2Theme {
+        TestEvaluableCard(test = test, navController = navController)
+    }
+}
+
