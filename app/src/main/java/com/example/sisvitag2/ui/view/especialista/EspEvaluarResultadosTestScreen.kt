@@ -1,11 +1,11 @@
+// EspEvaluarResultadosTestScreen.kt
 package com.example.sisvitag2.ui.view.especialista
 
-import EvaluarResultadosTestViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -17,166 +17,138 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.data.model.android.Especialista
-import com.example.data.model.response.TestResult
-
+import com.example.data.model.response.TestEvaluable
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
+// EspEvaluarResultadosTestScreen.kt
 @Composable
-fun EspEvaluarResultadosTestScreen(
-    navController: NavHostController,
-    especialista: Especialista,
-    viewModel: EvaluarResultadosTestViewModel= viewModel()
-) {
-
-    var observacion by remember { mutableStateOf("") }
+fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvaluable, especialista: Especialista) {
+    var descripcion by remember { mutableStateOf("") }
+    var resultado by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
-    val testResults = viewModel.testsRespondidos
+    var recomendacion by remember { mutableStateOf("") }
+    var notas by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.obtenerTodosTestsRespondidos()
-    }
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
-    ) {
-        TopBarEvaResult(navController,especialista)
-        Text(
-            text = "Evaluar Resultados Test",
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+    Scaffold(
+        topBar = { TopBarDiagnostico(navController) }
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
                 .padding(16.dp)
-                .padding(top = 10.dp, bottom = 30.dp),
-            textAlign = TextAlign.Center
-        )
-
-
-        testResults.forEach { tests ->
-            TestResultComponent(tests)
-        }
-
-
-        // Observaciones y Tratamiento
-        ObservacionesComponent(
-            observacion = observacion,
-            onObservacionChanged = { observacion = it },
-            tratamiento = tratamiento,
-            onTratamientoChanged = { tratamiento = it }
-        )
-
-        // Botón para Confirmar y Notificar
-        Button(
-            onClick = {
-                // Aquí se puede agregar la lógica para confirmar el resultado y notificar
-                println("Resultado confirmado: $observacion, $tratamiento")
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .padding(vertical = 8.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Confirmar y Notificar",
-                fontSize = 18.sp,
+                text = "Realizar Diagnóstico",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(5.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                textAlign = TextAlign.Center
             )
+
+            // Mostrar detalles del test
+            DiagnosticoCard(test, navController)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Agregar evaluación",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 10.dp)
+            )
+
+            OutlinedTextField(
+                value = descripcion,
+                onValueChange = { descripcion = it },
+                label = { Text("Descripción") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = resultado,
+                onValueChange = { resultado = it },
+                label = { Text("Resultado") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = tratamiento,
+                onValueChange = { tratamiento = it },
+                label = { Text("Tratamiento") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = recomendacion,
+                onValueChange = { recomendacion = it },
+                label = { Text("Recomendación") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = notas,
+                onValueChange = { notas = it },
+                label = { Text("Notas de seguimiento") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { showDialog = true },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(text = "Guardar cambios")
+            }
+
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    confirmButton = {
+                        Button(
+                            onClick = { navController.navigate(AppScreen.realizarVigilanciaScreen.createRoute(especialista)) }
+                        ) {
+                            Text("Continuar")
+                        }
+                    },
+                    title = { Text(text = "Diagnóstico Registrado") },
+                    text = { Text("Se registró el diagnóstico correctamente.") }
+                )
+            }
         }
-
-        // Espacio para empujar el BottomBarEvaResult hacia abajo
-        Spacer(modifier = Modifier.weight(1f))
-        BottomBarEvaResult(navController = navController)
-
-    }
-
-}
-@Composable
-fun ObservacionesComponent(
-    observacion: String,
-    onObservacionChanged: (String) -> Unit,
-    tratamiento: String,
-    onTratamientoChanged: (String) -> Unit
-) {
-    Column {
-        Text(
-            text = "Observaciones",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        BasicTextField(
-            value = observacion,
-            onValueChange = onObservacionChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            singleLine = true
-        )
-        Text(
-            text = "Tratamiento",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .padding(top = 5.dp, bottom = 10.dp),
-            textAlign = TextAlign.Left
-        )
-        BasicTextField(
-            value = tratamiento,
-            onValueChange = onTratamientoChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            singleLine = true
-        )
     }
 }
 
 
 @Composable
-fun TopBarEvaResult(
-    navController: NavController,
-    especialista : Especialista
-) {
+fun TopBarDiagnostico(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .padding(6.dp)
     ) {
         IconButton(onClick = {
-
-            navController.navigate(AppScreen.espMenuScreen.createRoute(especialista)) {
-                popUpTo(AppScreen.espMenuScreen.route) { inclusive = true }
-
-            }
-            
+            navController.popBackStack()
         }) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
@@ -195,7 +167,7 @@ fun BottomBarEvaResult(navController: NavController) {
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.secondary)
             .padding(horizontal = 16.dp, vertical = 6.dp),
-    horizontalArrangement = Arrangement.SpaceAround
+        horizontalArrangement = Arrangement.SpaceAround
     ) {
         itemBarEvaResult("Cuestion.", Icons.Default.Star, navController, "cuestion")
         itemBarEvaResult("Result.", Icons.Default.CheckCircle, navController, "result")
@@ -228,12 +200,14 @@ fun itemBarEvaResult(texto: String, vector: ImageVector, navController: NavContr
         )
     }
 }
-
-
 @Composable
-fun TestResultComponent(
-    result: TestResult
-) {
+fun DiagnosticoCard(test: TestEvaluable, navController: NavController) {
+    val color = when (test.nivel.toLowerCase()) {
+        "alto" -> Color.Red
+        "medio" -> Color.Yellow
+        else -> Color.Green
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -242,39 +216,96 @@ fun TestResultComponent(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = "Test: ${result.id_test_res}",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Test: ${test.descripcion}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.weight(1f)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(16.dp)
+                        .background(color, shape = CircleShape)
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Tipo de test: ${result.tipo_test}",
+                text = "Estudiante: ${test.estudiante}",
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Puntaje Total: ${result.puntaje_total}",
-                fontSize = 14.sp,
+                text = "Tipo de Test: ${test.tipo}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Puntaje Total: ${test.puntaje_total}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Fecha: ${test.fecha}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(
+                    onClick = { navController.navigate(AppScreen.testResumenScreen.createRoute(test)) }
+                ) {
+                    Text(
+                        text = "Ver más detalles",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Diagnóstico automático:",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Black,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Text(
+                text = "Descripción: ${test.resultado}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Recomendación: ${test.recomend}",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun EspEvaluarResultadosTestScreen() {
+fun EspEvaluarResultadosTestScreenPreview() {
     val navController = rememberNavController()
-    val especialista = Especialista.defaultEspecialista()
+    val test = TestEvaluable(
+        descripcion = "Resultado Zung",
+        estudiante = "Diego Flores Quinonez",
+        fecha = "Mon, 01 Jul 2024 00:00:00 GMT",
+        id_test_res = 3000002,
+        nivel = "medio",
+        puntaje_total = 42,
+        recomend = "-",
+        resultado = "Ansiedad minima a moderada",
+        tipo = "Test de Ansiedad de Zung"
+    )
+    val especialista = Especialista(10, 10, "Salazar", "Maria Salazar", "Gutierrez", "especialista")
     SisvitaG2Theme {
-        EspEvaluarResultadosTestScreen(
-            especialista = especialista,
-            navController = navController
-            )
+        EspEvaluarResultadosTestScreen(navController, test, especialista)
     }
 }
-
-
