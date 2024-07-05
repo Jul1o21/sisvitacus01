@@ -15,6 +15,12 @@ class EspRealizarVigilanciaViewModel : ViewModel() {
     private val _testsEvaluables = MutableLiveData<List<TestEvaluable>>()
     val testsEvaluables: LiveData<List<TestEvaluable>> get() = _testsEvaluables
 
+    private val _tipoTests = MutableLiveData<List<String>>()
+    val tipoTests: LiveData<List<String>> get() = _tipoTests
+
+    private val _nivelesGravedad = MutableLiveData<List<String>>()
+    val nivelesGravedad: LiveData<List<String>> get() = _nivelesGravedad
+
     init {
         obtenerTestsEvaluables()
     }
@@ -24,8 +30,11 @@ class EspRealizarVigilanciaViewModel : ViewModel() {
             try {
                 val response = realizarVigilanciaUseCase.getTestsEvaluables()
                 if (response.success) {
-                    _testsEvaluables.value = response.data.tests
-                    Log.d("EspRealizarVigilanciaVM", "Tests evaluables obtenidos: ${response.data.tests}")
+                    val tests = response.data.tests
+                    _testsEvaluables.value = tests
+                    _tipoTests.value = tests.map { it.tipo }.distinct()
+                    _nivelesGravedad.value = tests.map { it.nivel }.distinct()
+                    Log.d("EspRealizarVigilanciaVM", "Tests evaluables obtenidos: $tests")
                 } else {
                     Log.e("EspRealizarVigilanciaVM", "Error al obtener los tests: ${response.message}")
                 }

@@ -1,6 +1,5 @@
 package com.example.sisvitag2.ui.view.especialista
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,7 +29,6 @@ import com.example.data.model.response.TestEvaluable
 import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 
-
 @Composable
 fun EspRealizarVigilanciaScreen(
     navController: NavHostController,
@@ -38,9 +36,20 @@ fun EspRealizarVigilanciaScreen(
     viewModel: EspRealizarVigilanciaViewModel = viewModel()
 ) {
     val testsEvaluable by viewModel.testsEvaluables.observeAsState(emptyList())
+    val tipoTests by viewModel.tipoTests.observeAsState(emptyList())
+    val nivelesGravedad by viewModel.nivelesGravedad.observeAsState(emptyList())
 
-    // Log the size of the list
-    Log.d("EspRealizarVigilanciaScreen", "Tests evaluables: ${testsEvaluable.size}")
+    var fechaInicio by remember { mutableStateOf("") }
+    var fechaFin by remember { mutableStateOf("") }
+    var tipoTest by remember { mutableStateOf("") }
+    var nivelGravedad by remember { mutableStateOf("") }
+
+    val filteredTests = testsEvaluable.filter { test ->
+        (tipoTest.isEmpty() || test.tipo == tipoTest) &&
+                (nivelGravedad.isEmpty() || test.nivel == nivelGravedad) &&
+                (fechaInicio.isEmpty() || test.fecha >= fechaInicio) &&
+                (fechaFin.isEmpty() || test.fecha <= fechaFin)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.obtenerTestsEvaluables()
@@ -58,11 +67,6 @@ fun EspRealizarVigilanciaScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            var fechaInicio by remember { mutableStateOf("") }
-            var fechaFin by remember { mutableStateOf("") }
-            var tipoTest by remember { mutableStateOf("") }
-            var nivelGravedad by remember { mutableStateOf("") }
-
             Text(
                 text = "Evaluar Estudiantes",
                 color = MaterialTheme.colorScheme.primary,
@@ -83,12 +87,20 @@ fun EspRealizarVigilanciaScreen(
                 tipoTest = tipoTest,
                 onTipoTestChanged = { tipoTest = it },
                 nivelGravedad = nivelGravedad,
-                onNivelGravedadChanged = { nivelGravedad = it }
+                onNivelGravedadChanged = { nivelGravedad = it },
+                tipoTests = tipoTests,
+                nivelesGravedad = nivelesGravedad,
+                onResetFilters = {
+                    fechaInicio = ""
+                    fechaFin = ""
+                    tipoTest = ""
+                    nivelGravedad = ""
+                }
             )
 
             // Lista de Tests Evaluables
-            if (testsEvaluable.isNotEmpty()) {
-                testsEvaluable.forEach { test ->
+            if (filteredTests.isNotEmpty()) {
+                filteredTests.forEach { test ->
                     TestEvaluableCard(test)
                 }
             } else {
@@ -103,6 +115,7 @@ fun EspRealizarVigilanciaScreen(
         }
     }
 }
+
 
 @Composable
 fun TopBarVigilancia(
@@ -184,7 +197,10 @@ fun FiltrosComponent(
     tipoTest: String,
     onTipoTestChanged: (String) -> Unit,
     nivelGravedad: String,
-    onNivelGravedadChanged: (String) -> Unit
+    onNivelGravedadChanged: (String) -> Unit,
+    tipoTests: List<String>,
+    nivelesGravedad: List<String>,
+    onResetFilters: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -234,7 +250,7 @@ fun FiltrosComponent(
         DropdownMenuComponent(
             value = tipoTest,
             onValueChange = onTipoTestChanged,
-            options = listOf("Test A", "Test B", "Test C")
+            options = tipoTests
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
@@ -246,10 +262,18 @@ fun FiltrosComponent(
         DropdownMenuComponent(
             value = nivelGravedad,
             onValueChange = onNivelGravedadChanged,
-            options = listOf("Bajo", "Medio", "Alto")
+            options = nivelesGravedad
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = onResetFilters,
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text(text = "Quitar Filtros")
+        }
     }
 }
+
 
 @Composable
 fun DropdownMenuComponent(
@@ -301,11 +325,17 @@ fun TestEvaluableCard(test: TestEvaluable) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-
+            Text(
+                text = "Test: ${test.descripcion}",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Estudiante: ${test.estudiante}",
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = "Fecha: ${test.fecha}",
@@ -319,11 +349,6 @@ fun TestEvaluableCard(test: TestEvaluable) {
             )
             Text(
                 text = "Puntaje Total: ${test.puntaje_total}",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Text(
-                text = "Resomendación: ${test.recomend}",
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
