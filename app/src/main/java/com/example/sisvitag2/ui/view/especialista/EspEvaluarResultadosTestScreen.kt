@@ -38,8 +38,9 @@ fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvalu
     var tratamiento by remember { mutableStateOf("") }
     var recomendacion by remember { mutableStateOf("") }
     var notas by remember { mutableStateOf("") }
-    var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    val showDialog by viewModel.showDialog
 
     fun saveDiagnostico() {
         if (descripcion.isBlank() || resultado.isBlank() || tratamiento.isBlank() || recomendacion.isBlank() || notas.isBlank()) {
@@ -139,10 +140,13 @@ fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvalu
 
             if (showDialog) {
                 AlertDialog(
-                    onDismissRequest = { showDialog = false },
+                    onDismissRequest = { viewModel.updateShowDialog(false) },
                     confirmButton = {
                         Button(
-                            onClick = { navController.navigate(AppScreen.realizarVigilanciaScreen.createRoute(especialista)) }
+                            onClick = {
+                                viewModel.updateShowDialog(false)
+                                navController.navigate(AppScreen.realizarVigilanciaScreen.createRoute(especialista))
+                            }
                         ) {
                             Text("Continuar")
                         }
@@ -154,6 +158,7 @@ fun EspEvaluarResultadosTestScreen(navController: NavController, test: TestEvalu
         }
     }
 }
+
 
 
 @Composable
