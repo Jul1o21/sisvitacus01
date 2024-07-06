@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.model.response.TestEvaluable
+import com.example.data.model.response.Ubigeo
 import com.example.domain.VisualizarMapaCalorUseCase
 import kotlinx.coroutines.launch
 
@@ -32,8 +33,18 @@ class EspMapaViewModel : ViewModel() {
     private val _gravedadLista = MutableLiveData<List<String>>()
     val gravedadLista: LiveData<List<String>> get() = _gravedadLista
 
+    private val _ubigeosEst = MutableLiveData<List<Ubigeo>>()
+    val ubigeosEst: LiveData<List<Ubigeo>> get() = _ubigeosEst
+
+    private val _selectedTipoTest = MutableLiveData<String>()
+    val selectedTipoTest: LiveData<String> get() = _selectedTipoTest
+
+    private val _selectedNivelGravedad = MutableLiveData<String>()
+    val selectedNivelGravedad: LiveData<String> get() = _selectedNivelGravedad
+
     init {
         fetchTodosTests()
+        fetchUbigeosEst()
     }
     private fun fetchTodosTests() {
 
@@ -60,6 +71,24 @@ class EspMapaViewModel : ViewModel() {
     }
 
 
+    private fun fetchUbigeosEst() {
+        println("Se llama a fetchUbigeosEst")
+        viewModelScope.launch {
+            try {
+                val response = visualizarMapaCalorUseCase.obtenerUbigeosEst()
+                if (response.success) {
+                    _ubigeosEst.value = response.data.ubigeos
+                    println("Ubigeos obtenidos: ${response.data.ubigeos}")
+                    Log.d("EspMapaViewModel", "Ubigeos obtenidos: ${response.data.ubigeos}")
+                } else {
+                    Log.e("EspMapaViewModel", "Error al obtener los ubigeos: ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("EspMapaViewModel", "Excepción al obtener los ubigeos: ${e.message}")
+            }
+        }
+    }
+
     fun setStartPeriodo(value: String) {
         _startPeriodo.value = value
     }
@@ -71,5 +100,13 @@ class EspMapaViewModel : ViewModel() {
     fun clearPeriodos() {
         _startPeriodo.value = ""
         _endPeriodo.value = ""
+    }
+
+    fun setSelectedTipoTest(value: String) {
+        _selectedTipoTest.value = value
+    }
+
+    fun setSelectedNivelGravedad(value: String) {
+        _selectedNivelGravedad.value = value
     }
 }

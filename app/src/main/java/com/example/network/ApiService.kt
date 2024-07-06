@@ -4,13 +4,13 @@ import com.example.data.model.request.LoginRequest
 import com.example.data.model.request.RegTestRequest
 import com.example.data.model.request.RegisterRequest
 import com.example.data.model.request.TestRequest
-import com.example.data.model.response.GeneralResponse
 import com.example.data.model.response.LoginResponse
 import com.example.data.model.response.RegistrarTestResponse
 import com.example.data.model.response.TestsEvaluableResponse
 import com.example.data.model.response.TestSingleResponse
 import com.example.data.model.response.TestsAllResponse
 import com.example.data.model.response.TestsResultResponse
+import com.example.data.model.response.UbigeosEstudResponse
 import com.example.data.model.response.registerResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -38,4 +38,9 @@ interface ApiService {
 
     @GET("/obtenerTestsEvaluables")
     suspend fun obtenerTestEvaluables(): TestsEvaluableResponse
+
+    @GET("/obtenerUbigeosEst")
+    suspend fun obtenerUbigeosEst(): UbigeosEstudResponse
+
+
 }

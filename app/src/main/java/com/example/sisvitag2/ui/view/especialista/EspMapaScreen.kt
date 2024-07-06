@@ -33,11 +33,17 @@ import com.example.sisvitacus1.navigation.AppScreen
 import com.example.sisvitag2.ui.theme.SisvitaG2Theme
 import com.example.sisvitag2.ui.viewmodel.EspMapaViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.Circle
 
 @Composable
 fun EspMapaScreen(
@@ -295,7 +301,7 @@ fun FiltroComponentMap(
             textAlign = TextAlign.Left
         )
 
-        CrearGoogleMap()
+        CrearGoogleMap3()
     }
 }
 
@@ -456,6 +462,107 @@ fun CrearGoogleMap() {
                 cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(LatLng(-12.0464, -77.0428), 10f))
             }
         )
+    }
+}
+@Composable
+fun CrearGoogleMap2() {
+
+    var circle by remember { mutableStateOf<Circle?>(null) }
+
+    var properties by remember {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+
+    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
+
+    val lima = LatLng(-12.0464, -77.0428)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(lima, 10f)
+    }
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(300.dp)
+        .padding(16.dp)
+        .border(1.dp, Color.Gray)
+    ) {
+        GoogleMap(
+            modifier = Modifier.matchParentSize(),
+            properties = properties,
+            uiSettings = uiSettings,
+            cameraPositionState = cameraPositionState,  // Asegúrate de usar cameraPositionState aquí
+            onMapLoaded = {
+                cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(lima, 10f))
+            }
+        )
+        {
+            /*
+            Circle(
+                center = lima,
+                radius = 1000.0, // Radio de la circunferencia en metros
+                strokeColor = Color.Red, // Color del borde de la circunferencia (rojo)
+                strokeWidth = 4f, // Ancho del borde de la circunferencia
+                fillColor = Color.Red.copy(alpha = 0.3f) // Color de relleno de la circunferencia (rojo con transparencia)
+            )*/
+
+        }
+
+    }
+}
+
+@Composable
+fun CrearGoogleMap3(viewModel: EspMapaViewModel = viewModel()) {
+
+    val ubigeos by viewModel.ubigeosEst.observeAsState(emptyList())
+
+    var properties by remember {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+
+    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
+
+    val lima = LatLng(-12.0464, -77.0428)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(lima, 10f)
+    }
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(300.dp)
+        .padding(16.dp)
+        .border(1.dp, Color.Gray)
+    ) {
+        GoogleMap(
+            modifier = Modifier.matchParentSize(),
+            properties = properties,
+            uiSettings = uiSettings,
+            cameraPositionState = cameraPositionState,
+            onMapLoaded = {
+                cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(lima, 10f))
+            }
+        ) {
+            // Itera sobre los ubigeos y dibuja los círculos según el nivel
+            ubigeos.forEach { ubigeo ->
+                if (ubigeo.nivel.isNotEmpty()) {
+                    val color = when (ubigeo.nivel.lowercase()) {
+                        "alto" -> Color.Red
+                        "medio" -> Color.Yellow
+                        "bajo" -> Color.Green
+                        else -> Color.Gray // Default color in case of unknown level
+                    }
+
+                    val position = LatLng(ubigeo.y.toDouble(), ubigeo.x.toDouble())
+
+                    Circle(
+                        center = position,
+                        radius = 1000.0, // Radio de la circunferencia en metros
+                        strokeColor = color, // Color del borde de la circunferencia
+                        strokeWidth = 4f, // Ancho del borde de la circunferencia
+                        fillColor = color.copy(alpha = 0.3f) // Color de relleno de la circunferencia con transparencia
+                    )
+                }
+            }
+        }
     }
 }
 
