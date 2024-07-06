@@ -1,15 +1,19 @@
 package com.example.domain
 
-import com.example.data.model.response.TestsResultResponse
-import com.example.sisvita_cus1.data.repository.TestRepository
+import android.util.Log
+import com.example.data.model.request.DiagnosticoRequest
+import com.example.data.model.response.DiagnosticoResponse
+import com.example.data.repository.DiagnosticoRepository
 
-
-//Caso de uso 3.1
 class EvaluarResultadosTestUseCase {
-    private val testRepository = TestRepository()
+    private val diagnosticoRepository = DiagnosticoRepository()
 
-    //Obetener los datos y preguntas de un solo test por medio de su ID
-    suspend fun getTestResueltos(): TestsResultResponse {
-        return testRepository.getTodosTestsResultados()
+    suspend fun registrarDiagnostico(diagnosticoRequest: DiagnosticoRequest): DiagnosticoResponse? {
+        return try {
+            diagnosticoRepository.registrarDiagnostico(diagnosticoRequest)
+        } catch (e: Exception) {
+            Log.e("EvaluarResultadosTestUC", "Error al registrar diagnóstico: ${e.message}")
+            null
+        }
     }
 }

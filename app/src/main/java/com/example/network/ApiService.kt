@@ -1,9 +1,12 @@
 package com.example.sisvita_cus1.network
 
+import android.telecom.Call
+import com.example.data.model.request.DiagnosticoRequest
 import com.example.data.model.request.LoginRequest
 import com.example.data.model.request.RegTestRequest
 import com.example.data.model.request.RegisterRequest
 import com.example.data.model.request.TestRequest
+import com.example.data.model.response.DiagnosticoResponse
 import com.example.data.model.response.LoginResponse
 import com.example.data.model.response.RegistrarTestResponse
 import com.example.data.model.response.TestsEvaluableResponse
@@ -43,4 +46,6 @@ interface ApiService {
     suspend fun obtenerUbigeosEst(): UbigeosEstudResponse
 
 
+    @POST("/registerDiagEsp")
+    suspend fun registerDiagnostico(@Body request: DiagnosticoRequest): DiagnosticoResponse
 }
